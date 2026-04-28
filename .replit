@@ -38,3 +38,8 @@ args = "node index.js"
 
 [workflows.workflow.metadata]
 outputType = "console"
+
+[userenv]
+
+[userenv.shared]
+CLAUDE_CONFIG_DIR = "/home/runner/workspace/.claude-user"
