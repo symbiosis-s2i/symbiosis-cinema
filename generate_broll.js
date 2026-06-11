@@ -1,10 +1,10 @@
 const { fal } = require("@fal-ai/client");
+const { runPipeline } = require("./run_pipeline");
+
+runPipeline();
+const { fal } = require("@fal-ai/client");
 const fs = require("fs");
 const path = require("path");
-
-fal.config({
-  credentials: "602b8fa7-b0ec-4f82-9d2b-0be1f4d2f664:cdfb86d36a91862b2855dcdce4bba4fd"
-});
 
 async function runPipeline() {
   console.log("🎬 Initiating smart Seedance 2.0 automatic production...");
@@ -36,4 +36,4 @@ async function runPipeline() {
   }
 }
 
-runPipeline();
+module.exports = { runPipeline };
