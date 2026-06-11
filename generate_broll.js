@@ -35,6 +35,9 @@ async function main() {
     console.log("Video Download URL:", result.data.video.url);
   } catch (err) {
     console.error("❌ Execution error:", err.message || err);
+    if (err.response) {
+      console.error("Response data:", err.response.data);
+    }
   }
 }
 
