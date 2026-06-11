@@ -7,7 +7,7 @@ async function generateSeedanceVideo() {
   
   try {
     // Look for the founder image in the public folder relative to this script
-    const imagePath = path.join(__dirname, 'antal-commercial', 'public', 'founder_image.jpg');
+    const imagePath = path.join(__dirname, 'antal-commercial', 'public', 'antal_broll_3_base.jpg');
     
     if (!fs.existsSync(imagePath)) {
       throw new Error(`Founder image not found at path: ${imagePath}`);
