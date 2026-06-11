@@ -24,7 +24,7 @@ async function generateScript() {
           content: 'Please generate a real estate ad script.'
         }
       ],
-      max_tokens: 150
+      max_completion_tokens: 150
     });
 
     const script = response.choices[0].message.content.trim();
