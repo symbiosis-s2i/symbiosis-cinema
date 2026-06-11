@@ -13,7 +13,7 @@ async function generateScript() {
   console.log('Generating real estate ad script...');
   try {
     const response = await client.chat.completions.create({
-      model: 'openai/gpt-5.5-instant',
+      model: 'gpt-5.4-mini',
       messages: [
         {
           role: 'system',
