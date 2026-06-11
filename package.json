@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^22.13.11"
+    "@fal-ai/client": "^1.10.0",
+    "@types/node": "^22.13.11",
+    "openai": "^6.34.0"
   }
 }

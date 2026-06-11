@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ffprobe *)",
+      "Bash(node *)",
+      "Bash(npm list *)",
+      "Read(//home/runner/workspace/antal-commercial/**)",
+      "Bash(npm install *)",
+      "Bash(npm info *)"
+    ]
+  }
+}

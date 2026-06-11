@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-video@latest *)",
+      "Bash(python3 -c \"import pexpect; print\\('pexpect available'\\)\")",
+      "Bash(pip3 install *)",
+      "Bash(python3 -c \"import pexpect; print\\('ok'\\)\")",
+      "Bash(pip install *)",
+      "Bash(node *)",
+      "Bash(npm install *)",
+      "Bash(awk ' *)",
+      "Bash(printenv ELEVENLABS_API_KEY)",
+      "Bash(printenv FAL_KEY)",
+      "Bash(printenv OPENAI_API_KEY)"
+    ]
+  }
+}
