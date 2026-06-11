@@ -16,6 +16,7 @@ async function main() {
 
     console.log("📦 Uploading clean base image asset to Fal cloud canvas...");
     const imageBuffer = fs.readFileSync(imagePath);
+    console.log("Image buffer first few bytes:", imageBuffer.slice(0, 10));
 
     // Check if the image is a valid JPEG
     if (imageBuffer[0] !== 0xFF || imageBuffer[1] !== 0xD8 || imageBuffer[imageBuffer.length - 2] !== 0xFF || imageBuffer[imageBuffer.length - 1] !== 0xD9) {
