@@ -37,8 +37,7 @@ async function generateBrollClip(prompt) {
   const result = await fal.subscribe("fal-ai/luma-dream-machine", {
     input: {
       prompt,
-      duration: 3,
-      aspect_ratio: "16:9"
+      aspect_ratio: "9:16"
     }
   });
   return result.data.video.url;
