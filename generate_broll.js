@@ -33,6 +33,22 @@ async function generateSeedanceVideo() {
   console.log("🎬 Standalone Seedance 2.0 Production Complete!");
   console.log("Video Download URL:", result.data.video.url);
 }
+
+async function generateSeedanceVideo() {
+  const result = await fal.subscribe("bytedance/seedance-2.0/image-to-video", {
+    input: {
+      image_url: "https://your-replit-app.com/public/founder_image.jpg", // Path to your founder profile photo
+      prompt: "A close-up, high-end commercial shot of the speaker looking directly into the camera inside a modern, softly-lit corporate venture capital office space. The camera executes a slow, dramatic dolly-in tracking shot, maintaining sharp cinematic focus on their face. The speaker delivers the following dialogue with an authentic, confident, and rapid-fire cadence: \"We lost money on fix-and-flips, managed 15 million in real estate, then watched hundreds of deals die because capital was slow. So we built Antal—the AI-powered, white-labeled operating layer for private credit. Deploy your own automated lending stack at AntalCapital.com.\" Studio-grade color grading, ultra-realistic skin textures, 4k quality, natural ambient room tone audio.",
+      resolution: "720p",
+      duration: "15", // Exact target duration constraint
+      aspect_ratio: "9:16", // Vertical social/short form ad format
+      generate_audio: true // Triggers built-in dialogue and environmental audio generation
+    }
+  });
+
+  console.log("🎬 Standalone Seedance 2.0 Production Complete!");
+  console.log("Video Download URL:", result.data.video.url);
+}
   const apiKey = process.env.FAL_KEY;
   if (!apiKey) {
     console.error("FAL_KEY not set in environment.");
