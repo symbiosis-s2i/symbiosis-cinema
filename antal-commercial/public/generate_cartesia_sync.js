@@ -9,7 +9,7 @@ if (!API_KEY) {
 
 const client = new OpenAI({ apiKey: API_KEY });
 
-async function generateScript(targetNiche) {
+async function generateScript(targetNiche = 'luxury real estate') {
   console.log('Generating real estate ad script...');
   try {
     const response = await client.chat.completions.create({
@@ -183,11 +183,10 @@ async function downloadResult(resultUrl) {
 }
 
 // Main execution
-async function main() {
+async function main(targetNiche = 'luxury real estate') {
   try {
     // Generate script
-    const targetNiche = 'luxury townhomes'; // Example target niche
-    const script = await generateScript(targetNiche);
+    const script = await retryWithDelay(generateScript)(targetNiche);
 
     // Create looped video
     await retryWithDelay(createLoopedVideo)();

@@ -11,7 +11,7 @@ if (!API_KEY) {
 const client = new OpenAI({ apiKey: API_KEY });
 const OUTPUT_PATH = path.join(__dirname, 'antal-commercial', 'public', 'voiceover.mp3');
 
-async function generateScript() {
+async function generateScript(targetNiche = 'luxury real estate') {
   console.log('Generating real estate ad script...');
   try {
     const response = await client.chat.completions.create({
@@ -19,7 +19,7 @@ async function generateScript() {
       messages: [
         {
           role: 'system',
-          content: 'You are a creative assistant. Write a 35-second real estate ad script for Antal Capital. Do not include any visual cues or brackets, only the spoken script.'
+          content: `You are a creative assistant. Write a 35-second real estate ad script for Antal Capital focusing on ${targetNiche}. Do not include any visual cues or brackets, only the spoken script.`
         },
         {
           role: 'user',
@@ -58,6 +58,6 @@ async function generateAudio(script) {
 }
 
 (async () => {
-  const script = await generateScript();
+  const script = await retryWithDelay(generateScript)();
   await generateAudio(script);
 })();
