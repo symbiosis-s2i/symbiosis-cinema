@@ -35,8 +35,8 @@ async function main() {
     console.log("Video Download URL:", result.data.video.url);
   } catch (err) {
     console.error("❌ Execution error:", err.message || err);
-    if (err.response) {
-      console.error("Response data:", err.response.data);
+    if (err.body) {
+      console.error("📋 Detailed Server Validation Error:", JSON.stringify(err.body, null, 2));
     }
   }
 }
