@@ -1,4 +1,3 @@
-const { fal } = require("@fal-ai/client");
 const { runPipeline } = require("./run_pipeline");
 
 runPipeline();
