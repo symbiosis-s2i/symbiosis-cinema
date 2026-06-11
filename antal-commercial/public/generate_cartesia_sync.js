@@ -9,19 +9,18 @@ if (!API_KEY) {
 
 const client = new OpenAI({ apiKey: API_KEY });
 
-async function generateScript() {
+async function generateScript(targetNiche) {
   console.log('Generating real estate ad script...');
   try {
     const response = await client.chat.completions.create({
       model: 'gpt-5.4-mini',
-      messages: [
-        {
+      messages: [{
           role: 'system',
-          content: 'You are a creative assistant. Write a 35-second real estate ad script for Antal Capital. Do not include any visual cues or brackets, only the spoken script.'
+          content: `You are a creative assistant. Write a 35-second real estate ad script for Antal Capital focusing on ${targetNiche}. Do not include any visual cues or brackets, only the spoken script.`
         },
         {
           role: 'user',
-          content: 'Please generate a real estate ad script.'
+          content: `Please generate a real estate ad script for ${targetNiche}.`
         }
       ],
       max_completion_tokens: 150
@@ -35,7 +34,22 @@ async function generateScript() {
     process.exit(1);
   }
 }
-const fs = require('fs');
+function retryWithDelay(fn, retries = 3, delay = 3000) {
+  return async function(...args) {
+    for (let attempt = 1; attempt <= retries; attempt++) {
+      try {
+        return await fn(...args);
+      } catch (error) {
+        if (attempt < retries) {
+          console.warn(`Attempt ${attempt} failed. Retrying in ${delay / 1000} seconds...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+        } else {
+          throw error;
+        }
+      }
+    }
+  };
+}
 const path = require('path');
 
 const INPUT_VIDEO = path.join(__dirname, 'looped_podcast.mp4');
@@ -170,13 +184,14 @@ async function downloadResult(resultUrl) {
 async function main() {
   try {
     // Generate script
-    const script = await generateScript();
+    const targetNiche = 'luxury townhomes'; // Example target niche
+    const script = await generateScript(targetNiche);
 
     // Create looped video
-    await createLoopedVideo();
+    await retryWithDelay(createLoopedVideo)();
 
     // Call fal-ai API
-    const apiResponse = await syncWithFalAI();
+    const apiResponse = await retryWithDelay(syncWithFalAI)();
     console.log('\n📋 API Response received');
 
     // Extract the video URL from response
