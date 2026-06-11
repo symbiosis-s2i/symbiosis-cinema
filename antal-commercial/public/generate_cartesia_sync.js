@@ -38,7 +38,7 @@ async function generateScript() {
 const fs = require('fs');
 const path = require('path');
 
-const INPUT_VIDEO = './looped_podcast.mp4';
+const INPUT_VIDEO = path.join(__dirname, 'looped_podcast.mp4');
 const INPUT_AUDIO = './voiceover_cartesia.mp3';
 const LOOPED_VIDEO = '/tmp/looped_cartesia_video.mp4';
 const OUTPUT_VIDEO = './cartesia_founder_synced.mp4';
