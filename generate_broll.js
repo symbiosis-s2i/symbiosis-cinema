@@ -59,32 +59,3 @@ async function main() {
 }
 
 main();
-const { fal } = require("@fal-ai/client");
-const fs = require("fs");
-const path = require("path");
-
-async function generateMasterTalkingHead() {
-  console.log("🎥 Generating Master Talking Head...");
-  const imagePath = path.join(__dirname, 'antal-commercial', 'public', 'antal_broll_3_base.jpg');
-  if (!fs.existsSync(imagePath)) {
-    throw new Error(`Asset not found at path: ${imagePath}`);
-  }
-  const imageBuffer = fs.readFileSync(imagePath);
-  const founderImageUrl = await fal.storage.upload(
-    new Blob([imageBuffer], { type: 'image/jpeg' }),
-    { fileName: 'antal_broll_3_base.jpg' }
-  );
-
-  const result = await fal.subscribe("bytedance/seedance-2.0/image-to-video", {
-    input: {
-      image_url: founderImageUrl,
-      prompt: "A close-up shot of the speaker delivering a corporate pitch. Clean audio sync, natural framing.",
-      duration: 15,
-      aspect_ratio: "16:9",
-      generate_audio: true
-    }
-  });
-  return result.data.video.url;
-}
-
-module.exports = { generateMasterTalkingHead };
