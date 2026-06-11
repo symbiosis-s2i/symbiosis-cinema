@@ -24,7 +24,7 @@ async function runPipeline() {
     const result = await fal.subscribe("bytedance/seedance-2.0/image-to-video", {
       input: {
         image_url: uploadedUrl,
-        prompt: "A close-up shot of the speaker looking directly into the camera inside a modern corporate office, delivering the dialogue: \"We lost money on fix-and-flips, managed 15 million in real estate, then watched hundreds of deals die because capital was slow. So we built Antal—the AI-powered, white-labeled operating layer for private credit. Deploy your own automated lending stack at AntalCapital.com.\" Clean audio sync, natural framing."
+        prompt: "A close-up shot of the speaker looking directly into the camera inside a modern corporate office, delivering the dialogue with an authentic, confident, and rapid-fire cadence: \"We lost money on fix-and-flips, managed 15 million in real estate, then watched hundreds of deals die because capital was slow. So we built Antal—the AI-powered, white-labeled operating layer for private credit. Deploy your own automated lending stack at AntalCapital.com.\" Studio-grade color grading, ultra-realistic skin textures, 4k quality, natural ambient room tone audio, vertical 9:16 aspect ratio."
       }
     });
 
