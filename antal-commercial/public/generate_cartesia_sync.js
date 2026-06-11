@@ -110,10 +110,10 @@ async function syncWithFalAI() {
 
     // Upload audio to fal storage to get URL
     console.log('Uploading audio to storage...');
-    const audioUrl = await fal.storage.upload(
+    const audioUrl = await retryWithDelay(() => fal.storage.upload(
       new Blob([audioBuffer], { type: 'audio/mpeg' }),
       { fileName: 'voiceover_cartesia.mp3' }
-    );
+    ))();
 
     console.log(`Audio URL: ${audioUrl}`);
 
@@ -122,21 +122,21 @@ async function syncWithFalAI() {
     const founderImageBuffer = fs.readFileSync(founderImagePath);
 
     console.log('Uploading founder image to storage...');
-    const founderImageUrl = await fal.storage.upload(
+    const founderImageUrl = await retryWithDelay(() => fal.storage.upload(
       new Blob([founderImageBuffer], { type: 'image/jpeg' }),
       { fileName: 'founder_image.jpg' }
-    );
+    ))();
 
     console.log(`Founder Image URL: ${founderImageUrl}`);
     console.log('Calling bytedance/seedance-2.0/image-to-video...');
 
     // Call the Seedance 2.0 API with file URLs
-    const result = await fal.subscribe('bytedance/seedance-2.0/image-to-video', {
+    const result = await retryWithDelay(() => fal.subscribe('bytedance/seedance-2.0/image-to-video', {
       input: {
         image_url: founderImageUrl,
         audio_url: audioUrl
       }
-    });
+    }))();
 
     console.log('✅ API response received\n');
     return result;
@@ -186,7 +186,7 @@ async function downloadResult(resultUrl) {
 async function main(targetNiche = 'luxury real estate') {
   try {
     // Generate script
-    const script = await retryWithDelay(generateScript)(targetNiche);
+    const script = await retryWithDelay(() => generateScript(targetNiche))();
 
     // Create looped video
     await retryWithDelay(createLoopedVideo)();
