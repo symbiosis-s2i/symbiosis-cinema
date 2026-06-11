@@ -51,7 +51,7 @@ async function main() {
         prompt: "A close-up shot of the speaker looking directly into the camera inside a modern corporate office, delivering the dialogue: \"We lost money on fix-and-flips, managed 15 million in real estate, then watched hundreds of deals die because capital was slow. So we built Antal—the AI-powered, white-labeled operating layer for private credit. Deploy your own automated lending stack at AntalCapital.com.\""
       }
     });
-    const aRollUrl = aRollResult.data.video.url;
+    const aRollUrl = aRollResult.video.url;
     console.log("✅ A-Roll Rendered successfully.");
 
     // STEP 2: Generate High-Energy Cinematic Cutaways (B-Roll)
@@ -73,13 +73,13 @@ async function main() {
     // STEP 3: Download everything to Replit disk storage
     console.log("📥 Pulling remote streams down to local production studio workspace...");
     await downloadFile(aRollUrl, "a_roll.mp4");
-    await downloadFile(bRoll1Res.output.video.url, "b_roll1.mp4");
-    await downloadFile(bRoll2Res.output.video.url, "b_roll2.mp4");
-    await downloadFile(bRoll3Res.output.video.url, "b_roll3.mp4");
+    await downloadFile(bRoll1Res.video.url, "b_roll1.mp4");
+    await downloadFile(bRoll2Res.video.url, "b_roll2.mp4");
+    await downloadFile(bRoll3Res.video.url, "b_roll3.mp4");
 
     // STEP 4: Invoke FFmpeg to programmatically slice and overlay scenes every few seconds
     console.log("🎬 Initializing local FFmpeg automation layer. Executing 2-second clip pacing...");
-    const ffmpegCommand = `ffmpeg -y -i a_roll.mp4 -i b_roll1.mp4 -i b_roll2.mp4 -i b_roll3.mp4 -filter_complex "[1:v]scale=720:1280[b1]; [2:v]scale=720:1280[b2]; [3:v]scale=720:1280[b3]; [0:v][b1]overlay=enable='between(t,0,3)':shortest=1[v1]; [v1][b2]overlay=enable='between(t,6,9)':shortest=1[v2]; [v2][b3]overlay=enable='between(t,11,14)':shortest=1" -c:a copy antal_commercial_final.mp4`;
+    const ffmpegCommand = `ffmpeg -y -i a_roll.mp4 -i b_roll1.mp4 -i b_roll2.mp4 -i b_roll3.mp4 -filter_complex "[1:v]scale=720:1280[b1]; [2:v]scale=720:1280[b2]; [3:v]scale=720:1280[b3]; [0:v][b1]overlay=enable='between(t,0,3)'[v1]; [v1][b2]overlay=enable='between(t,6,9)'[v2]; [v2][b3]overlay=enable='between(t,11,14)'" -c:a copy antal_commercial_final.mp4`;
 
     exec(ffmpegCommand, (error, stdout, stderr) => {
       if (error) {
