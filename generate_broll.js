@@ -16,6 +16,11 @@ async function main() {
 
     console.log("📦 Uploading clean base image asset to Fal cloud canvas...");
     const imageBuffer = fs.readFileSync(imagePath);
+
+    // Check if the image is a valid JPEG
+    if (imageBuffer[0] !== 0xFF || imageBuffer[1] !== 0xD8 || imageBuffer[imageBuffer.length - 2] !== 0xFF || imageBuffer[imageBuffer.length - 1] !== 0xD9) {
+      throw new Error("The image file is not a valid JPEG.");
+    }
     const uploadedUrl = await fal.storage.upload(
       new Blob([imageBuffer], { type: 'image/jpeg' }),
       { fileName: 'antal_broll_3_base.jpg' }
