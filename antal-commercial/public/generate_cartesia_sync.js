@@ -91,9 +91,8 @@ function createLoopedVideo() {
   });
 }
 
-// Step 2: Call fal-ai sync-lipsync using the SDK
 async function syncWithFalAI() {
-  console.log('🎙️ Uploading files and calling sync-lipsync...');
+  console.log('🎙️ Uploading files and calling Seedance 2.0...');
 
   const FAL_KEY = process.env.FAL_KEY;
   if (!FAL_KEY) {
@@ -104,34 +103,37 @@ async function syncWithFalAI() {
   const { fal } = require('@fal-ai/client');
 
   try {
-    // Read the video and audio files
-    const videoBuffer = fs.readFileSync(LOOPED_VIDEO);
+    // Read the audio file
     const audioBuffer = fs.readFileSync(INPUT_AUDIO);
 
-    console.log(`Video size: ${(videoBuffer.length / 1024 / 1024).toFixed(2)} MB`);
     console.log(`Audio size: ${(audioBuffer.length / 1024 / 1024).toFixed(2)} MB`);
 
-    // Upload files to fal storage to get URLs
-    console.log('Uploading video to storage...');
-    const videoUrl = await fal.storage.upload(
-      new Blob([videoBuffer], { type: 'video/mp4' }),
-      { fileName: 'looped_cartesia_video.mp4' }
-    );
-
+    // Upload audio to fal storage to get URL
     console.log('Uploading audio to storage...');
     const audioUrl = await fal.storage.upload(
       new Blob([audioBuffer], { type: 'audio/mpeg' }),
       { fileName: 'voiceover_cartesia.mp3' }
     );
 
-    console.log(`Video URL: ${videoUrl}`);
     console.log(`Audio URL: ${audioUrl}`);
-    console.log('Calling fal-ai/sync-lipsync...');
 
-    // Call the API with file URLs
-    const result = await fal.subscribe('fal-ai/sync-lipsync', {
+    // Define the founder image asset path
+    const founderImagePath = path.join(__dirname, 'founder_image.jpg');
+    const founderImageBuffer = fs.readFileSync(founderImagePath);
+
+    console.log('Uploading founder image to storage...');
+    const founderImageUrl = await fal.storage.upload(
+      new Blob([founderImageBuffer], { type: 'image/jpeg' }),
+      { fileName: 'founder_image.jpg' }
+    );
+
+    console.log(`Founder Image URL: ${founderImageUrl}`);
+    console.log('Calling bytedance/seedance-2.0/image-to-video...');
+
+    // Call the Seedance 2.0 API with file URLs
+    const result = await fal.subscribe('bytedance/seedance-2.0/image-to-video', {
       input: {
-        video_url: videoUrl,
+        image_url: founderImageUrl,
         audio_url: audioUrl
       }
     });
