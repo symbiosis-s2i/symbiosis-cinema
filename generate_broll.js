@@ -31,6 +31,3 @@ const path = require("path");
   } catch (err) {
     console.error("❌ Execution error:", err.message || err);
   }
-}
-
-module.exports = { runPipeline };
