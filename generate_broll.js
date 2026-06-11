@@ -10,6 +10,11 @@ async function main() {
   console.log("🎬 Initiating clean, self-contained Seedance 2.0 commercial production...");
   try {
     const imagePath = path.join(__dirname, 'antal-commercial', 'public', 'antal_broll_3_base.jpg');
+    const fileExtension = path.extname(imagePath).toLowerCase();
+    console.log("File extension:", fileExtension);
+    if (fileExtension !== '.jpg' && fileExtension !== '.jpeg') {
+      throw new Error("The file extension is not a valid JPEG.");
+    }
     if (!fs.existsSync(imagePath)) {
       throw new Error(`Target image asset missing from disk at: ${imagePath}`);
     }
