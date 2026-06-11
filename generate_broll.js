@@ -35,3 +35,9 @@ async function main() {
 }
 
 main();
+async function runPipeline() {
+  console.log("Running pipeline...");
+  // Add the logic for the runPipeline function here
+}
+
+module.exports = { runPipeline };
