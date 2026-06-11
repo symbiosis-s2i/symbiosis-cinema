@@ -4,6 +4,7 @@ runPipeline();
 const { fal } = require("@fal-ai/client");
 const fs = require("fs");
 const path = require("path");
+async function main() {
   console.log("🎬 Initiating smart Seedance 2.0 automatic production...");
   try {
     const imagePath = path.join(__dirname, 'antal-commercial', 'public', 'antal_broll_3_base.jpg');
@@ -31,3 +32,6 @@ const path = require("path");
   } catch (err) {
     console.error("❌ Execution error:", err.message || err);
   }
+}
+
+main();
