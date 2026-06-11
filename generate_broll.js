@@ -7,42 +7,44 @@ fal.config({
 });
 
 async function main() {
-  console.log("🎬 Initiating clean, self-contained Seedance 2.0 commercial production...");
+  console.log("🎬 Initiating smart standalone production line...");
   try {
     const imagePath = path.join(__dirname, 'antal-commercial', 'public', 'antal_broll_3_base.jpg');
-    const fileExtension = path.extname(imagePath).toLowerCase();
-    console.log("File extension:", fileExtension);
-    if (fileExtension !== '.jpg' && fileExtension !== '.jpeg') {
-      throw new Error("The file extension is not a valid JPEG.");
-    }
     if (!fs.existsSync(imagePath)) {
       throw new Error(`Target image asset missing from disk at: ${imagePath}`);
     }
 
-    console.log("📦 Uploading clean base image asset to Fal cloud canvas...");
-    const imageBuffer = fs.readFileSync(imagePath);
-    console.log("Image buffer first few bytes:", imageBuffer.slice(0, 10));
+    let imageContent = fs.readFileSync(imagePath);
+    let imageBuffer;
+    let mimeType = 'image/jpeg';
 
-    // Check if the image is a valid JPEG
-    if (imageBuffer[0] !== 0xFF || imageBuffer[1] !== 0xD8 || imageBuffer[imageBuffer.length - 2] !== 0xFF || imageBuffer[imageBuffer.length - 1] !== 0xD9) {
-      throw new Error("The image file is not a valid JPEG.");
+    // Auto-detect if file is a Base64 text string disguised as a file
+    const textStart = imageContent.toString('utf8').trim().substring(0, 10);
+    if (textStart.startsWith('iVBORw0K')) {
+      console.log("💡 Discovered Base64 text wrapper. Converting text stream into raw binary image canvas...");
+      imageBuffer = Buffer.from(imageContent.toString('utf8').trim(), 'base64');
+      mimeType = 'image/png'; // The signature belongs to a PNG structure
+    } else {
+      imageBuffer = imageContent;
     }
+
+    console.log("📦 Uploading binary asset matrix to Fal cloud space...");
     const uploadedUrl = await fal.storage.upload(
-      new Blob([imageBuffer], { type: 'image/jpeg' }),
-      { fileName: 'antal_broll_3_base.jpg' }
+      new Blob([imageBuffer], { type: mimeType }),
+      { fileName: mimeType === 'image/png' ? 'base_asset.png' : 'base_asset.jpg' }
     );
 
-    console.log("🚀 Dispatching pristine cinematic payload to ByteDance layer...");
+    console.log("🚀 Dispatching clean payload to ByteDance execution layer...");
     const payload = {
       input: {
         image_url: uploadedUrl,
         prompt: "A high-end cinematic close-up commercial shot of a professional speaker looking directly into the camera inside a modern, softly-lit corporate private equity office. The camera executes a subtle, ultra-smooth dolly-in tracking shot, keeping razor-sharp focus on the subject's face. The speaker delivers the following dialogue with a highly confident, clear, and rapid-fire commercial cadence: \"We lost money on fix-and-flips, managed 15 million in real estate, then watched hundreds of deals die because capital was slow. So we built Antal—the AI-powered, white-labeled operating layer for private credit. Deploy your own automated lending stack at AntalCapital.com.\" Professional Hollywood studio lighting, pristine skin details, 4k resolution, clean audio lip-sync."
       }
     };
-    console.log("Payload being sent to fal.subscribe:", JSON.stringify(payload, null, 2));
+
     const result = await fal.subscribe("bytedance/seedance-2.0/image-to-video", payload);
 
-    console.log("🎉 Video processing accepted and complete!");
+    console.log("🎉 Video processing complete!");
     console.log("Video Download URL:", result.data.video.url);
   } catch (err) {
     console.error("❌ Execution error:", err.message || err);
