@@ -1,4 +1,40 @@
+const OpenAI = require('openai');
 const { spawn } = require('child_process');
+
+const API_KEY = process.env.OPENAI_API_KEY;
+if (!API_KEY) {
+  console.error('OPENAI_API_KEY is not set');
+  process.exit(1);
+}
+
+const client = new OpenAI({ apiKey: API_KEY });
+
+async function generateScript() {
+  console.log('Generating real estate ad script...');
+  try {
+    const response = await client.chat.completions.create({
+      model: 'openai/gpt-5.5-instant',
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a creative assistant. Write a 35-second real estate ad script for Antal Capital. Do not include any visual cues or brackets, only the spoken script.'
+        },
+        {
+          role: 'user',
+          content: 'Please generate a real estate ad script.'
+        }
+      ],
+      max_tokens: 150
+    });
+
+    const script = response.choices[0].message.content.trim();
+    console.log('Generated script:', script);
+    return script;
+  } catch (error) {
+    console.error('Error generating script:', error.message);
+    process.exit(1);
+  }
+}
 const fs = require('fs');
 const path = require('path');
 
@@ -133,6 +169,9 @@ async function downloadResult(resultUrl) {
 // Main execution
 async function main() {
   try {
+    // Generate script
+    const script = await generateScript();
+
     // Create looped video
     await createLoopedVideo();
 
