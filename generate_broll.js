@@ -1,3 +1,4 @@
+process.env.FAL_KEY = "602b8fa7-b0ec-4f82-9d2b-0be1f4d2f664:cdfb86d36a91862b2855dcdce4bba4fd";
 const { fal } = require("@fal-ai/client");
 const fs = require("fs");
 const path = require("path");
