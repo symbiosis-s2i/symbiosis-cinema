@@ -1,4 +1,5 @@
-const BYTEPLUS_API_KEY = "ark-1cf43687-f941-4b42-917d-9afe68f67542-4f7af";
+const express = require('express');
+const bodyParser = require('body-parser');
 const { fal } = require("@fal-ai/client");
 const fs = require("fs");
 const path = require("path");
@@ -17,10 +18,17 @@ async function downloadFile(url, outputPath) {
   console.log(`💾 Saved local asset: ${outputPath}`);
 }
 
-async function main() {
+const app = express();
+app.use(bodyParser.json());
+
+app.post('/generate-video', async (req, res) => {
   console.log("🎬 Launching Automated Multi-Track Commercial Production Engine...");
   try {
-    const imagePath = path.join(__dirname, 'antal-commercial', 'public', 'antal_broll_3_base.jpg');
+    const { prompt, image_url } = req.body;
+    const defaultPrompt = "A close-up shot of the speaker looking directly into the camera inside a modern corporate office, delivering the dialogue: \"We lost money on fix-and-flips, managed 15 million in real estate, then watched hundreds of deals die because capital was slow. So we built Antal—the AI-powered, white-labeled operating layer for private credit. Deploy your own automated lending stack at AntalCapital.com.\"";
+    const defaultImagePath = path.join(__dirname, 'antal-commercial', 'public', 'antal_broll_3_base.jpg');
+    const imagePath = image_url || defaultImagePath;
+
     if (!fs.existsSync(imagePath)) {
       throw new Error(`Target asset missing from disk location: ${imagePath}`);
     }
@@ -49,7 +57,7 @@ async function main() {
     const aRollResult = await fal.subscribe("bytedance/seedance-2.0/image-to-video", {
       input: {
         image_url: uploadedUrl,
-        prompt: "A close-up shot of the speaker looking directly into the camera inside a modern corporate office, delivering the dialogue: \"We lost money on fix-and-flips, managed 15 million in real estate, then watched hundreds of deals die because capital was slow. So we built Antal—the AI-powered, white-labeled operating layer for private credit. Deploy your own automated lending stack at AntalCapital.com.\""
+        prompt: prompt || defaultPrompt
       }
     });
     const aRollUrl = aRollResult.video.url;
@@ -85,16 +93,21 @@ async function main() {
     exec(ffmpegCommand, (error, stdout, stderr) => {
       if (error) {
         console.error("❌ FFmpeg editing sequence failed:", error);
+        res.status(500).send("FFmpeg editing sequence failed");
         return;
       }
       console.log("🎉 SUCCESS! Your hyper-dynamic commercial timeline has been compiled!");
-      console.log("📦 Output File Location: antal_commercial_final.mp4");
+      res.sendFile(path.resolve('antal_commercial_final.mp4'));
     });
 
   } catch (err) {
     console.error("❌ Execution error:", err.message || err);
     if (err.body) console.error("📋 Detailed Server Validation Error:", JSON.stringify(err.body, null, 2));
+    res.status(500).send(err.message || "Execution error");
   }
-}
+});
 
-main();
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
