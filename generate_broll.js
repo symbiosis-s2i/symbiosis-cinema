@@ -1,3 +1,4 @@
+const BYTEPLUS_API_KEY = "ark-1cf43687-f941-4b42-917d-9afe68f67542-4f7af";
 const { fal } = require("@fal-ai/client");
 const fs = require("fs");
 const path = require("path");
