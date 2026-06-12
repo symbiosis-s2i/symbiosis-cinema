@@ -132,3 +132,4 @@ dist
 # Replit debugger
 .breakpoints
 .claude-user/
+.aider*

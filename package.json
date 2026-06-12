@@ -12,6 +12,8 @@
   "dependencies": {
     "@fal-ai/client": "^1.10.0",
     "@types/node": "^22.13.11",
+    "body-parser": "^2.2.2",
+    "express": "^5.2.1",
     "openai": "^6.34.0"
   }
 }

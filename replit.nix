@@ -1,5 +1,6 @@
 { pkgs }: {
   deps = [
+    pkgs.aider-chat
     pkgs.nodejs_22
     pkgs.chromium
     pkgs.nspr
