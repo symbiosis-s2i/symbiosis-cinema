@@ -115,3 +115,5 @@ app.listen(PORT, () => {
 nixPkgs = ["...", "ffmpeg"]
 [phases.setup]
 nixPkgs = ["...", "ffmpeg"]
+[phases.setup]
+nixPkgs = ["...", "ffmpeg"]
