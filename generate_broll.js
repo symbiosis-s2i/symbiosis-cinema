@@ -113,3 +113,5 @@ app.listen(PORT, () => {
 });
 [phases.setup]
 nixPkgs = ["...", "ffmpeg"]
+[phases.setup]
+nixPkgs = ["...", "ffmpeg"]
