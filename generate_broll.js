@@ -62,7 +62,7 @@ app.post('/generate-video', async (req, res) => {
         }
       });
 
-      const result = response.choices[0].message.content;
+      const result = JSON.parse(response.choices[0].message.content);
       voiceoverScript = result.voiceoverScript;
       brollPrompt1 = result.brollPrompt1;
       brollPrompt2 = result.brollPrompt2;
@@ -80,6 +80,20 @@ app.post('/generate-video', async (req, res) => {
       fs.writeFileSync('openai_voice.mp3', Buffer.from(audioBuffer));
       console.log("✅ Voiceover audio generated and saved as openai_voice.mp3.");
       
+      
+      // Generate audio using OpenAI TTS
+      console.log("🔊 Generating voiceover audio...");
+      const ttsResponse = await openai.audio.speech.create({
+        model: 'tts-1',
+        voice: req.body.voice || 'onyx',
+        input: voiceoverScript,
+      });
+
+      const audioBuffer = await ttsResponse.arrayBuffer();
+      fs.writeFileSync('openai_voice.mp3', Buffer.from(audioBuffer));
+      console.log("✅ Voiceover audio generated and saved as openai_voice.mp3.");
+      
+    } catch (error) {
       console.error("❌ OpenAI API call failed:", error.message || error);
       res.status(500).send("OpenAI API call failed");
       return;
