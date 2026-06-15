@@ -67,7 +67,19 @@ app.post('/generate-video', async (req, res) => {
       brollPrompt1 = result.brollPrompt1;
       brollPrompt2 = result.brollPrompt2;
       brollPrompt3 = result.brollPrompt3;
-    } catch (error) {
+      
+      // Generate audio using OpenAI TTS
+      console.log("🔊 Generating voiceover audio...");
+      const ttsResponse = await openai.audio.speech.create({
+        model: 'tts-1',
+        voice: req.body.voice || 'onyx',
+        input: voiceoverScript,
+      });
+
+      const audioBuffer = await ttsResponse.arrayBuffer();
+      fs.writeFileSync('openai_voice.mp3', Buffer.from(audioBuffer));
+      console.log("✅ Voiceover audio generated and saved as openai_voice.mp3.");
+      
       console.error("❌ OpenAI API call failed:", error.message || error);
       res.status(500).send("OpenAI API call failed");
       return;
@@ -134,7 +146,7 @@ app.post('/generate-video', async (req, res) => {
 
     // STEP 4: Invoke FFmpeg to programmatically slice and overlay scenes every few seconds
     console.log("🎬 Initializing local FFmpeg automation layer. Executing 2-second clip pacing...");
-    const ffmpegCommand = `ffmpeg -y -i a_roll.mp4 -i b_roll1.mp4 -i b_roll2.mp4 -i b_roll3.mp4 -filter_complex "[1:v]scale=720:1280[b1]; [2:v]scale=720:1280[b2]; [3:v]scale=720:1280[b3]; [0:v][b1]overlay=enable='between(t,0,3)'[v1]; [v1][b2]overlay=enable='between(t,6,9)'[v2]; [v2][b3]overlay=enable='between(t,11,14)'" -c:a copy antal_commercial_final.mp4`;
+    const ffmpegCommand = `ffmpeg -y -i a_roll.mp4 -i b_roll1.mp4 -i b_roll2.mp4 -i b_roll3.mp4 -i openai_voice.mp3 -filter_complex "[1:v]scale=720:1280[b1]; [2:v]scale=720:1280[b2]; [3:v]scale=720:1280[b3]; [0:v][b1]overlay=enable='between(t,0,3)'[v1]; [v1][b2]overlay=enable='between(t,6,9)'[v2]; [v2][b3]overlay=enable='between(t,11,14)'" -map 4:a -c:v libx264 -shortest antal_commercial_final.mp4`;
 
     exec(ffmpegCommand, (error, stdout, stderr) => {
       if (error) {
