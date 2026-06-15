@@ -2,7 +2,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
-const OpenAI = require("openai");
+const { OpenAI } = require("openai");
 
 const AUDIO_PATH = "./antal-commercial/public/voiceover.mp3";
 const OUTPUT_PATH = "./antal-commercial/public/transcript.json";

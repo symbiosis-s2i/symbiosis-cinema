@@ -1,14 +1,10 @@
 const fs = require('fs');
 const path = require('path');
-const OpenAI = require('openai');
+const { OpenAI } = require('openai');
 
-const API_KEY = process.env.OPENAI_API_KEY;
-if (!API_KEY) {
-  console.error('OPENAI_API_KEY is not set');
-  process.exit(1);
-}
-
-const client = new OpenAI({ apiKey: API_KEY });
+const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 const OUTPUT_PATH = path.join(__dirname, 'antal-commercial', 'public', 'voiceover.mp3');
 
 async function generateScript(targetNiche = 'luxury real estate') {
