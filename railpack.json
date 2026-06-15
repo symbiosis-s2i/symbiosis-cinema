@@ -1,0 +1,8 @@
+{
+  "$schema": "https://schema.railpack.com",
+  "provider": "node",
+  "deploy": {
+    "startCommand": "node generate_broll.js",
+    "aptPackages": ["ffmpeg"]
+  }
+}

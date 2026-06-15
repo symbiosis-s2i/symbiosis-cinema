@@ -1,7 +1,0 @@
-providers = ["node"]
-
-[phases.setup]
-nixPkgs = ["...", "ffmpeg"]
-
-[start]
-cmd = "node generate_broll.js"
