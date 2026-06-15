@@ -34,7 +34,7 @@ app.post('/generate-video', async (req, res) => {
 
     try {
       const response = await openai.chat.completions.create({
-        model: 'gpt-5.5',
+        model: 'gpt-4o-mini',
         messages: [
           {
             role: 'system',
