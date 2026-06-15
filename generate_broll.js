@@ -1,7 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { fal } = require("@fal-ai/client");
+const { OpenAI } = require("openai");
 const fs = require("fs");
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 const path = require("path");
 const { exec } = require("child_process");
 
@@ -24,8 +29,49 @@ app.use(bodyParser.json());
 app.post('/generate-video', async (req, res) => {
   console.log("🎬 Launching Automated Multi-Track Commercial Production Engine...");
   try {
-    const { prompt, image_url } = req.body;
-    const defaultPrompt = "A close-up shot of the speaker looking directly into the camera inside a modern corporate office, delivering the dialogue: \"We lost money on fix-and-flips, managed 15 million in real estate, then watched hundreds of deals die because capital was slow. So we built Antal—the AI-powered, white-labeled operating layer for private credit. Deploy your own automated lending stack at AntalCapital.com.\"";
+    const { userTopic, image_url } = req.body;
+    let voiceoverScript, brollPrompt1, brollPrompt2, brollPrompt3;
+
+    try {
+      const response = await openai.chat.completions.create({
+        model: 'gpt-4o-mini',
+        messages: [
+          {
+            role: 'system',
+            content: `You are a creative assistant. Generate content for a ${userTopic}.`
+          }
+        ],
+        max_tokens: 150,
+        temperature: 0.7,
+        stop: null,
+        n: 1,
+        stream: false,
+        logprobs: null,
+        presence_penalty: 0,
+        frequency_penalty: 0,
+        user: null,
+        json_schema: {
+          type: "object",
+          properties: {
+            voiceoverScript: { type: "string" },
+            brollPrompt1: { type: "string" },
+            brollPrompt2: { type: "string" },
+            brollPrompt3: { type: "string" }
+          },
+          required: ["voiceoverScript", "brollPrompt1", "brollPrompt2", "brollPrompt3"]
+        }
+      });
+
+      const result = response.choices[0].message.content;
+      voiceoverScript = result.voiceoverScript;
+      brollPrompt1 = result.brollPrompt1;
+      brollPrompt2 = result.brollPrompt2;
+      brollPrompt3 = result.brollPrompt3;
+    } catch (error) {
+      console.error("❌ OpenAI API call failed:", error.message || error);
+      res.status(500).send("OpenAI API call failed");
+      return;
+    }
     const defaultImagePath = path.join(__dirname, 'antal-commercial', 'public', 'antal_broll_3_base.jpg');
     const imagePath = image_url || defaultImagePath;
 
@@ -57,7 +103,7 @@ app.post('/generate-video', async (req, res) => {
     const aRollResult = await fal.subscribe("bytedance/seedance-2.0/image-to-video", {
       input: {
         image_url: uploadedUrl,
-        prompt: prompt || defaultPrompt
+        prompt: voiceoverScript
       }
     });
     const aRollUrl = aRollResult.video.url;
@@ -66,17 +112,17 @@ app.post('/generate-video', async (req, res) => {
     // STEP 2: Generate High-Energy Cinematic Cutaways (B-Roll)
     console.log("🚀 Generating Cinematic B-Roll Track 1 (Skyscraper Drone)...");
     const bRoll1Res = await fal.subscribe("fal-ai/luma-dream-machine", {
-      input: { prompt: "An intense, cinematic FPV drone plunge diving straight down the sleek glass facade of a black luxury skyscraper at dusk. 4k, vertical 9:16 aspect ratio.", aspect_ratio: "9:16" }
+      input: { prompt: brollPrompt1, aspect_ratio: "9:16" }
     });
 
     console.log("🚀 Generating Cinematic B-Roll Track 2 (Tech Servers)...");
     const bRoll2Res = await fal.subscribe("fal-ai/luma-dream-machine", {
-      input: { prompt: "Macro close-up shot of high-tech corporate server racks flashing with glowing blue and green data stream lights. 4k, vertical 9:16 aspect ratio.", aspect_ratio: "9:16" }
+      input: { prompt: brollPrompt2, aspect_ratio: "9:16" }
     });
 
     console.log("🚀 Generating Cinematic B-Roll Track 3 (Fintech Dashboard)...");
     const bRoll3Res = await fal.subscribe("fal-ai/luma-dream-machine", {
-      input: { prompt: "A sleek, modern digital venture capital dashboard shifting instantly from a red 'Deal Delayed' graph to a bright green 'Approved' metric. 4k, vertical 9:16 aspect ratio.", aspect_ratio: "9:16" }
+      input: { prompt: brollPrompt3, aspect_ratio: "9:16" }
     });
 
     // STEP 3: Download everything to Replit disk storage
