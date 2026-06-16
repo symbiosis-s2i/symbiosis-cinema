@@ -29,7 +29,7 @@ app.use(bodyParser.json());
 app.post('/generate-video', async (req, res) => {
   console.log("🎬 Launching Automated Multi-Track Commercial Production Engine...");
   try {
-    const { userTopic, image_url, bRollEngine = 'fal' } = req.body; // Default to 'fal' if not specified
+    const { userTopic, image_url, brollProvider = 'fal' } = req.body; // Default to 'fal' if not specified
     let voiceoverScript, brollPrompt1, brollPrompt2, brollPrompt3;
 
     try {
@@ -138,15 +138,67 @@ app.post('/generate-video', async (req, res) => {
     // STEP 2: Generate High-Energy Cinematic Cutaways (B-Roll)
     let bRoll1Res, bRoll2Res, bRoll3Res;
 
-    if (bRollEngine === 'runway') {
-      console.log("🚀 Generating Cinematic B-Roll Track 1 (Skyscraper Drone) using Runway ML...");
-      bRoll1Res = await runway.generateVideo({ prompt: brollPrompt1, aspect_ratio: "9:16" });
+    if (brollProvider === 'runway') {
+      console.log("🚀 Generating Cinematic B-Roll using Runway ML...");
 
-      console.log("🚀 Generating Cinematic B-Roll Track 2 (Tech Servers) using Runway ML...");
-      bRoll2Res = await runway.generateVideo({ prompt: brollPrompt2, aspect_ratio: "9:16" });
+      const runwayHeaders = {
+        'Authorization': `Bearer ${process.env.key_feb676e00c6e4f16d75261ff363feb6dda7d7d94cf521a5e88e20a4c98a63dc0a6f1615ea077920ae715dfb8312d20ed1d8a4ffda438dc619ded9acfbe28b9b6}`,
+        'X-Runway-Version': '2024-11-06',
+        'Content-Type': 'application/json'
+      };
 
-      console.log("🚀 Generating Cinematic B-Roll Track 3 (Fintech Dashboard) using Runway ML...");
-      bRoll3Res = await runway.generateVideo({ prompt: brollPrompt3, aspect_ratio: "9:16" });
+      const runwayPayload = (promptText) => ({
+        model: 'gen4.5',
+        promptText,
+        ratio: '1280:720',
+        duration: 5
+      });
+
+      const runwayUrls = await Promise.all([
+        fetch('https://api.runwayml.com/v1/text_to_video', {
+          method: 'POST',
+          headers: runwayHeaders,
+          body: JSON.stringify(runwayPayload(brollPrompt1))
+        }).then(res => res.json()),
+
+        fetch('https://api.runwayml.com/v1/text_to_video', {
+          method: 'POST',
+          headers: runwayHeaders,
+          body: JSON.stringify(runwayPayload(brollPrompt2))
+        }).then(res => res.json()),
+
+        fetch('https://api.runwayml.com/v1/text_to_video', {
+          method: 'POST',
+          headers: runwayHeaders,
+          body: JSON.stringify(runwayPayload(brollPrompt3))
+        }).then(res => res.json())
+      ]);
+
+      const taskIds = runwayUrls.map(res => res.id);
+
+      const checkStatus = async (taskId) => {
+        const response = await fetch(`https://api.runwayml.com/v1/tasks/${taskId}`, {
+          headers: runwayHeaders
+        });
+        const result = await response.json();
+        return result.status === 'SUCCEEDED' ? result.outputUrl : null;
+      };
+
+      const pollRunwayTasks = async () => {
+        const urls = [];
+        while (urls.length < 3) {
+          console.log("🔄 Polling Runway ML for task completion...");
+          const results = await Promise.all(taskIds.map(checkStatus));
+          urls.push(...results.filter(url => url !== null));
+          if (urls.length < 3) await new Promise(resolve => setTimeout(resolve, 5000));
+        }
+        return urls;
+      };
+
+      const [bRoll1Url, bRoll2Url, bRoll3Url] = await pollRunwayTasks();
+      bRoll1Res = { video: { url: bRoll1Url } };
+      bRoll2Res = { video: { url: bRoll2Url } };
+      bRoll3Res = { video: { url: bRoll3Url } };
     } else {
       console.log("🚀 Generating Cinematic B-Roll Track 1 (Skyscraper Drone) using Fal AI...");
       bRoll1Res = await fal.subscribe("fal-ai/luma-dream-machine", {
