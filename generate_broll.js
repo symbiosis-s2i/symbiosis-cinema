@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { fal } = require("@fal-ai/client");
 const { OpenAI } = require("openai");
-const fs = require("fs");
+const runway = require('runwayml'); // Assuming runwayml is the package for Runway ML
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -29,7 +29,7 @@ app.use(bodyParser.json());
 app.post('/generate-video', async (req, res) => {
   console.log("🎬 Launching Automated Multi-Track Commercial Production Engine...");
   try {
-    const { userTopic, image_url } = req.body;
+    const { userTopic, image_url, bRollEngine = 'fal' } = req.body; // Default to 'fal' if not specified
     let voiceoverScript, brollPrompt1, brollPrompt2, brollPrompt3;
 
     try {
@@ -136,20 +136,33 @@ app.post('/generate-video', async (req, res) => {
     console.log("✅ A-Roll Rendered successfully.");
 
     // STEP 2: Generate High-Energy Cinematic Cutaways (B-Roll)
-    console.log("🚀 Generating Cinematic B-Roll Track 1 (Skyscraper Drone)...");
-    const bRoll1Res = await fal.subscribe("fal-ai/luma-dream-machine", {
-      input: { prompt: brollPrompt1, aspect_ratio: "9:16" }
-    });
+    let bRoll1Res, bRoll2Res, bRoll3Res;
 
-    console.log("🚀 Generating Cinematic B-Roll Track 2 (Tech Servers)...");
-    const bRoll2Res = await fal.subscribe("fal-ai/luma-dream-machine", {
-      input: { prompt: brollPrompt2, aspect_ratio: "9:16" }
-    });
+    if (bRollEngine === 'runway') {
+      console.log("🚀 Generating Cinematic B-Roll Track 1 (Skyscraper Drone) using Runway ML...");
+      bRoll1Res = await runway.generateVideo({ prompt: brollPrompt1, aspect_ratio: "9:16" });
 
-    console.log("🚀 Generating Cinematic B-Roll Track 3 (Fintech Dashboard)...");
-    const bRoll3Res = await fal.subscribe("fal-ai/luma-dream-machine", {
-      input: { prompt: brollPrompt3, aspect_ratio: "9:16" }
-    });
+      console.log("🚀 Generating Cinematic B-Roll Track 2 (Tech Servers) using Runway ML...");
+      bRoll2Res = await runway.generateVideo({ prompt: brollPrompt2, aspect_ratio: "9:16" });
+
+      console.log("🚀 Generating Cinematic B-Roll Track 3 (Fintech Dashboard) using Runway ML...");
+      bRoll3Res = await runway.generateVideo({ prompt: brollPrompt3, aspect_ratio: "9:16" });
+    } else {
+      console.log("🚀 Generating Cinematic B-Roll Track 1 (Skyscraper Drone) using Fal AI...");
+      bRoll1Res = await fal.subscribe("fal-ai/luma-dream-machine", {
+        input: { prompt: brollPrompt1, aspect_ratio: "9:16" }
+      });
+
+      console.log("🚀 Generating Cinematic B-Roll Track 2 (Tech Servers) using Fal AI...");
+      bRoll2Res = await fal.subscribe("fal-ai/luma-dream-machine", {
+        input: { prompt: brollPrompt2, aspect_ratio: "9:16" }
+      });
+
+      console.log("🚀 Generating Cinematic B-Roll Track 3 (Fintech Dashboard) using Fal AI...");
+      bRoll3Res = await fal.subscribe("fal-ai/luma-dream-machine", {
+        input: { prompt: brollPrompt3, aspect_ratio: "9:16" }
+      });
+    }
 
     // STEP 3: Download everything to Replit disk storage
     console.log("📥 Pulling remote streams down to local production studio workspace...");
