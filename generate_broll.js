@@ -1,11 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { fal } = require("@fal-ai/client");
-const { OpenAI } = require("openai");
+const { OpenRouter } = require("openrouter");
 const runway = require('runwayml'); // Assuming runwayml is the package for Runway ML
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+const openrouter = new OpenRouter({
+  apiKey: process.env.OPENROUTER_API_KEY,
 });
 const path = require("path");
 const { exec } = require("child_process");
@@ -33,8 +33,8 @@ app.post('/generate-video', async (req, res) => {
     let voiceoverScript, brollPrompt1, brollPrompt2, brollPrompt3;
 
     try {
-      const response = await openai.chat.completions.create({
-        model: 'gpt-4o-mini',
+      const response = await openrouter.chat.completions.create({
+        model: 'mistral-dual-tier',
         messages: [
           {
             role: 'system',
@@ -70,8 +70,8 @@ app.post('/generate-video', async (req, res) => {
       
       // Generate audio using OpenAI TTS
       console.log("🔊 Generating voiceover audio...");
-      const ttsResponse = await openai.audio.speech.create({
-        model: 'tts-1',
+      const ttsResponse = await openrouter.audio.speech.create({
+        model: 'mistral-tts',
         voice: req.body.voice || 'onyx',
         input: voiceoverScript,
       });
