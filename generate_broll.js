@@ -1,12 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { fal } = require("@fal-ai/client");
-const { OpenRouter } = require("openrouter");
+const { OpenAI } = require("openai");
 const runway = require('runwayml'); // Assuming runwayml is the package for Runway ML
 
-const openrouter = new OpenRouter({
-  apiKey: process.env.OPENROUTER_API_KEY,
+const openrouter = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
+  apiKey: process.env.OPENROUTER_API_KEY
+});
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
 });
 const path = require("path");
 const { exec } = require("child_process");
@@ -35,7 +39,7 @@ app.post('/generate-video', async (req, res) => {
 
     try {
       const response = await openrouter.chat.completions.create({
-        model: 'mistralai/mistral-small',
+        model: 'mistralai/mistral-large',
         messages: [
           {
             role: 'system',
@@ -68,19 +72,6 @@ app.post('/generate-video', async (req, res) => {
       brollPrompt1 = result.brollPrompt1;
       brollPrompt2 = result.brollPrompt2;
       brollPrompt3 = result.brollPrompt3;
-      
-      // Generate audio using OpenAI TTS
-      console.log("🔊 Generating voiceover audio...");
-      const ttsResponse = await openrouter.audio.speech.create({
-        model: 'mistralai/mistral-small',
-        voice: req.body.voice || 'onyx',
-        input: voiceoverScript,
-      });
-
-      const audioBuffer = await ttsResponse.arrayBuffer();
-      fs.writeFileSync('openai_voice.mp3', Buffer.from(audioBuffer));
-      console.log("✅ Voiceover audio generated and saved as openai_voice.mp3.");
-      
       
       // Generate audio using OpenAI TTS
       console.log("🔊 Generating voiceover audio...");
