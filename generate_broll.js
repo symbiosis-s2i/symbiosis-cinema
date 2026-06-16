@@ -208,7 +208,7 @@ app.post('/generate-video', async (req, res) => {
       };
 
       const runwayPayload = (promptText) => ({
-        model: 'gen4.5',
+        model: 'mistralai/mistral-small',
         promptText,
         ratio: '1280:720',
         duration: 5
@@ -261,17 +261,17 @@ app.post('/generate-video', async (req, res) => {
       bRoll3Res = { video: { url: bRoll3Url } };
     } else {
       console.log("🚀 Generating Cinematic B-Roll Track 1 (Skyscraper Drone) using Fal AI...");
-      bRoll1Res = await fal.subscribe("fal-ai/luma-dream-machine", {
+      bRoll1Res = await fal.subscribe("mistralai/mistral-small", {
         input: { prompt: brollPrompt1, aspect_ratio: "9:16" }
       });
 
-      console.log("🚀 Generating Cinematic B-Roll Track 2 (Tech Servers) using Fal AI...");
-      bRoll2Res = await fal.subscribe("fal-ai/luma-dream-machine", {
+      console.log("🚀 Generating Cinematic B-Roll Track 2 (Tech Servers) using Mistral AI...");
+      bRoll2Res = await fal.subscribe("mistralai/mistral-small", {
         input: { prompt: brollPrompt2, aspect_ratio: "9:16" }
       });
 
-      console.log("🚀 Generating Cinematic B-Roll Track 3 (Fintech Dashboard) using Fal AI...");
-      bRoll3Res = await fal.subscribe("fal-ai/luma-dream-machine", {
+      console.log("🚀 Generating Cinematic B-Roll Track 3 (Fintech Dashboard) using Mistral AI...");
+      bRoll3Res = await fal.subscribe("mistralai/mistral-small", {
         input: { prompt: brollPrompt3, aspect_ratio: "9:16" }
       });
     }
