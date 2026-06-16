@@ -35,7 +35,7 @@ app.post('/generate-video', async (req, res) => {
 
     try {
       const response = await openrouter.chat.completions.create({
-        model: 'mistral-dual-tier',
+        model: 'mistralai/mistral-small',
         messages: [
           {
             role: 'system',
@@ -72,7 +72,7 @@ app.post('/generate-video', async (req, res) => {
       // Generate audio using OpenAI TTS
       console.log("🔊 Generating voiceover audio...");
       const ttsResponse = await openrouter.audio.speech.create({
-        model: 'mistral-tts',
+        model: 'mistralai/mistral-small',
         voice: req.body.voice || 'onyx',
         input: voiceoverScript,
       });
