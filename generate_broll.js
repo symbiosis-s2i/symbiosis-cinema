@@ -142,7 +142,7 @@ app.post('/generate-video', async (req, res) => {
       console.log("🚀 Generating Cinematic B-Roll using Runway ML...");
 
       const runwayHeaders = {
-        'Authorization': `Bearer ${process.env.key_feb676e00c6e4f16d75261ff363feb6dda7d7d94cf521a5e88e20a4c98a63dc0a6f1615ea077920ae715dfb8312d20ed1d8a4ffda438dc619ded9acfbe28b9b6}`,
+        'Authorization': `Bearer ${process.env.RUNWAY_API_KEY}`,
         'X-Runway-Version': '2024-11-06',
         'Content-Type': 'application/json'
       };
