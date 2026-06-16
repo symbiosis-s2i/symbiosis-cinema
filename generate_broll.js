@@ -118,31 +118,30 @@ app.post('/generate-video', async (req, res) => {
       console.log("🚀 Generating Cinematic B-Roll using Kling AI...");
 
       const klingHeaders = {
-        'Authorization': `Bearer ${process.env.KLING_API_KEY}`,
+        'Authorization': `Bearer ${process.env.FAL_KEY}`,
         'Content-Type': 'application/json'
       };
 
       const klingPayload = (promptText) => ({
-        model_name: 'kling-v1',
         prompt: promptText,
-        duration: '5',
+        duration: 5,
         aspect_ratio: '16:9'
       });
 
       const klingUrls = await Promise.all([
-        fetch('https://api-singapore.klingai.com/v1/videos/text2video', {
+        fetch('https://queue.fal.run/fal-ai/kling-video/v3/text-to-video', {
           method: 'POST',
           headers: klingHeaders,
           body: JSON.stringify(klingPayload(brollPrompt1))
         }).then(res => res.json()),
 
-        fetch('https://api-singapore.klingai.com/v1/videos/text2video', {
+        fetch('https://queue.fal.run/fal-ai/kling-video/v3/text-to-video', {
           method: 'POST',
           headers: klingHeaders,
           body: JSON.stringify(klingPayload(brollPrompt2))
         }).then(res => res.json()),
 
-        fetch('https://api-singapore.klingai.com/v1/videos/text2video', {
+        fetch('https://queue.fal.run/fal-ai/kling-video/v3/text-to-video', {
           method: 'POST',
           headers: klingHeaders,
           body: JSON.stringify(klingPayload(brollPrompt3))
