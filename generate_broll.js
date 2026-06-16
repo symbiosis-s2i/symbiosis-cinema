@@ -6,6 +6,7 @@ const runway = require('runwayml'); // Assuming runwayml is the package for Runw
 
 const openrouter = new OpenRouter({
   apiKey: process.env.OPENROUTER_API_KEY,
+  baseURL: "https://openrouter.ai/api/v1",
 });
 const path = require("path");
 const { exec } = require("child_process");
