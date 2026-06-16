@@ -15,6 +15,42 @@ const openai = new OpenAI({
 const path = require("path");
 const { exec } = require("child_process");
 
+async function heygenClient(script) {
+  const response = await fetch('https://api.heygen.com/v3/video-agents', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${process.env.HEYGEN_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ script })
+  });
+
+  if (!response.ok) {
+    throw new Error(`HeyGen API call failed: ${response.statusText}`);
+  }
+
+  const { session_id } = await response.json();
+  return session_id;
+}
+
+async function pollHeygenStatus(session_id) {
+  const statusUrl = `https://api.heygen.com/v3/video-agents/${session_id}/status`;
+  while (true) {
+    const response = await fetch(statusUrl, {
+      headers: {
+        'Authorization': `Bearer ${process.env.HEYGEN_API_KEY}`
+      }
+    });
+
+    const result = await response.json();
+    if (result.video_url) {
+      return result.video_url;
+    }
+
+    await new Promise(resolve => setTimeout(resolve, 5000));
+  }
+}
+
 fal.config({
   credentials: "602b8fa7-b0ec-4f82-9d2b-0be1f4d2f664:cdfb86d36a91862b2855dcdce4bba4fd"
 });
@@ -34,7 +70,7 @@ app.use(bodyParser.json());
 app.post('/generate-video', async (req, res) => {
   console.log("🎬 Launching Automated Multi-Track Commercial Production Engine...");
   try {
-    const { userTopic, image_url, brollProvider = 'fal' } = req.body; // Default to 'fal' if not specified
+    const { userTopic, image_url, brollProvider = 'fal', usePresenter = false } = req.body; // Default to 'fal' if not specified
     let voiceoverScript, brollPrompt1, brollPrompt2, brollPrompt3;
 
     try {
@@ -73,17 +109,26 @@ app.post('/generate-video', async (req, res) => {
       brollPrompt2 = result.brollPrompt2;
       brollPrompt3 = result.brollPrompt3;
       
-      // Generate audio using OpenAI TTS
-      console.log("🔊 Generating voiceover audio...");
-      const ttsResponse = await openai.audio.speech.create({
-        model: 'tts-1',
-        voice: req.body.voice || 'onyx',
-        input: voiceoverScript,
-      });
+      if (usePresenter) {
+        console.log("🎥 Generating presenter-led video using HeyGen...");
+        const session_id = await heygenClient(voiceoverScript);
+        const videoUrl = await pollHeygenStatus(session_id);
+        console.log("✅ Presenter-led video generated successfully.");
+        res.json({ videoUrl });
+        return;
+      } else {
+        // Generate audio using OpenAI TTS
+        console.log("🔊 Generating voiceover audio...");
+        const ttsResponse = await openai.audio.speech.create({
+          model: 'tts-1',
+          voice: req.body.voice || 'onyx',
+          input: voiceoverScript,
+        });
 
-      const audioBuffer = await ttsResponse.arrayBuffer();
-      fs.writeFileSync('openai_voice.mp3', Buffer.from(audioBuffer));
-      console.log("✅ Voiceover audio generated and saved as openai_voice.mp3.");
+        const audioBuffer = await ttsResponse.arrayBuffer();
+        fs.writeFileSync('openai_voice.mp3', Buffer.from(audioBuffer));
+        console.log("✅ Voiceover audio generated and saved as openai_voice.mp3.");
+      }
       
     } catch (error) {
       console.error("❌ OpenAI API call failed:", error.message || error);
