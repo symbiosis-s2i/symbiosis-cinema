@@ -114,6 +114,66 @@ app.post('/generate-video', async (req, res) => {
       console.log("💡 Discovered Base64 text wrapper. Converting text stream into raw binary image canvas...");
       imageBuffer = Buffer.from(imageContent.toString('utf8').trim(), 'base64');
       mimeType = 'image/png';
+    } else if (brollProvider === 'kling') {
+      console.log("🚀 Generating Cinematic B-Roll using Kling AI...");
+
+      const klingHeaders = {
+        'Authorization': `Bearer ${process.env.KLING_API_KEY}`,
+        'Content-Type': 'application/json'
+      };
+
+      const klingPayload = (promptText) => ({
+        model_name: 'kling-v1',
+        prompt: promptText,
+        duration: '5',
+        aspect_ratio: '16:9'
+      });
+
+      const klingUrls = await Promise.all([
+        fetch('https://api-singapore.klingai.com/v1/videos/text2video', {
+          method: 'POST',
+          headers: klingHeaders,
+          body: JSON.stringify(klingPayload(brollPrompt1))
+        }).then(res => res.json()),
+
+        fetch('https://api-singapore.klingai.com/v1/videos/text2video', {
+          method: 'POST',
+          headers: klingHeaders,
+          body: JSON.stringify(klingPayload(brollPrompt2))
+        }).then(res => res.json()),
+
+        fetch('https://api-singapore.klingai.com/v1/videos/text2video', {
+          method: 'POST',
+          headers: klingHeaders,
+          body: JSON.stringify(klingPayload(brollPrompt3))
+        }).then(res => res.json())
+      ]);
+
+      const taskIds = klingUrls.map(res => res.task_id);
+
+      const checkKlingStatus = async (taskId) => {
+        const response = await fetch(`https://api-singapore.klingai.com/v1/videos/text2video/tasks/${taskId}`, {
+          headers: klingHeaders
+        });
+        const result = await response.json();
+        return result.status === 'SUCCEEDED' ? result.output_url : null;
+      };
+
+      const pollKlingTasks = async () => {
+        const urls = [];
+        while (urls.length < 3) {
+          console.log("🔄 Polling Kling AI for task completion...");
+          const results = await Promise.all(taskIds.map(checkKlingStatus));
+          urls.push(...results.filter(url => url !== null));
+          if (urls.length < 3) await new Promise(resolve => setTimeout(resolve, 7000));
+        }
+        return urls;
+      };
+
+      const [bRoll1Url, bRoll2Url, bRoll3Url] = await pollKlingTasks();
+      bRoll1Res = { video: { url: bRoll1Url } };
+      bRoll2Res = { video: { url: bRoll2Url } };
+      bRoll3Res = { video: { url: bRoll3Url } };
     } else {
       imageBuffer = imageContent;
     }
