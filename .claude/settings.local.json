@@ -11,7 +11,8 @@
       "Bash(awk ' *)",
       "Bash(printenv ELEVENLABS_API_KEY)",
       "Bash(printenv FAL_KEY)",
-      "Bash(printenv OPENAI_API_KEY)"
+      "Bash(printenv OPENAI_API_KEY)",
+      "mcp__Claude_Code_Remote__send_later"
     ]
   },
   "hooks": {
