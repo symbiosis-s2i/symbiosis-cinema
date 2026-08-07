@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comp A · Playhead Dominant — Symbiosis OS</title>
+<link rel="stylesheet" href="comp.css">
+<style>
+  .fold { display: flex; flex-direction: column; min-height: 100vh; }
+  .fold__head {
+    padding: clamp(40px, 6vh, 84px) var(--gutter) clamp(26px, 3.5vh, 44px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 40px;
+    align-items: end;
+  }
+  .fold__head h1 { font-size: clamp(38px, 5.1vw, 76px); max-width: 17ch; }
+  .fold__actions { display: flex; gap: 12px; align-items: center; }
+
+  .stage { flex: 1; padding: 0 var(--gutter) clamp(28px, 4vh, 56px); display: flex; }
+  .stage .tl { flex: 1; display: flex; flex-direction: column; --lane-gutter: 176px; }
+  .stage .tl__lanes { flex: 1; display: flex; flex-direction: column; }
+  .stage .tl__lane { flex: 1; }
+
+  .next {
+    border-top: 1px solid var(--rule);
+    padding: clamp(40px, 6vh, 78px) var(--gutter);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: clamp(24px, 3vw, 54px);
+  }
+  .next h2 { grid-column: 1 / -1; font-size: clamp(24px, 2.6vw, 38px); font-weight: 480;
+             letter-spacing: -0.028em; color: var(--text); max-width: 22ch; line-height: 1.1; }
+  .next p { font-size: 14.5px; }
+  .next h3 { font-size: 15px; font-weight: 550; color: var(--text); margin-bottom: 7px; letter-spacing: -0.01em; }
+
+  @media (max-width: 900px) {
+    .fold__head { grid-template-columns: 1fr; gap: 26px; align-items: start; }
+    .stage .tl { --lane-gutter: 104px; --lane-h: 46px; }
+    .tl__block { font-size: 10px; }
+  }
+  @media (max-width: 560px) {
+    .stage .tl { --lane-gutter: 0; }
+    .tl__lane { grid-template-columns: 1fr; }
+    .tl__laneName { border-right: 0; border-bottom: 1px solid var(--rule-soft); padding: 8px 12px 4px; }
+    .tl__lane { min-height: 78px; }
+    .tl__ruler { padding-left: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <a class="nav__mark" href="#">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <circle cx="10" cy="10" r="8.25" stroke="#5B7BFF" stroke-width="1.5"/>
+      <circle cx="10" cy="10" r="3" fill="#5B7BFF"/>
+    </svg>
+    Symbiosis
+  </a>
+  <nav class="nav__links">
+    <a href="#">Cinema</a><a href="#">Платформа</a><a href="#">Защо Symbiosis</a><a href="#">Процесът</a><a href="#">Въпроси</a>
+  </nav>
+  <div class="nav__end">
+    <div class="nav__lang" role="group" aria-label="Език">
+      <button type="button" aria-pressed="true">BG</button>
+      <button type="button" aria-pressed="false">EN</button>
+    </div>
+    <a class="btn btn--sm" href="#">Заяви достъп</a>
+  </div>
+</header>
+
+<main class="fold">
+  <div class="fold__head">
+    <h1>Съдържание, което носи клиенти.<br><em>Система, която ги затваря.</em></h1>
+    <div class="fold__actions">
+      <a class="btn" href="#">Заяви достъп</a>
+      <a class="btn btn--ghost" href="#">Виж как работи</a>
+    </div>
+  </div>
+
+  <section class="stage" aria-label="Пътят на един клиент през Symbiosis">
+    <div class="tl">
+      <div class="tl__ruler" aria-hidden="true">
+        <div class="tl__tick tl__tick--major"><span>ПОН</span></div>
+        <div class="tl__tick"></div>
+        <div class="tl__tick tl__tick--major"><span>СРЯ</span></div>
+        <div class="tl__tick"></div>
+        <div class="tl__tick tl__tick--major"><span>ПЕТ</span></div>
+        <div class="tl__tick"></div>
+        <div class="tl__tick tl__tick--major"><span>НЕД</span></div>
+        <div class="tl__tick"></div>
+      </div>
+
+      <div class="tl__lanes" id="lanes">
+        <div class="tl__lane">
+          <div class="tl__laneName"><span class="tl__dot"></span>Съдържание</div>
+          <div class="tl__track">
+            <div class="tl__block" style="left:2%;width:17%" data-at="4">Видео · Анна</div>
+            <div class="tl__block tl__block--quiet" style="left:23%;width:12%" data-at="26">Публикация</div>
+          </div>
+        </div>
+        <div class="tl__lane">
+          <div class="tl__laneName"><span class="tl__dot"></span>Ангажираност</div>
+          <div class="tl__track">
+            <div class="tl__block tl__block--quiet" style="left:19%;width:9%" data-at="22">Гледане</div>
+            <div class="tl__block" style="left:31%;width:14%" data-at="36">Трето гледане</div>
+          </div>
+        </div>
+        <div class="tl__lane">
+          <div class="tl__laneName"><span class="tl__dot"></span>Клиент</div>
+          <div class="tl__track">
+            <div class="tl__block" style="left:44%;width:13%" data-at="50">Разпознат</div>
+          </div>
+        </div>
+        <div class="tl__lane">
+          <div class="tl__laneName"><span class="tl__dot"></span>Оферта</div>
+          <div class="tl__track">
+            <div class="tl__block" style="left:58%;width:16%" data-at="64">Изпратена</div>
+          </div>
+        </div>
+        <div class="tl__lane">
+          <div class="tl__laneName"><span class="tl__dot"></span>Приход</div>
+          <div class="tl__track">
+            <div class="tl__block tl__block--lit" style="left:77%;width:15%" data-at="84">Подписана</div>
+          </div>
+        </div>
+        <div class="tl__head" id="head" style="left:calc(var(--lane-gutter, 0px) + 4%)"></div>
+      </div>
+
+      <div class="scrub">
+        <span class="label">Превърти</span>
+        <input type="range" id="scrub" min="0" max="100" value="4" aria-label="Превърти през пътя на клиента">
+        <span class="scrub__read" id="read">Видео · Анна</span>
+        <span class="synthetic">примерни данни</span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<section class="next">
+  <h2>Едно движение надолу по пистите — не десет отделни програми.</h2>
+  <div>
+    <h3>Съдържанието помни</h3>
+    <p>Всяко гледане остава закачено за човека, който го е направил.</p>
+  </div>
+  <div>
+    <h3>Системата разпознава</h3>
+    <p>Когато този човек стане клиент, историята му вече е там.</p>
+  </div>
+  <div>
+    <h3>Офертата знае</h3>
+    <p>Какво е гледал, колко пъти и какво го е върнало обратно.</p>
+  </div>
+</section>
+
+<div class="compbar">
+  <strong>Comp A</strong> · Playhead Dominant — таймлайнът владее целия фолд
+  <span style="margin-left:auto">Композиция A от 3</span>
+</div>
+
+<script>
+  // Scrubbing moves one client story across all five lanes at once.
+  var scrub = document.getElementById('scrub');
+  var head  = document.getElementById('head');
+  var read  = document.getElementById('read');
+  var blocks = Array.prototype.slice.call(document.querySelectorAll('.tl__block'));
+
+  function gutter() {
+    return getComputedStyle(document.querySelector('.tl')).getPropertyValue('--lane-gutter').trim() || '0px';
+  }
+  function sync() {
+    var v = +scrub.value;
+    head.style.left = 'calc(' + gutter() + ' + ' + v + '%)';
+    var active = null;
+    blocks.forEach(function (b) {
+      var at = +b.dataset.at;
+      var on = at <= v;
+      b.classList.toggle('tl__block--lit', on && at > v - 26);
+      if (on) active = b;
+    });
+    read.textContent = active ? active.textContent : '—';
+  }
+  scrub.addEventListener('input', sync);
+  window.addEventListener('resize', sync);
+  sync();
+</script>
+</body>
+</html>

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0E1420">
+<title>Symbiosis — съдържание, което носи клиенти. Система, която ги затваря.</title>
+<meta name="description" content="Symbiosis свързва съдържанието, клиентите, офертите и приходите ви в една система. Продукт на Sell 2 Inspire.">
+<link rel="canonical" href="https://symbiosis.bg/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Symbiosis — съдържание, което носи клиенти. Система, която ги затваря.">
+<meta property="og:description" content="Едно място за съдържанието, клиентите, офертите и приходите ви, вместо десет програми, които не си говорят.">
+<meta property="og:locale" content="bg_BG">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="bg" href="https://symbiosis.bg/">
+<link rel="alternate" hreflang="en" href="https://symbiosis.bg/?lang=en">
+<link rel="preload" href="assets/fonts/geist/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 20 20%27%3E%3Crect width=%2720%27 height=%2720%27 fill=%27%230E1420%27/%3E%3Ccircle cx=%2710%27 cy=%2710%27 r=%278.25%27 fill=%27none%27 stroke=%27%235B7BFF%27 stroke-width=%271.5%27/%3E%3Ccircle cx=%2710%27 cy=%2710%27 r=%273%27 fill=%27%235B7BFF%27/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!--
+THESIS: One time axis, many tracks, one playhead — a service business read as a
+timeline. Refuses the bento grid of equal feature tiles this category ships.
+OWN-WORLD: Edit-suite instrument panel. Deep navy #0E1420 through three surface
+steps, one cobalt accent, 1px hairlines only, no shadows, 4px/2px corners, Geist
+Variable alone. Track lanes, rulers, scope readouts.
+STORY: A service owner sees one client story cross content → engagement → client
+→ revenue in a single scrub, understands the connection is real, requests access.
+FIRST VIEWPORT: 40/60 split. Headline and primary action left at 62px; timeline,
+three scopes and a live queue right. CTA sits in the left column, above the fold.
+FORM: Editorial Split, candidate 6 of the grounded list, seed key b08cf51f.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the
+finish review, the verdict, and DESIGN.md
+-->
+
+<a class="skip" href="#main" data-i="a11y.skip">Към съдържанието</a>
+
+<header class="hdr">
+  <div class="hdr__in">
+    <a class="mark" href="#top">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <circle cx="10" cy="10" r="8.25" stroke="#5B7BFF" stroke-width="1.5"/>
+        <circle cx="10" cy="10" r="3" fill="#5B7BFF"/>
+      </svg>
+      <span>Symbiosis</span>
+    </a>
+    <nav class="hdr__nav" id="nav" aria-label="Основна навигация" data-ia="aria-label:nav.aria">
+      <a href="#mechanic" data-i="nav.mechanic">Как работи</a>
+      <a href="#cinema" data-i="nav.cinema">Cinema</a>
+      <a href="#why" data-i="nav.why">Защо</a>
+      <a href="#modules" data-i="nav.modules">Какво включва</a>
+      <a href="#process" data-i="nav.process">Процесът</a>
+      <a href="#faq" data-i="nav.faq">Въпроси</a>
+    </nav>
+    <div class="hdr__end">
+      <div class="lang" role="group" aria-label="Език / Language" data-ia="aria-label:lang.aria">
+        <button type="button" data-lang="bg" aria-pressed="true">BG</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <a class="btn btn--sm" href="https://portal.sell2inspire.agency/book/free-consultation" target="_blank" rel="noopener" data-i="cta.primary">Заяви достъп</a>
+      <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="nav" aria-label="Меню" data-ia="aria-label:menu.aria">
+        <svg width="18" height="12" viewBox="0 0 18 12" fill="none" aria-hidden="true">
+          <path d="M0 1h18M0 6h18M0 11h18" stroke-width="1.4"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- 1 · hero ------------------------------------------------------------ -->
+<section class="hero" id="top">
+  <div class="hero__say">
+    <h1><span data-i="hero.h1a">Съдържание, което носи клиенти.</span> <em data-i="hero.h1b">Система, която ги затваря.</em></h1>
+    <p class="lede" data-i="hero.lede">Едно място за съдържанието, клиентите, офертите и приходите ви, вместо десет програми, които не си говорят.</p>
+    <div class="hero__acts">
+      <a class="btn" href="https://portal.sell2inspire.agency/book/free-consultation" target="_blank" rel="noopener" data-i="cta.primary">Заяви достъп</a>
+      <a class="btn btn--ghost" href="#cinema" data-i="cta.secondary">Виж Symbiosis Cinema</a>
+    </div>
+    <p class="hero__foot" data-i="hero.foot">Продукт на Sell 2 Inspire. Интерфейс на български и английски.</p>
+  </div>
+
+  <div class="hero__rig">
+    <section class="tl" id="tl" aria-label="Пътят на един клиент през Symbiosis" data-ia="aria-label:tl.aria">
+      <div class="tl__ruler" aria-hidden="true">
+        <div class="tl__tick tl__tick--major"><span data-i="day.mon">ПОН</span></div><div class="tl__tick"></div>
+        <div class="tl__tick tl__tick--major"><span data-i="day.wed">СРЯ</span></div><div class="tl__tick"></div>
+        <div class="tl__tick tl__tick--major"><span data-i="day.fri">ПЕТ</span></div><div class="tl__tick"></div>
+      </div>
+      <div class="tl__lanes">
+        <div class="tl__lane">
+          <div class="tl__laneName"><span class="tl__dot"></span><span data-i="lane.content">Съдържание</span></div>
+          <div class="tl__track"><div class="tl__block" style="left:3%;width:22%" data-at="6" data-i="tl.b1">Видео · Анна</div></div>
+        </div>
+        <div class="tl__lane">
+          <div class="tl__laneName"><span class="tl__dot"></span><span data-i="lane.engage">Ангажираност</span></div>
+          <div class="tl__track"><div class="tl__block tl__block--quiet" style="left:27%;width:18%" data-at="30" data-i="tl.b2">Трето гледане</div></div>
+        </div>
+        <div class="tl__lane">
+          <div class="tl__laneName"><span class="tl__dot"></span><span data-i="lane.client">Клиент</span></div>
+          <div class="tl__track"><div class="tl__block" style="left:48%;width:17%" data-at="52" data-i="tl.b3">Разпознат</div></div>
+        </div>
+        <div class="tl__lane">
+          <div class="tl__laneName"><span class="tl__dot"></span><span data-i="lane.revenue">Приход</span></div>
+          <div class="tl__track"><div class="tl__block" style="left:70%;width:22%" data-at="74" data-i="tl.b4">Подписана оферта</div></div>
+        </div>
+        <div class="tl__head" id="head" style="left:calc(132px + (100% - 132px) * 0.74)"></div>
+      </div>
+      <div class="scrub">
+        <span class="label" data-i="scrub.label">Превърти</span>
+        <input type="range" id="scrub" min="0" max="100" value="74" aria-label="Превърти през пътя на клиента" data-ia="aria-label:scrub.aria">
+        <span class="scrub__read" id="read">Подписана оферта</span>
+      </div>
+    </section>
+
+    <section class="scopes" aria-label="Показатели" data-ia="aria-label:scopes.aria">
+      <div class="scope">
+        <div class="scope__name" data-i="scope.views">Гледания</div>
+        <svg viewBox="0 0 120 38" fill="none" aria-hidden="true" preserveAspectRatio="none">
+          <path d="M0 31 L15 27 L30 29 L45 19 L60 22 L75 11 L90 15 L105 6 L120 9" stroke="#5B7BFF" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="scope">
+        <div class="scope__name" data-i="scope.hold">Задържане</div>
+        <svg viewBox="0 0 120 38" fill="none" aria-hidden="true" preserveAspectRatio="none">
+          <path d="M0 7 L12 10 L24 9 L36 16 L48 14 L60 21 L72 20 L84 26 L96 25 L108 30 L120 29" stroke="#8FA6FF" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="scope">
+        <div class="scope__name" data-i="scope.offers">Стигнали до оферта</div>
+        <svg viewBox="0 0 120 38" fill="none" aria-hidden="true" preserveAspectRatio="none">
+          <g stroke="#5B7BFF" stroke-width="5">
+            <path d="M8 34 L8 25"/><path d="M24 34 L24 20"/><path d="M40 34 L40 27"/>
+            <path d="M56 34 L56 15"/><path d="M72 34 L72 22"/><path d="M88 34 L88 10"/><path d="M104 34 L104 18"/>
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <section class="queue" aria-label="Какво следва" data-ia="aria-label:queue.aria">
+      <div class="queue__row"><span class="queue__dot"></span><span class="queue__what" data-i="q.1"><b>Мария Т.</b> гледа VSL-а трети път</span><span class="queue__when" data-i="q.1w">преди 2 ч.</span></div>
+      <div class="queue__row"><span class="queue__dot"></span><span class="queue__what" data-i="q.2"><b>Николай Д.</b> отвори офертата</span><span class="queue__when" data-i="q.2w">преди 5 ч.</span></div>
+      <div class="queue__row"><span class="queue__dot queue__dot--quiet"></span><span class="queue__what" data-i="q.3"><b>Студио Север</b> не е отговорило</span><span class="queue__when" data-i="q.3w">преди 3 дни</span></div>
+      <div class="queue__row"><span class="queue__dot queue__dot--quiet"></span><span class="queue__what" data-i="q.4"><b>Ива К.</b> се записа за разговор</span><span class="queue__when" data-i="q.4w">преди 4 дни</span></div>
+    </section>
+
+    <span class="synthetic" data-i="synthetic">примерни данни — не са резултати на клиент</span>
+  </div>
+</section>
+
+<!-- 2 · the mechanic ---------------------------------------------------- -->
+<section class="sec" id="mechanic">
+  <div class="wrap">
+    <div class="sec__head">
+      <h2 data-i="mech.title">Едно движение надолу по пистите, не десет отделни програми.</h2>
+      <p data-i="mech.sub">Всяко събитие остава закачено за човека, който го е направил. Затова следващата стъпка вече знае какво се е случило преди нея.</p>
+    </div>
+    <div class="cols">
+      <div>
+        <h3 data-i="mech.1t">Съдържанието помни</h3>
+        <p data-i="mech.1b">Всяко гледане остава свързано с човека зад него, не с анонимен брояч.</p>
+      </div>
+      <div>
+        <h3 data-i="mech.2t">Системата разпознава</h3>
+        <p data-i="mech.2b">Когато този човек стане клиент, историята му вече е в системата.</p>
+      </div>
+      <div>
+        <h3 data-i="mech.3t">Офертата знае</h3>
+        <p data-i="mech.3b">Какво е гледал, колко пъти и какво го е върнало обратно.</p>
+      </div>
+      <div>
+        <h3 data-i="mech.4t">Приходът се проследява</h3>
+        <p data-i="mech.4b">До кампанията, която го е започнала, без ръчно свързване на таблици.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 · cinema ---------------------------------------------------------- -->
+<section class="sec" id="cinema">
+  <div class="wrap">
+    <div class="sec__head">
+      <h2 data-i="cin.title">Едни и същи лица. Един и същ глас. Във всяко видео.</h2>
+      <p data-i="cin.sub">Symbiosis Cinema изгражда постоянни AI персонажи за бранда ви, и ги свързва обратно към клиентите, които ги гледат.</p>
+    </div>
+    <div class="people">
+      <article class="person">
+        <img src="assets/img/persona-anna.webp" alt="Анна — AI персонаж на Symbiosis Cinema, портрет в син студиен светлинен ключ" data-ia="alt:cin.p1alt" width="742" height="495" loading="lazy" decoding="async">
+        <div class="person__body">
+          <h3 data-i="cin.p1n">Анна</h3>
+          <div class="person__role" data-i="cin.p1r">B2B консултант</div>
+          <p data-i="cin.p1b">Топъл и експертен глас. За видеа, които спокойно обясняват и печелят доверие.</p>
+        </div>
+      </article>
+      <article class="person">
+        <img src="assets/img/persona-kaloyan.webp" alt="Калоян — AI персонаж на Symbiosis Cinema, портрет в син студиен светлинен ключ" data-ia="alt:cin.p2alt" width="742" height="1113" loading="lazy" decoding="async">
+        <div class="person__body">
+          <h3 data-i="cin.p2n">Калоян</h3>
+          <div class="person__role" data-i="cin.p2r">Технологичен основател</div>
+          <p data-i="cin.p2b">Уверен и ясен. За демо видеа, продуктови обяснения и сериозни B2B разговори.</p>
+        </div>
+      </article>
+      <article class="person">
+        <img src="assets/img/persona-katerina.webp" alt="Катерина — AI персонаж на Symbiosis Cinema, портрет в топъл контражур" data-ia="alt:cin.p3alt" width="742" height="1113" loading="lazy" decoding="async">
+        <div class="person__body">
+          <h3 data-i="cin.p3n">Катерина</h3>
+          <div class="person__role" data-i="cin.p3r">Лайфстайл бранд</div>
+          <p data-i="cin.p3b">Жива и артистична. За социални мрежи, реклами и съдържание, което вдъхновява.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 4 · sourced evidence ------------------------------------------------ -->
+<section class="sec" id="why">
+  <div class="wrap">
+    <div class="sec__head">
+      <h2 data-i="why.title">Инструментите, с които работите всеки ден, ви струват повече, отколкото осъзнавате.</h2>
+      <p data-i="why.sub">Ето какво показват независими изследвания за екипите, които управляват продажбите си в десет отделни програми.</p>
+    </div>
+    <div class="cites">
+      <div class="cite">
+        <div class="cite__fig">106</div>
+        <p><span data-i="why.1u">програми</span> — <span data-i="why.1b">средният бизнес плаща за 106 софтуерни абонамента, а повечето не се използват от целия екип.</span></p>
+        <a href="https://www.sellerscommerce.com/blog/saas-statistics/" target="_blank" rel="noopener">SellersCommerce, 2025</a>
+      </div>
+      <div class="cite">
+        <div class="cite__fig">1 200</div>
+        <p><span data-i="why.2u">превключвания на ден</span> — <span data-i="why.2b">средният служител сменя програма 1 200 пъти дневно, а всяко връщане към работата отнема време.</span></p>
+        <a href="https://hbr.org/2022/08/how-much-time-and-energy-do-we-waste-toggling-between-applications" target="_blank" rel="noopener">Harvard Business Review, 2022</a>
+      </div>
+      <div class="cite">
+        <div class="cite__fig">21×</div>
+        <p><span data-i="why.3u">повече сключени сделки</span> — <span data-i="why.3b">който отговори на нов клиент в първите пет минути, печели сделката многократно по-често.</span></p>
+        <a href="https://www.kixie.com/sales-blog/lead-response-time-statistics/" target="_blank" rel="noopener">Kixie Lead Response Study, 2025</a>
+      </div>
+      <div class="cite">
+        <div class="cite__fig">59</div>
+        <p><span data-i="why.4u">минути на ден</span> — <span data-i="why.4b">близо час от всеки работен ден минава в търсене: документ тук, таблица там, съобщение в трета програма.</span></p>
+        <a href="https://qatalog.com/blog/post/workgeist-report-22/" target="_blank" rel="noopener">Qatalog / Cornell, 2022</a>
+      </div>
+    </div>
+    <p class="small muted" style="margin-top:20px;max-width:56ch" data-i="why.foot">Това не е ваша грешка. Това е неизбежният резултат, когато програмите ви не си говорят.</p>
+  </div>
+</section>
+
+<!-- 5 · one system vs ten, as two timeline states --------------------- -->
+<section class="sec sec--tight" id="compare">
+  <div class="wrap">
+    <div class="sec__head">
+      <h2 data-i="vs.title">Десет отделни инструмента срещу една свързана система.</h2>
+      <p data-i="vs.sub">Едни и същи четири събития. Разликата е дали нещо ги свързва.</p>
+    </div>
+
+    <div class="states">
+      <div class="state">
+        <div class="state__head">
+          <span class="state__tag state__tag--now" data-i="vs.now">Както е сега</span>
+          <span class="small muted" data-i="vs.nowNote">Четири програми, четири записа, нищо помежду им.</span>
+        </div>
+        <div class="tl tl--broken">
+          <div class="tl__lanes">
+            <div class="tl__lane"><div class="tl__laneName"><span class="tl__dot tl__dot--off"></span><span data-i="lane.content">Съдържание</span></div>
+              <div class="tl__track"><div class="tl__block tl__block--quiet" style="left:3%;width:20%" data-i="vs.b1">Видео</div></div></div>
+            <div class="tl__lane"><div class="tl__laneName"><span class="tl__dot tl__dot--off"></span><span data-i="lane.engage">Ангажираност</span></div>
+              <div class="tl__track"><div class="tl__block tl__block--quiet" style="left:30%;width:18%" data-i="vs.b2">Брояч</div></div></div>
+            <div class="tl__lane"><div class="tl__laneName"><span class="tl__dot tl__dot--off"></span><span data-i="lane.client">Клиент</span></div>
+              <div class="tl__track"><div class="tl__block tl__block--quiet" style="left:54%;width:20%" data-i="vs.b3">Ред в таблица</div></div></div>
+            <div class="tl__lane"><div class="tl__laneName"><span class="tl__dot tl__dot--off"></span><span data-i="lane.revenue">Приход</span></div>
+              <div class="tl__track"><div class="tl__block tl__block--quiet" style="left:78%;width:19%" data-i="vs.b4">Фактура</div></div></div>
+          </div>
+        </div>
+        <ul class="state__notes state__notes--off">
+          <li data-i="vs.n2">Не знаете кое съдържание е довело кой клиент</li>
+          <li data-i="vs.n3">Пропуснати обаждания, защото никой не е видял сигнала</li>
+          <li data-i="vs.n4">Отделен абонамент за всяка AI функция</li>
+        </ul>
+      </div>
+
+      <div class="state">
+        <div class="state__head">
+          <span class="state__tag state__tag--sym" data-i="vs.sym">Със Symbiosis</span>
+          <span class="small muted" data-i="vs.symNote">Същите четири събития, закачени за един и същ човек.</span>
+        </div>
+        <div class="tl tl--joined">
+          <div class="tl__lanes">
+            <div class="tl__lane"><div class="tl__laneName"><span class="tl__dot"></span><span data-i="lane.content">Съдържание</span></div>
+              <div class="tl__track"><div class="tl__block" style="left:3%;width:20%" data-i="vs.b1">Видео</div><span class="joint" style="left:23%"></span></div></div>
+            <div class="tl__lane"><div class="tl__laneName"><span class="tl__dot"></span><span data-i="lane.engage">Ангажираност</span></div>
+              <div class="tl__track"><div class="tl__block" style="left:28%;width:22%" data-i="vs.b2j">Мария Т. · 3×</div><span class="joint" style="left:50%"></span></div></div>
+            <div class="tl__lane"><div class="tl__laneName"><span class="tl__dot"></span><span data-i="lane.client">Клиент</span></div>
+              <div class="tl__track"><div class="tl__block" style="left:55%;width:17%" data-i="vs.b3j">Мария Т.</div><span class="joint" style="left:72%"></span></div></div>
+            <div class="tl__lane"><div class="tl__laneName"><span class="tl__dot"></span><span data-i="lane.revenue">Приход</span></div>
+              <div class="tl__track"><div class="tl__block tl__block--lit" style="left:74%;width:24%" data-i="vs.b4j">Подписана</div></div></div>
+          </div>
+        </div>
+        <ul class="state__notes state__notes--on">
+          <li data-i="vs.s2">Всяко гледане е свързано с конкретен човек и сделка</li>
+          <li data-i="vs.s3">Системата ви казва кой чака отговор и защо точно сега</li>
+          <li data-i="vs.s4">AI е част от работния процес, не поредният абонамент</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 · modules --------------------------------------------------------- -->
+<section class="sec" id="modules">
+  <div class="wrap">
+    <div class="sec__head">
+      <h2 data-i="mod.title">Всичко, което ви трябва, подредено в пет групи.</h2>
+      <p data-i="mod.sub">Не е нужно да ги научите наведнъж. Отваряте това, което ви трябва днес.</p>
+    </div>
+    <div class="groups">
+      <details open>
+        <summary><span data-i="mod.g1">Клиенти и продажби</span><span class="label" data-i="mod.g1n">6</span></summary>
+        <div class="groups__body">
+          <span data-i="mod.g1a">CRM и фуния</span><span data-i="mod.g1b">Оферти</span><span data-i="mod.g1c">Ценообразуване</span>
+          <span data-i="mod.g1d">Проследяване на сделки</span><span data-i="mod.g1e">Календар и записване</span><span data-i="mod.g1f">Имейл машина</span>
+        </div>
+      </details>
+      <details>
+        <summary><span data-i="mod.g2">Съдържание и Cinema</span><span class="label" data-i="mod.g2n">6</span></summary>
+        <div class="groups__body">
+          <span data-i="mod.g2a">AI персонажи</span><span data-i="mod.g2b">Бранд профил</span><span data-i="mod.g2c">Видео кампании</span>
+          <span data-i="mod.g2d">Кампанийни страници</span><span data-i="mod.g2e">Публикуване</span><span data-i="mod.g2f">Одит за AI търсене</span>
+        </div>
+      </details>
+      <details>
+        <summary><span data-i="mod.g3">Доставка на проекти</span><span class="label" data-i="mod.g3n">5</span></summary>
+        <div class="groups__body">
+          <span data-i="mod.g3a">Брифове</span><span data-i="mod.g3b">Проекти и срокове</span><span data-i="mod.g3c">Натовареност на екипа</span>
+          <span data-i="mod.g3d">Клиентски портал</span><span data-i="mod.g3e">Задачи</span>
+        </div>
+      </details>
+      <details>
+        <summary><span data-i="mod.g4">Пари и отчетност</span><span class="label" data-i="mod.g4n">5</span></summary>
+        <div class="groups__body">
+          <span data-i="mod.g4a">Финанси по проект</span><span data-i="mod.g4b">Рентабилност</span><span data-i="mod.g4c">Приходи по източник</span>
+          <span data-i="mod.g4d">Отчети</span><span data-i="mod.g4e">Отчет по клиент</span>
+        </div>
+      </details>
+      <details>
+        <summary><span data-i="mod.g5">AI и автоматизации</span><span class="label" data-i="mod.g5n">6</span></summary>
+        <div class="groups__body">
+          <span data-i="mod.g5a">Препоръки за следваща стъпка</span><span data-i="mod.g5b">Автоматични оферти</span><span data-i="mod.g5c">Обобщения</span>
+          <span data-i="mod.g5d">Работни потоци</span><span data-i="mod.g5e">Асистент за писане</span><span data-i="mod.g5f">Вграден AI асистент</span>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- 7 · process, as a six-lane plan on one shared axis ------------------ -->
+<section class="sec" id="process">
+  <div class="wrap">
+    <div class="sec__head">
+      <h2 data-i="pr.title">От регистрация до първи резултати.</h2>
+      <p data-i="pr.sub">Не е нужно да разбирате от технологии. Водим ви през всяка стъпка.</p>
+    </div>
+    <div class="tl tl--plan" aria-label="Шест стъпки от регистрация до първи резултати" data-ia="aria-label:pr.aria">
+      <div class="tl__ruler" aria-hidden="true">
+        <span data-i="pr.axisStart">Начало</span>
+        <span data-i="pr.axisEnd">Първи резултати</span>
+      </div>
+      <div class="tl__lanes">
+        <div class="tl__lane">
+          <div class="tl__laneName"><span>01</span></div>
+          <div class="tl__track"><div class="tl__block tl__block--lit" style="left:0%;width:32%"><h3 data-i="pr.1t">Опознаване на бизнеса</h3><p data-i="pr.1b">Качвате сайта, документите, логата и снимките си. Symbiosis сглобява един общ профил на бранда.</p></div></div>
+        </div>
+        <div class="tl__lane">
+          <div class="tl__laneName"><span>02</span></div>
+          <div class="tl__track"><div class="tl__block" style="left:11%;width:32%"><h3 data-i="pr.2t">Персонажи и активи</h3><p data-i="pr.2b">Избирате лицата и гласа, с които брандът ви ще говори във видеата си.</p></div></div>
+        </div>
+        <div class="tl__lane">
+          <div class="tl__laneName"><span>03</span></div>
+          <div class="tl__track"><div class="tl__block" style="left:24%;width:34%"><h3 data-i="pr.3t">Първата кампания</h3><p data-i="pr.3b">Създавате съдържание и кампанийна страница, свързани с фунията ви от първия ден.</p></div></div>
+        </div>
+        <div class="tl__lane">
+          <div class="tl__laneName"><span>04</span></div>
+          <div class="tl__track"><div class="tl__block" style="left:40%;width:34%"><h3 data-i="pr.4t">Клиентите влизат</h3><p data-i="pr.4b">Всяко посещение и гледане се записва срещу конкретен човек, не срещу брояч.</p></div></div>
+        </div>
+        <div class="tl__lane">
+          <div class="tl__laneName"><span>05</span></div>
+          <div class="tl__track"><div class="tl__block" style="left:55%;width:33%"><h3 data-i="pr.5t">Системата подсказва</h3><p data-i="pr.5b">Виждате кой чака отговор, кой е готов за оферта и какво да кажете.</p></div></div>
+        </div>
+        <div class="tl__lane">
+          <div class="tl__laneName"><span>06</span></div>
+          <div class="tl__track"><div class="tl__block" style="left:68%;width:32%"><h3 data-i="pr.6t">Приходът се вижда</h3><p data-i="pr.6b">Проследявате всяка сключена сделка обратно до съдържанието, което я е започнало.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 · faq ------------------------------------------------------------- -->
+<section class="sec" id="faq">
+  <div class="wrap">
+    <div class="sec__head"><h2 data-i="faq.title">Въпроси, които получаваме най-често.</h2></div>
+    <div class="faq">
+      <details><summary data-i="faq.q1">Трябва ли да разбирам от технологии?</summary><div class="faq__a" data-i="faq.a1">Не. Ако можете да пишете имейл и да ползвате телефона си, Symbiosis е направена за вас. Настройката минава с водене стъпка по стъпка.</div></details>
+      <details><summary data-i="faq.q2">Ще загубя ли данните от сегашния си CRM?</summary><div class="faq__a" data-i="faq.a2">Не. Прехвърляме съществуващите ви клиенти и сделки при въвеждането. Старата ви система остава достъпна, докато не решите да я спрете.</div></details>
+      <details><summary data-i="faq.q3">Колко време отнема да тръгне?</summary><div class="faq__a" data-i="faq.a3">Зависи от това колко материали имате готови. Първата стъпка — профилът на бранда — обикновено се случва в рамките на едно работно заседание.</div></details>
+      <details><summary data-i="faq.q4">Трябват ли ми отделни абонаменти за AI?</summary><div class="faq__a" data-i="faq.a4">Не. AI функциите са част от системата. Няма отделни ключове, отделни сметки и отделни програми за поддържане.</div></details>
+      <details><summary data-i="faq.q5">На какъв език работи платформата?</summary><div class="faq__a" data-i="faq.a5">Интерфейсът е на български и английски. Съдържанието, което създавате, може да бъде и на двата.</div></details>
+      <details><summary data-i="faq.q6">Какво става с данните на клиентите ми?</summary><div class="faq__a" data-i="faq.a6">Обработват се съгласно GDPR. AI функциите работят върху вашите данни само с вашето съгласие и не ги споделят с други бизнеси.</div></details>
+      <details><summary data-i="faq.q7">Symbiosis замества ли счетоводителя ми?</summary><div class="faq__a" data-i="faq.a7">Не. Финансовата част показва рентабилност по проект за оперативни решения. Не е счетоводна, данъчна или правна услуга.</div></details>
+      <details><summary data-i="faq.q8">Какво включва „заяви достъп“?</summary><div class="faq__a" data-i="faq.a8">Разговор, в който минаваме през вашия случай и ви показваме системата с ваши материали. Без ангажимент и без предварително плащане.</div></details>
+    </div>
+  </div>
+</section>
+
+<!-- 9 · close ----------------------------------------------------------- -->
+<section class="close" id="request">
+  <div class="wrap">
+    <h2 data-i="close.title">Бизнесът ви може да работи с много по-малко хаос.</h2>
+    <p class="lede" style="margin-top:16px" data-i="close.sub">Заявете достъп и ще минем през вашия случай заедно, с вашите материали, не с демо данни.</p>
+    <div class="hero__acts">
+      <a class="btn" href="https://portal.sell2inspire.agency/book/free-consultation" target="_blank" rel="noopener" data-i="cta.primary">Заяви достъп</a>
+    </div>
+    <p class="small muted" style="margin-top:18px" data-i="close.foot">Без предварително плащане. Разговорът е с човек от екипа.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="ftr">
+  <div class="wrap ftr__in">
+    <a class="mark" href="#top">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <circle cx="10" cy="10" r="8.25" stroke="#5B7BFF" stroke-width="1.5"/><circle cx="10" cy="10" r="3" fill="#5B7BFF"/>
+      </svg>
+      <span>Symbiosis</span>
+    </a>
+    <nav aria-label="Долна навигация" data-ia="aria-label:ftrnav.aria">
+      <a href="#cinema" data-i="nav.cinema">Cinema</a>
+      <a href="#modules" data-i="nav.modules">Какво включва</a>
+      <a href="#process" data-i="nav.process">Процесът</a>
+      <a href="#faq" data-i="nav.faq">Въпроси</a>
+    </nav>
+    <span class="ftr__legal" data-i="ftr.legal">Продукт на Sell 2 Inspire</span>
+  </div>
+</footer>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebPage","@id":"https://symbiosis.bg/#page","name":"Symbiosis — съдържание, което носи клиенти. Система, която ги затваря.","inLanguage":"bg","description":"Symbiosis свързва съдържанието, клиентите, офертите и приходите ви в една система."},
+{"@type":"SoftwareApplication","name":"Symbiosis OS","applicationCategory":"BusinessApplication","operatingSystem":"Web","inLanguage":["bg","en"],"publisher":{"@type":"Organization","name":"Sell 2 Inspire","url":"https://www.sell2inspire.agency"}},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Трябва ли да разбирам от технологии?","acceptedAnswer":{"@type":"Answer","text":"Не. Ако можете да пишете имейл и да ползвате телефона си, Symbiosis е направена за вас."}},
+{"@type":"Question","name":"Ще загубя ли данните от сегашния си CRM?","acceptedAnswer":{"@type":"Answer","text":"Не. Прехвърляме съществуващите ви клиенти и сделки при въвеждането."}},
+{"@type":"Question","name":"Трябват ли ми отделни абонаменти за AI?","acceptedAnswer":{"@type":"Answer","text":"Не. AI функциите са част от системата, без отделни ключове и сметки."}},
+{"@type":"Question","name":"На какъв език работи платформата?","acceptedAnswer":{"@type":"Answer","text":"Интерфейсът е на български и английски."}},
+{"@type":"Question","name":"Symbiosis замества ли счетоводителя ми?","acceptedAnswer":{"@type":"Answer","text":"Не. Финансовата част показва рентабилност по проект за оперативни решения, не е счетоводна услуга."}}
+]}]}
+</script>
+
+<script src="i18n.js" defer></script>
+<script src="app.js" defer></script>
+</body>
+</html>
