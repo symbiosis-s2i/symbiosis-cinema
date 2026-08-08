@@ -207,6 +207,18 @@ rather than copying these forward.
 - **Capabilities listed must appear in PRODUCT.md's confirmed set.** Roadmap
   items and unbacked quantitative claims do not ship.
 
+## Deploying
+
+`site/` is the deploy root and contains only what the page loads — 980 KB,
+static, no build step. Full-resolution brand originals live in
+`brand-assets/` outside it; re-encode from those, not from the WebP, which
+is already at 2× its largest render.
+
+**The canonical URL, both `hreflang` alternates and `og:url` currently point
+at `https://symbiosis.bg/`, which is a placeholder.** It was never confirmed
+by the client. Set it to the real host before going live or the page will
+declare a canonical it does not own.
+
 ## Known open work
 
 Recorded so the next pass starts from truth rather than rediscovery:
