@@ -95,8 +95,13 @@ The load-bearing components. Everything else on the page defers to them.
   double height carrying timecode labels.
 - **`.tl__lane`** — a grid of `var(--lane-gutter) 1fr`. Minimum 48px.
 - **`.tl__block`** — 24px tall, absolutely positioned by percentage of the
-  track. **Sized to its own copy**: blocks are checked for clipping at 390 and
-  1440 in both languages, because Bulgarian runs ~10–15% longer than English.
+  track, with **`min-width: min-content` as a floor**. The percentage is the
+  intended width; the floor is what makes it safe. A block's label is a fixed
+  pixel length while its track is fluid, so percentages tuned at 1440 and 390
+  clipped across the entire band between them — up to 7 blocks at 1001px, in
+  both languages. Checking only the two ends of the range will not find this:
+  sweep it. Bulgarian runs ~10–15% longer than English, so both languages
+  need checking at every width.
 - **`.tl__head`** — the playhead. 1px, `--cobalt-lit`, square 9px head on the
   ruler. Travel is `calc(gutter + (100% − gutter) × v)` — the percentage is of
   the *track*, not the lane, or it runs past the right edge at 100.
@@ -201,9 +206,12 @@ Recorded so the next pass starts from truth rather than rediscovery:
    `.cites`, `.people`, two accordions, the close) are still equal-tile grids
    or plain type — that is the honest remaining gap.
 2. **Section rhythm is a single token** — see Spacing above.
-3. **Dead CSS:** `.panel`, `.panel__head`, `.chip` and `.split` are defined
-   and used zero times. (The `.step` / `.steps` / `.track` card-grid rules the
-   plan timeline replaced were deleted rather than left commented out.)
+3. **Dead CSS: none.** `.panel`, `.panel__head`, `.chip`, `.split` (never
+   shipped) and `.vs`, `.vs__side`, `.vs__side--now` (left behind when the
+   comparison became two timeline states) were all deleted, along with the
+   `.step` / `.steps` / `.track` card grid the plan timeline replaced. Of 78
+   classes defined, the only one absent from the markup is `.tl--stack`,
+   which `app.js` applies at runtime.
 4. **Booking is wired.** All three primary CTAs point directly at
    `https://portal.sell2inspire.agency/book/free-consultation`, confirmed by
    the client. No in-page `#request` anchors remain: one label, one
