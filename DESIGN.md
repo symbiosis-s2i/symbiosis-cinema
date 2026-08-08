@@ -104,7 +104,7 @@ The load-bearing components. Everything else on the page defers to them.
   sweep sampling 900/1000/1001 walked straight past it. Bulgarian runs
   ~10–15% longer than English, so both languages need checking at every width.
   **The floor costs the percentage its literal meaning.** Between roughly
-  880px and 1100px a short track can push a block to as much as 1.66× its
+  880px and 1100px a short track can push a block to as much as 1.69× its
   declared width, so `width` reads as intent rather than as extent on the
   axis in that band. Legibility was judged worth it; the trade is recorded
   here rather than left to be rediscovered.
@@ -119,7 +119,10 @@ The load-bearing components. Everything else on the page defers to them.
   the *track*, not the lane, or it runs past the right edge at 100.
 - **`.joint`** — a 1px drop with a 6px terminal dot, marking one event handing
   off to the next. This is the connection argument made visible, so the dot is
-  not optional decoration. **In `.tl--stack` the joint must be
+  not optional decoration — which is why it carries `z-index: 2`, under the
+  playhead's 3 but over the blocks. Without it, a right-anchored terminal
+  block whose left edge floats with its label painted over the dot entirely
+  in a ~30px Bulgarian band. **In `.tl--stack` the joint must be
   `position: relative`, never `static`:** it has to stay in the flex flow *and*
   remain a containing block, or the `::after` dot resolves against
   `.tl__lanes` and all of them land on one point outside the panel. A rule
@@ -222,7 +225,8 @@ Recorded so the next pass starts from truth rather than rediscovery:
    shipped), `.vs` / `.vs__side` / `.vs__side--now` (left behind when the
    comparison became two timeline states) and the `.step` / `.steps` /
    `.track` card grid the plan replaced are all deleted, along with an inert
-   `--lane-h` override, an empty media block and a duplicate padding rule.
+   `--lane-h` override, an empty media block, a duplicate padding rule and an
+   orphaned comment block.
    Of **79** classes defined, the only two absent from the markup are
    `.tl--stack` and `.hdr__nav--open`, both applied by `app.js` at runtime.
    `.split` survived one earlier cleanup because its base rule was deleted

@@ -410,14 +410,13 @@ a { color: var(--periwinkle); }
 .tl--joined { --lane-gutter: 124px; --lane-h: 42px; }
 .tl__dot--off { background: var(--text-3); }
 /* the joint is the whole argument: each event hands off to the next */
-.joint { position: absolute; top: 50%; width: 1px; height: 42px; background: var(--cobalt-lit); opacity: 0.55; }
+.joint { position: absolute; top: 50%; z-index: 2; width: 1px; height: 42px; background: var(--cobalt-lit); opacity: 0.55; }
 .joint::after {
   content: ''; position: absolute; bottom: -1px; left: -2.5px;
   width: 6px; height: 6px; border-radius: 50%; background: var(--cobalt-lit);
 }
 .state__notes { list-style: none; margin-top: 14px; display: flex; flex-direction: column; gap: 7px; }
-.state__notes li { font-size: 13.5px; padding-left: 17px; position: relative; color: var(--text-3); }
-.state__notes li { padding-left: 22px; }
+.state__notes li { font-size: 13.5px; padding-left: 22px; position: relative; color: var(--text-3); }
 .state__notes li::before {
   content: ''; position: absolute; left: 0; top: 5px; width: 11px; height: 11px;
   background-repeat: no-repeat; background-size: 11px 11px;
@@ -492,14 +491,6 @@ a { color: var(--periwinkle); }
 .tl--stack.tl--plan .tl__block { min-height: 0; top: auto; }
 .tl--stack.tl--plan .tl__laneName { padding: 12px 14px 0; justify-content: flex-start; }
 .tl--stack.tl--plan .tl__ruler { display: flex; }
-
-/* steps
-   The rail is the same ruler geometry as the timeline: one hairline,
-   seated markers, a joint from each marker down into its card. */
-/* Each card seats its own marker on the rule above it, so the geometry
-   holds at three columns, two, or one. */
-
-/* the joint: a short run from the card's own seated marker into its number */
 
 /* faq */
 .faq { border: 1px solid var(--rule); border-radius: var(--r); background: var(--panel); overflow: hidden; max-width: 900px; }
