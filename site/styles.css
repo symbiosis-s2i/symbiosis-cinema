@@ -309,7 +309,7 @@ a { color: var(--periwinkle); }
 .tl--stack .tl__lane { grid-template-columns: 1fr; min-height: 0; border-bottom: 1px solid var(--rule-soft); }
 .tl--stack .tl__laneName { border-right: 0; padding: 12px 14px 0; font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--text-3); }
 .tl--stack .tl__track { position: static; display: flex; flex-direction: column; gap: 6px; padding: 8px 14px 13px; }
-.tl--stack .tl__block { position: static; transform: none; height: auto; min-height: 32px; width: auto !important; left: auto !important; white-space: normal; }
+.tl--stack .tl__block { position: static; transform: none; height: auto; min-height: 32px; width: auto !important; left: auto !important; right: auto !important; white-space: normal; }
 .tl--stack .tl__head { display: none; }
 /* The joint stops being an absolute overlay and joins the flow: a short
    vertical drop between one event and the next. Left absolute it reparents
@@ -539,14 +539,6 @@ a { color: var(--periwinkle); }
   .hero { grid-template-columns: 1fr; }
   .hero__say { border-right: 0; border-bottom: 1px solid var(--rule); }
   .hero__rig { padding: var(--gutter); }
-  .split { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 1000px) {
-  .tl--plan { --lane-h: 116px; }
-}
-
-@media (max-width: 640px) {
 }
 
 @media (max-width: 900px) {

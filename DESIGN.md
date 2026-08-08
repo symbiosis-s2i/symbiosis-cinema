@@ -56,7 +56,7 @@ There is no second family. No monospace, no serif. Measured at 1440px:
 | h2 | 41.76px (`clamp(27px, 2.9vw, 44px)`) | 480 | −0.028em |
 | h3 | 19.44px (`clamp(18px, 1.35vw, 21px)`) | 520 | −0.018em |
 | Body / lede | 15.84px | 400 | −0.008em |
-| Button | 13.5px | 530 | −0.005em |
+| Button | 14.5px (`.btn--sm` 13.5px) | 530 | −0.005em |
 | Label | 11px | 550 | **+0.1em**, uppercase |
 
 Three tiers, deliberately: display, section head, and interface. The uppercase
@@ -100,8 +100,20 @@ The load-bearing components. Everything else on the page defers to them.
   pixel length while its track is fluid, so percentages tuned at 1440 and 390
   clipped across the entire band between them — up to 7 blocks at 1001px, in
   both languages. Checking only the two ends of the range will not find this:
-  sweep it. Bulgarian runs ~10–15% longer than English, so both languages
-  need checking at every width.
+  sweep it at fine resolution: the band that clipped opened at 901px and a
+  sweep sampling 900/1000/1001 walked straight past it. Bulgarian runs
+  ~10–15% longer than English, so both languages need checking at every width.
+  **The floor costs the percentage its literal meaning.** Between roughly
+  880px and 1100px a short track can push a block to as much as 1.66× its
+  declared width, so `width` reads as intent rather than as extent on the
+  axis in that band. Legibility was judged worth it; the trade is recorded
+  here rather than left to be rediscovered.
+  **The terminal block of each timeline is anchored with `right:`, not
+  `left:`.** Its meaning is that the event ends at the end of the axis, and
+  right-anchoring lets the min-content floor grow leftward into free track.
+  Left-anchored, the floor pushed it into the panel wall, where
+  `.tl { overflow: hidden }` sheared its border and last glyph between 901
+  and 986px — the same defect the floor was added to fix, moved one box out.
 - **`.tl__head`** — the playhead. 1px, `--cobalt-lit`, square 9px head on the
   ruler. Travel is `calc(gutter + (100% − gutter) × v)` — the percentage is of
   the *track*, not the lane, or it runs past the right edge at 100.
@@ -206,12 +218,15 @@ Recorded so the next pass starts from truth rather than rediscovery:
    `.cites`, `.people`, two accordions, the close) are still equal-tile grids
    or plain type — that is the honest remaining gap.
 2. **Section rhythm is a single token** — see Spacing above.
-3. **Dead CSS: none.** `.panel`, `.panel__head`, `.chip`, `.split` (never
-   shipped) and `.vs`, `.vs__side`, `.vs__side--now` (left behind when the
-   comparison became two timeline states) were all deleted, along with the
-   `.step` / `.steps` / `.track` card grid the plan timeline replaced. Of 78
-   classes defined, the only one absent from the markup is `.tl--stack`,
-   which `app.js` applies at runtime.
+3. **Dead CSS: none.** `.panel`, `.panel__head`, `.chip` and `.split` (never
+   shipped), `.vs` / `.vs__side` / `.vs__side--now` (left behind when the
+   comparison became two timeline states) and the `.step` / `.steps` /
+   `.track` card grid the plan replaced are all deleted, along with an inert
+   `--lane-h` override, an empty media block and a duplicate padding rule.
+   Of **79** classes defined, the only two absent from the markup are
+   `.tl--stack` and `.hdr__nav--open`, both applied by `app.js` at runtime.
+   `.split` survived one earlier cleanup because its base rule was deleted
+   and its media-query override was not — check inside media blocks too.
 4. **Booking is wired.** All three primary CTAs point directly at
    `https://portal.sell2inspire.agency/book/free-consultation`, confirmed by
    the client. No in-page `#request` anchors remain: one label, one
