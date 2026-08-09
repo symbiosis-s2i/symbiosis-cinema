@@ -1,248 +1,256 @@
-# Design
+# Symbiosis landing page — design record
 
-<!-- impeccable:design-schema 1 -->
+Records what the page is, where the design came from, what the engineering
+pass changed and why, and what is still open. Every number here was measured
+in a browser against the built page, not estimated.
 
-Recorded from the built surface at `site/`, not from intention. Every value
-below was measured in the rendered page at 1440px unless stated otherwise.
+---
 
-**World:** The Edit Suite. Direction seed `b08cf51f`, candidate 6, approved
-composition `.impeccable/mocks/hero-b.html`.
+## 1. Provenance
 
-**Thesis:** One time axis, many tracks, one playhead — a service business read
-as a timeline. It refuses the grid of equal feature tiles this category ships,
-so hierarchy comes from the form rather than being applied on top of it.
+The design was authored in **Claude Design** and chosen there. This repo
+holds the port: the same design, made into a page that can be deployed,
+indexed, read by a screen reader, and opened on a phone.
 
-## Colors
+The split is deliberate and worth stating plainly, because it is the reason
+the page looks the way it does:
 
-Three surface steps carry all depth. There are no shadows anywhere in the
-built page — `box-shadow` computes to `none` on every element.
+- **Claude Design decided how it looks.** Composition, palette, type scale,
+  the hero, the section rhythm, the motion. None of that was re-decided
+  here.
+- **This pass decided whether it works.** Fonts that carry the weights and
+  scripts they claim, contrast that passes, controls a thumb can hit,
+  breakpoints that hold, a page that survives JavaScript being off, and a
+  transfer size a phone on mobile data will tolerate.
 
-| Token | Value | Role |
-|---|---|---|
-| `--ground` | `#0E1420` | Page ground. Deep navy, deliberately not neutral near-black |
-| `--panel` | `#141B2A` | Panels, cards, timeline bodies |
-| `--panel-lit` | `#1A2233` | Rulers, scrub bars, hover, the "as it is now" column |
-| `--cobalt` | `#2B4EE6` | Primary action only |
-| `--cobalt-lit` | `#5B7BFF` | Playhead, lit block, joints, focus ring, hover |
-| `--periwinkle` | `#8FA6FF` | Secondary emphasis, headline second clause, links |
-| `--text` | `#E8ECF4` | Headings and primary text — 16.1:1 on ground |
-| `--text-2` | `#A8B4CC` | Body — 8.85:1 |
-| `--text-3` | `#7E8CA8` | Labels, captions, quiet states — 5.41:1 |
-| `--rule` | `rgba(201,211,232,0.14)` | Structural divisions between panels |
-| `--rule-soft` | `rgba(201,211,232,0.07)` | Divisions inside a panel |
+Layout still lives in the 1,376 inline `style` attributes the design shipped
+with. Rewriting them into classes would be a redesign wearing a refactor's
+clothes, and would put the thing that was approved at risk. They stay.
 
-**Colour strategy: Restrained.** A neutral ramp plus exactly one accent. The
-cobalt is taken from the Symbiosis logo mark. Nothing else on the page is
-saturated. Every text step clears WCAG AA against every surface it sits on:
-**0 failures across 210 visible text nodes** at 1440px, each foreground
-composited over the first fully opaque ancestor background.
+---
 
-Dark was chosen from the use scene, not the category: the visitor is a service
-owner evaluating software mid-afternoon, and the instrument-panel world is
-legible under office light without the glare a light ground would give a page
-this dense with rules.
+## 2. The design
 
-## Typography
+**Ground** — neutral near-black. `#08080A` at the page level, `#0C0C11` for
+panels, `#101016`–`#101018` for lit states. Not navy: the neutral reads
+colder and lets the accents carry all of the hue.
 
-**One face: Geist Variable**, self-hosted, SIL OFL v1.7.2, weights 100–900 in a
-single 68 KB file. It carries 134 Cyrillic codepoints and covers Bulgarian
-completely — the reason it displaced Instrument Serif, which carries zero.
+**Accents** — a signal palette rather than a single brand colour.
 
-There is no second family. No monospace, no serif. Measured at 1440px:
-
-| Role | Size | Weight | Tracking |
-|---|---|---|---|
-| h1 | 55.44px (`clamp(34px, 3.85vw, 62px)`) | 480 | −0.032em |
-| h2 | 41.76px (`clamp(27px, 2.9vw, 44px)`) | 480 | −0.028em |
-| h3 | 19.44px (`clamp(18px, 1.35vw, 21px)`) | 520 | −0.018em |
-| Body / lede | 15.84px | 400 | −0.008em |
-| Button | 14.5px (`.btn--sm` 13.5px) | 530 | −0.005em |
-| Label | 11px | 550 | **+0.1em**, uppercase |
-
-Three tiers, deliberately: display, section head, and interface. The uppercase
-label is the only positive-tracked style and is reserved for lane names, field
-names and timeline day markers — never for a kicker above a heading.
-
-**Weights are non-integer on purpose.** 480 and 520 and 530 sit between Geist's
-named cuts and are only reachable because the variable font is used as a
-variable font. Rounding them to 400/500/600 changes the page's voice.
-
-### Corner and line language
-
-| | Value |
+| Token | Use |
 |---|---|
-| Panels, buttons | `4px` |
-| Chips, blocks, inner controls, timeline events | `2px` |
-| Lane dots, queue dots | `50%` |
-| Borders | **`1px` only** — no other width exists in the built page |
-| Shadows | **none** |
+| `#A9BCFF` periwinkle | second headline line, active rails, primary emphasis |
+| `#8AA6FF` | links, borders on active cards |
+| `#5B7BFF` cobalt | the hero glow's core, progress bar start |
+| `#7A4DFF` violet | glow secondary, score dial sweep |
+| `#FF9B4A` peach | the AI-search track, score dial start |
+| `#7DFF9E` mint | positive deltas |
 
-Panels subdivide with internal hairlines rather than gaps. Cards never nest —
-a panel's children are separated by `--rule-soft`, not wrapped in their own
-borders.
+**Text ladder** on `#0C0C11`, with measured contrast:
 
-## Components
+| Colour | Ratio | Role |
+|---|---|---|
+| `#F6F6F9` | 18.09 | headings |
+| `#C4C4D2` | 11.31 | emphasis body |
+| `#A9A9BA` | 8.43 | body |
+| `#8F8FA3` | 6.16 | secondary |
+| `#88889A` | 5.61 | tertiary |
+| `#808092` | 5.04 | quaternary |
+| `#7A7A8B` | 4.63 | quiet labels, small print |
 
-### Timeline primitives
+The bottom three replaced `#6E6E80` (3.91), `#5C5C6E` (2.98) and `#4D4D5E`
+(2.36), which between them appeared 180 times, all of them as `color`. The
+ordering of the ladder is preserved, so nothing changed rank.
 
-The load-bearing components. Everything else on the page defers to them.
+**Type** — Inter for everything structural, JetBrains Mono for eyebrows,
+labels and readouts, Playfair Display italic for exactly one line: the third
+line of the `<h1>`, gradient-filled, in both languages.
 
-- **`.tl`** — the timeline shell. Declares `--lane-gutter: 132px`, the fixed
-  width of the lane-name column. This must stay declared: consumers in
-  markup and JS previously fell back to `0px` while CSS fell back to `132px`,
-  which put the playhead inside the label column at every scrub value.
-- **`.tl__ruler`** — 30px, `--panel-lit`, hairline ticks, major ticks at
-  double height carrying timecode labels.
-- **`.tl__lane`** — a grid of `var(--lane-gutter) 1fr`. Minimum 48px.
-- **`.tl__block`** — 24px tall, absolutely positioned by percentage of the
-  track, with **`min-width: min-content` as a floor**. The percentage is the
-  intended width; the floor is what makes it safe. A block's label is a fixed
-  pixel length while its track is fluid, so percentages tuned at 1440 and 390
-  clipped across the entire band between them — up to 7 blocks at 1001px, in
-  both languages. Checking only the two ends of the range will not find this:
-  sweep it at fine resolution: the band that clipped opened at 901px and a
-  sweep sampling 900/1000/1001 walked straight past it. Bulgarian runs
-  ~10–15% longer than English, so both languages need checking at every width.
-  **The floor costs the percentage its literal meaning.** Between roughly
-  880px and 1100px a short track can push a block to as much as 1.69× its
-  declared width, so `width` reads as intent rather than as extent on the
-  axis in that band. Legibility was judged worth it; the trade is recorded
-  here rather than left to be rediscovered.
-  **The terminal block of each timeline is anchored with `right:`, not
-  `left:`.** Its meaning is that the event ends at the end of the axis, and
-  right-anchoring lets the min-content floor grow leftward into free track.
-  Left-anchored, the floor pushed it into the panel wall, where
-  `.tl { overflow: hidden }` sheared its border and last glyph between 901
-  and 986px — the same defect the floor was added to fix, moved one box out.
-- **`.tl__head`** — the playhead. 1px, `--cobalt-lit`, square 9px head on the
-  ruler. Travel is `calc(gutter + (100% − gutter) × v)` — the percentage is of
-  the *track*, not the lane, or it runs past the right edge at 100.
-- **`.joint`** — a 1px drop with a 6px terminal dot, marking one event handing
-  off to the next. This is the connection argument made visible, so the dot is
-  not optional decoration — which is why it carries `z-index: 2`, under the
-  playhead's 3 but over the blocks. Without it, a right-anchored terminal
-  block whose left edge floats with its label painted over the dot entirely
-  in a ~30px Bulgarian band. **In `.tl--stack` the joint must be
-  `position: relative`, never `static`:** it has to stay in the flex flow *and*
-  remain a containing block, or the `::after` dot resolves against
-  `.tl__lanes` and all of them land on one point outside the panel. A rule
-  that merely exists for the stacked case is not the same as one that
-  resolves — that error passed every automated check twice.
-- **`.tl--plan`** — the six-lane variant used by `#process`. Lane gutter drops
-  to 46px (it carries only a step number), blocks grow to hold a heading and a
-  paragraph, and each block's `left` encodes its place in the sequence with
-  deliberate overlap, the way a real plan reads. The axis carries no time
-  units, because none are documented in PRODUCT.md; its two ruler labels name
-  the ends of the sequence, not durations.
-  **Its blocks are `position: relative`, and `.tl--plan` sets no `--lane-h`.**
-  Block height is content-driven and varies with viewport width and language,
-  so a fixed lane height is a guess no set of breakpoints can track: the first
-  build of this variant pinned 92px/116px and the blocks occluded each other
-  from 641–1220px while card 06 was clipped by `.tl { overflow: hidden }` at
-  every desktop width including 1440. Relative positioning keeps the block in
-  flow so the lane grows to meet it, while `left` still does the horizontal
-  work. Measuring x-positions alone will not catch this — measure vertical
-  fit across the range, in both languages.
-- **`.tl--stack`** — below 640px every timeline becomes a vertical sequence.
-  A horizontal timeline squeezed onto a phone clips its labels; this is not
-  optional and applies to **every** `.tl`, not just the hero's.
+**Hero** — centred. Three overlapping radial gradients as a light source,
+an 88px grid under a radial mask, an eyebrow badge, a three-line headline
+at `clamp(2.5rem, 7.2vw, 6.1rem)` with `line-height: .99`, then the lede and
+two pill CTAs, then a masked marquee of persona frames.
 
-**Exactly one block is lit at a time** — the one under the playhead. Lighting
-every passed block floods the instrument and loses the image of the head
-landing on a single event.
+**22 sections**: hero, AI search, Cinema, why, transformation, proof,
+platform, features, industries, process, modules, AI, comparison, FAQ,
+close.
 
-## Spacing
+---
 
-`--section-y: clamp(64px, 8vw, 128px)`, computing to 115.2px at 1440. Measured
-section padding-tops in the built page: `115.2px`, `129.6px`, `79.2px`, `0px`.
+## 3. What the pass changed
 
-**Known weakness, recorded rather than hidden:** six of nine sections share the
-same 115.2px and every section background is `transparent`. The page has one
-rhythm token where it should have a range. The finish reviewer ruled this
-non-blocking but flagged that it compounds with the tile-grid problem below.
+### 3.1 Fonts
 
-## Motion
+The reference declared Inter at five weights — 300, 400, 500, 600, 700 —
+and pointed **all five at the same static Regular file**. Every heading
+above 400 was being drawn by the browser's synthetic bold. JetBrains Mono
+had the same defect across its two declared weights.
 
-Four durations exist: `0.12s` (playhead travel), `0.2s` (hover, colour),
-`0.3s` (block state), `0.25s` (disclosure markers). Easing is
-`cubic-bezier(0.16, 1, 0.3, 1)` — exponential ease-out from an already-visible
-default.
+Replaced with real variable faces carrying a genuine `wght` axis, subset to
+the 200 characters both dictionaries actually use.
 
-**One authored moment: the playhead scrub.** A native `input[type=range]`, so
-it is keyboard-operable without custom handling — `Home`, `End` and arrows all
-work. There are no scroll-reveal animations on this page; nothing is hidden
-waiting to appear.
+`Instrument Serif`, which the design named for the hero's third line,
+**contains zero Cyrillic glyphs** — confirmed with fontTools against the
+font binary and again in the browser via `CSS.getPlatformFontsForNode`. Its
+`unicode-range` declarations did not even include Cyrillic, so the browser
+never attempted it and fell straight through to whatever serif the visitor's
+OS happened to ship. On the built page that line now reports **Playfair
+Display × 15 glyphs** in Bulgarian and × 13 in English.
 
-`prefers-reduced-motion: reduce` collapses every duration to 0.01ms.
+Twenty-one characters the design uses as icons — `→ ↗ ≈ ≡ ≤ ≥ ⌘ ▢ ▤ ▲ ▶ ◆
+◈ ◉ ◧ ◷ ✎ ✓ ✕ ✦ ✺` — exist in **neither Inter nor JetBrains Mono**. They
+were being resolved by the platform, which on iOS and Android turns several
+of them into colour emoji. A 21-glyph subset of DejaVu Sans (`SymIcons`,
+2,196 bytes) now sits in both font stacks and pins them.
 
-## Accessibility
+| | Before | After |
+|---|---|---|
+| Files | 17 | 7 |
+| Bytes | 322,272 | 88,204 |
+| `@font-face` blocks | 51 | 7 |
+| Real weight axes | 0 | 3 |
+| Cyrillic in the serif | none | full |
 
-Binding at WCAG 2.1 AA, and met — measured at 1440px and 390px, in both
-languages: 0 contrast failures across 210 visible text nodes; 0 of 37
-interactive elements under 44×44; one `h1`; no skipped heading levels; no
-images without `alt`; no horizontal overflow.
+### 3.2 The component runtime
 
-Both numbers above were wrong in the first draft of this file — it claimed
-738 text nodes (the count from the page this replaced) and a clean target
-sweep that had actually been measured against a laxer width threshold, while
-three controls sat under 44px wide. A wrong number here is worse than a
-visual defect, because later passes cite this section as clearance. Re-measure
-rather than copying these forward.
+| Removed | Replaced by |
+|---|---|
+| React 18.3.1 UMD, 142,586 B | — |
+| Claude Design runtime, 69,150 B | — |
+| 118 `style-hover` attributes | 20 deduplicated CSS rules, each paired with `:focus-visible` |
+| 12 `sc-camel-on-click="{{ fn }}"` | `data-act` plus real listeners |
+| `sc-camel-view-box` | `viewBox` |
+| A `DCLogic` class in a `text/x-dc` script | `app.js`, a plain IIFE |
 
-- **Focus is defined, not inherited.** `:focus-visible` draws a 2px
-  `--cobalt-lit` outline at 3px offset. Never rely on the user agent.
-- **`scroll-padding-top: 76px`** so deep links clear the sticky header.
-- **The mobile menu closes on Escape** and returns focus to its trigger;
-  `aria-expanded` and `aria-controls` are both set.
-- **Bilingual includes the accessibility layer.** `data-i` swaps text;
-  `data-ia="attr:key"` swaps `aria-label` and `alt`. A page whose visible copy
-  translates but whose screen-reader layer does not is monolingual.
+Behaviour is a straight port: same easing curves, same IntersectionObserver
+thresholds and root margins, same durations.
 
-## Content and claims
+Two things were added rather than ported. `willChange` is now released 1.2s
+after each reveal completes — the original set it on all 110 revealed
+elements and never cleared it, which keeps 110 compositor layers alive for
+the life of the page. And every observer-driven effect now has a
+reduced-motion path that paints the final state directly instead of
+returning early and leaving the dial reading zero.
 
-- **No first-party performance metrics.** `PRODUCT.md` records that none are
-  documented. Third-party statistics carry a named, linked source.
-- **Demonstration data is labelled** `примерни данни — не са резултати на
-  клиент` in-page, in the same viewport as the data it describes.
-- **Capabilities listed must appear in PRODUCT.md's confirmed set.** Roadmap
-  items and unbacked quantitative claims do not ship.
+### 3.3 Responsive behaviour
 
-## Deploying
+The reference had **no CSS media queries at all** — the runtime forbids
+stylesheets, so its only breakpoint was a `resize` listener toggling
+`display` at 1180px. Two consequences: the header could not collapse until
+JavaScript ran, and nothing else adapted except through `clamp()`.
 
-`site/` is the deploy root and contains only what the page loads — 980 KB,
-static, no build step. Full-resolution brand originals live in
-`brand-assets/` outside it; re-encode from those, not from the WebP, which
-is already at 2× its largest render.
+Those toggles are media queries now. Sweeping 24 widths from 320px to 1920px
+in both languages then surfaced a real defect:
 
-The canonical URL, both `hreflang` alternates and `og:url` point at
-`https://symbiosis.sell2inspire.agency/`, confirmed by the client as the
-live host.
+> **The mobile menu button was off the edge of the screen.** Below about
+> 560px the header's right-hand cluster — language tabs, booking button,
+> menu button — needs 273px beside a 118px wordmark. At 390px the row ran to
+> **425px**, putting the menu button 35px past the viewport. Because `body`
+> carries `overflow-x: hidden` there was no scrollbar to reveal it: on a
+> phone the entire navigation was simply unreachable.
 
-## Known open work
+Fixed by dropping the header's booking button below 560px — the one of the
+three that is already repeated inside the menu panel and again in the hero.
 
-Recorded so the next pass starts from truth rather than rediscovery:
+That bug is the argument for this pass in one line. It is invisible in a
+preview at any single width, invisible in the markup, and invisible to a
+check that trusts `scrollWidth`, because the body's overflow guard hides it.
+It took an explicit per-element sweep to find. My own first overflow check
+missed it too, for exactly that reason — it treated the body guard as
+legitimate clipping. The check was wrong before the page was.
 
-1. **The thesis governs 3 of 9 sections.** The hero, `#compare` and
-   `#process` all position items against a shared axis, so a block's `left`
-   means something because another block sits elsewhere on the same measure.
-   `#process` earned this: it was a card grid with a marker in each corner,
-   which failed the test *remove the markers and the layout is unchanged*.
-   It is now a six-lane plan whose blocks step right monotonically from
-   "Начало" to "Първи резултати". The remaining six sections (`.cols`,
-   `.cites`, `.people`, two accordions, the close) are still equal-tile grids
-   or plain type — that is the honest remaining gap.
-2. **Section rhythm is a single token** — see Spacing above.
-3. **Dead CSS: none.** `.panel`, `.panel__head`, `.chip` and `.split` (never
-   shipped), `.vs` / `.vs__side` / `.vs__side--now` (left behind when the
-   comparison became two timeline states) and the `.step` / `.steps` /
-   `.track` card grid the plan replaced are all deleted, along with an inert
-   `--lane-h` override, an empty media block, a duplicate padding rule and an
-   orphaned comment block.
-   Of **79** classes defined, the only two absent from the markup are
-   `.tl--stack` and `.hdr__nav--open`, both applied by `app.js` at runtime.
-   `.split` survived one earlier cleanup because its base rule was deleted
-   and its media-query override was not — check inside media blocks too.
-4. **Booking is wired.** All three primary CTAs point directly at
-   `https://portal.sell2inspire.agency/book/free-consultation`, confirmed by
-   the client. No in-page `#request` anchors remain: one label, one
-   destination, one behaviour.
+### 3.4 Accessibility
+
+- **Contrast**: 180 declarations across three grey steps raised to AA.
+  Measured **0 failures** at 1440 / 1024 / 768 / 390.
+- **Focus**: the reference had **zero** `:focus` rules. There is now a
+  visible ring, and all 20 hover states are paired to `:focus-visible` so a
+  keyboard reaches what a mouse reaches.
+- **Targets**: every control cleared 24×24 (WCAG 2.5.8 AA) already. On
+  coarse pointers they now clear 44×44 (2.5.5 AAA). Measured **0 under
+  44×44** on a simulated touch device. Citation links are deliberately
+  excluded — they are quiet small print, and enlarging them would distort a
+  block the design wants recessive.
+- **Skip link**: added; it was absent.
+- **Translated attributes**: `alt` text and `aria-label`s now swap with the
+  language. Previously an English visitor's screen reader still read the
+  Bulgarian alt text aloud.
+- **Reduced motion**: honoured by the reveal, the parallax glow, the dial,
+  the bars and the slate.
+
+### 3.5 Weight
+
+| | Before | After |
+|---|---|---|
+| Artifact / page | 9,258,485 B | 247,113 B markup |
+| Images | 6,265,525 B (4 PNG + 1 JPEG) | 131,982 B (WebP) |
+| Fonts | 322,272 B | 88,204 B |
+| JS | 296,619 B runtime | 13,750 B + 91,157 B dictionary |
+| Transfer, gzipped | — | **≈ 287 KB total, ≈ 158 KB to first paint** |
+
+The 2 MB persona PNGs were 1024×1536 rendering into a 400px card. They are
+800px WebP now. The 544×544 logo PNG was being drawn at 28×28.
+
+### 3.6 Markup and indexing
+
+- Bulgarian stays in the markup, so with JavaScript off the page still
+  delivers **26,055 characters, 94 headings and all 22 sections**, and
+  **nothing is hidden** — the reveal only conceals content when it can prove
+  it is able to reveal it again.
+- Canonical, `og:*`, `twitter:card`, `theme-color`, and `hreflang`
+  alternates for `bg`, `en` and `x-default`, all pointed at
+  `symbiosis.sell2inspire.agency`.
+- Both scripts deferred, so neither blocks parsing; deferred scripts run in
+  document order, so the dictionary is always in place before `app.js` reads
+  it.
+- `scroll-padding-top: 92px` so anchored sections clear the fixed header.
+
+---
+
+## 4. Verified
+
+Measured on the built page, served over HTTP, fonts loaded:
+
+| Check | Result |
+|---|---|
+| Contrast failures at 1440 / 1024 / 768 / 390 | **0** |
+| Horizontal overflow, 24 widths × 2 languages | **0 of 48** |
+| Menu button reachable, every width below 1180px | **yes** |
+| Targets under 44×44, coarse pointer | **0** |
+| Fonts resolving | Inter ×517, JetBrains Mono ×142, Playfair Display ×3 |
+| Cyrillic serif line | Playfair Display, 15 glyphs |
+| Untranslated nodes after EN swap | **0 of 550** |
+| Console errors / failed requests | **0** |
+| Without JavaScript | 22 sections, 94 headings, 26,055 chars, 0 hidden |
+
+---
+
+## 5. Open
+
+Recorded, not fixed. Each is a decision that belongs to the owner rather
+than a defect.
+
+1. **The primary CTA is below the fold at 1440×900 in Bulgarian.** The
+   headline is `clamp(2.5rem, 7.2vw, 6.1rem)` over three lines, and
+   Bulgarian wraps it to four. Faithful to the reference, and the reference
+   is what was approved — but it costs the first viewport its action.
+   Tightening the clamp ceiling to about `5.2rem` would recover it.
+
+2. **"до −70% на месец"** in the comparison section is a cost claim. It
+   compares subscription totals rather than reporting a customer outcome, so
+   it does not fall under the no-unverified-results rule in `PRODUCT.md` —
+   but a visitor will read it as a promise, and it should have a basis on
+   file.
+
+3. **Six sections are equal-tile grids.** Features, industries, modules, AI,
+   platform and proof all use `repeat(auto-fit, minmax(…, 1fr))`. It reads
+   as consistency at a glance and as sameness by the third one.
+
+4. **The citation block** renders 28px-tall links. Compliant, but it is the
+   one place where "quiet by design" and "hard to hit" are the same
+   decision.
+
+5. **Layout is still inline.** Deliberate, and recorded here so the next
+   person knows it was a decision rather than an oversight. If the design
+   ever needs real change rather than correction, extracting a token layer
+   is the first move.

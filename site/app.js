@@ -1,167 +1,365 @@
-/* Symbiosis OS — interaction layer.
-   Three jobs: the playhead scrub (the page's one authored moment),
-   the language swap, and the mobile menu. Everything degrades to
-   working HTML with this file absent. */
+/* Symbiosis — interaction layer.
+
+   A direct port of the component the design shipped inside Claude
+   Design's runtime. Same behaviours, same easing, same thresholds; the
+   class became an IIFE, `this.props` became constants, and the two
+   responsive `display` toggles moved into real media queries in
+   styles.css so the header does not have to wait for JavaScript to know
+   how wide the window is.
+
+   Everything below degrades: with this file absent the page is still
+   readable, still navigable, and still has all 22 sections in the
+   markup. */
 
 (function () {
   'use strict';
 
-  /* ---------- playhead scrub ---------- */
+  var root = document.querySelector('[data-sym-root]');
+  if (!root) return;
 
-  var scrub = document.getElementById('scrub');
-  var head = document.getElementById('head');
-  var read = document.getElementById('read');
-  var tl = document.getElementById('tl');
-
-  if (scrub && head && tl) {
-    var blocks = Array.prototype.slice.call(tl.querySelectorAll('.tl__block'));
-
-    var gutter = function () {
-      return getComputedStyle(tl).getPropertyValue('--lane-gutter').trim() || '0px';
-    };
-
-    var sync = function () {
-      var v = +scrub.value;
-      // The percentage is of the TRACK, not the whole lane: the lane-name
-      // column is fixed, so the travel is (100% - gutter). Adding v% of the
-      // full width instead ran the head past the track's right edge at 100.
-      var g = gutter();
-      head.style.left = 'calc(' + g + ' + (100% - ' + g + ') * ' + (v / 100) + ')';
-      // Exactly one block is lit — the one the playhead is currently over.
-      // Lighting every passed block at once floods the instrument and loses
-      // the comp's image of the head landing on a single event.
-      var active = null;
-      blocks.forEach(function (b) {
-        if (+b.getAttribute('data-at') <= v) active = b;
-      });
-      blocks.forEach(function (b) {
-        b.classList.toggle('tl__block--lit', b === active);
-      });
-      if (read) read.textContent = active ? active.textContent : '—';
-    };
-
-    scrub.addEventListener('input', sync);
-    window.addEventListener('resize', sync);
-    sync();
-  }
-
-  /* ---------- vertical restack ----------
-     Below 640px a horizontal timeline squeezes its labels into
-     nothing, so the lanes become a vertical sequence instead. The
-     class drives it; the blocks' inline percentage widths are
-     overridden in CSS rather than rewritten here. */
-
-  var stackQuery = window.matchMedia('(max-width: 640px)');
-  var allTimelines = Array.prototype.slice.call(document.querySelectorAll('.tl'));
-  var applyStack = function (mq) {
-    // EVERY timeline restacks, not just the hero's. Scoping this to #tl left
-    // the comparison timelines horizontal on a phone with all eight blocks
-    // clipped — the exact condition the surface brief marked blocking.
-    allTimelines.forEach(function (t) { t.classList.toggle('tl--stack', mq.matches); });
-    if (!tl) return;
-    // The scrub stays: in stacked mode the playhead is gone but the range
-    // still lights each event in turn, so the STORY survives on a phone.
-    if (scrub) scrub.dispatchEvent(new Event('input'));
-  };
-  if (stackQuery.addEventListener) stackQuery.addEventListener('change', applyStack);
-  else stackQuery.addListener(applyStack);
-  applyStack(stackQuery);
-
-  /* ---------- mobile menu ---------- */
-
-  var burger = document.getElementById('burger');
-  var nav = document.getElementById('nav');
-
-  if (burger && nav) {
-    var setOpen = function (open) {
-      nav.classList.toggle('hdr__nav--open', open);
-      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-    };
-
-    burger.addEventListener('click', function () {
-      setOpen(burger.getAttribute('aria-expanded') !== 'true');
-    });
-
-    // Escape closes it and returns focus to the control that opened it.
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && burger.getAttribute('aria-expanded') === 'true') {
-        setOpen(false);
-        burger.focus();
-      }
-    });
-
-    nav.addEventListener('click', function (e) {
-      if (e.target.tagName === 'A') setOpen(false);
-    });
-
-    window.addEventListener('resize', function () {
-      if (window.innerWidth > 900) setOpen(false);
-    });
-  }
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---------- language ---------- */
 
   var META = {
     bg: {
-      title: 'Symbiosis — съдържание, което носи клиенти. Система, която ги затваря.',
-      desc: 'Symbiosis свързва съдържанието, клиентите, офертите и приходите ви в една система. Продукт на Sell 2 Inspire.'
+      title: 'Symbiosis — AI платформа за бизнес растеж | 100+ AI модела в едно | Sell 2 Inspire',
+      desc: 'Symbiosis обединява AI видео създаване (Cinema), кампанийни страници с AI търсене, продажби, клиенти, оферти и проекти в една система. Над 100 AI модела без допълнителни абонаменти.'
     },
     en: {
-      title: 'Symbiosis — content that brings clients in. A system that closes them.',
-      desc: 'Symbiosis connects your content, clients, proposals and revenue in one system. A Sell 2 Inspire product.'
+      title: 'Symbiosis — the AI platform for business growth | 100+ AI models in one | Sell 2 Inspire',
+      desc: 'Symbiosis brings AI video production (Cinema), AI-search campaign pages, sales, clients, proposals and projects into one system. Over 100 AI models, no extra subscriptions.'
     }
   };
 
-  var setLang = function (lang) {
-    var dict = window.I18N && window.I18N[lang];
-    document.documentElement.lang = lang;
+  var lang = 'bg';
+
+  function swap(next) {
+    var dict = window.I18N && window.I18N[next];
+    lang = next;
+    document.documentElement.lang = next;
 
     if (dict) {
-      var nodes = document.querySelectorAll('[data-i]');
-      for (var i = 0; i < nodes.length; i++) {
-        var v = dict[nodes[i].getAttribute('data-i')];
-        if (typeof v === 'string') nodes[i].innerHTML = v;
-      }
-      // data-ia="attr:key" — aria-labels and alt text are content too
-      var attrNodes = document.querySelectorAll('[data-ia]');
-      for (var k = 0; k < attrNodes.length; k++) {
-        var spec = attrNodes[k].getAttribute('data-ia').split(':');
-        var av = dict[spec[1]];
-        if (typeof av === 'string') attrNodes[k].setAttribute(spec[0], av);
-      }
+      // textContent, not innerHTML: the dictionary is content, and none of
+      // these strings carry markup.
+      // document, not root: the skip link sits outside the design's own
+      // wrapper, and scoping this to the wrapper left it in Bulgarian.
+      document.querySelectorAll('[data-i]').forEach(function (el) {
+        var v = dict[el.getAttribute('data-i')];
+        if (typeof v === 'string') el.textContent = v;
+      });
+      // alt text and aria-labels are content too. The reference translated
+      // neither, so a screen reader in English still heard Bulgarian.
+      document.querySelectorAll('[data-ia]').forEach(function (el) {
+        var spec = el.getAttribute('data-ia').split(':');
+        var v = dict[spec[1]];
+        if (typeof v === 'string') el.setAttribute(spec[0], v);
+      });
     }
 
-    var meta = META[lang];
+    var meta = META[next];
     if (meta) {
       document.title = meta.title;
       var d = document.querySelector('meta[name="description"]');
       if (d) d.setAttribute('content', meta.desc);
       var og = document.querySelector('meta[property="og:title"]');
       if (og) og.setAttribute('content', meta.title);
+      var ogd = document.querySelector('meta[property="og:description"]');
+      if (ogd) ogd.setAttribute('content', meta.desc);
     }
 
-    var btns = document.querySelectorAll('.lang button');
-    for (var j = 0; j < btns.length; j++) {
-      btns[j].setAttribute('aria-pressed', btns[j].getAttribute('data-lang') === lang ? 'true' : 'false');
+    root.querySelectorAll('[data-sym-lang]').forEach(function (b) {
+      var on = b.getAttribute('data-sym-lang') === next;
+      b.style.background = on ? '#f6f6f9' : 'transparent';
+      b.style.color = on ? '#08080a' : '#88889a';
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+
+    try { localStorage.setItem('sym-lang', next); } catch (e) { /* private mode */ }
+  }
+
+  /* ---------- menu ---------- */
+
+  var menu = root.querySelector('[data-sym-menu]');
+  var burger = root.querySelector('[data-act="toggleMenu"]');
+  var menuOpen = false;
+
+  function setMenu(open) {
+    if (!menu) return;
+    menuOpen = open;
+    menu.style.display = open ? 'flex' : 'none';
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (burger) burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  function toggleMenu() { setMenu(!menuOpen); }
+
+  if (menu) {
+    menu.setAttribute('aria-hidden', 'true');
+    // Any link inside the panel is a navigation; the panel should not
+    // stay over the destination.
+    menu.addEventListener('click', function (e) {
+      if (e.target.closest('a')) setMenu(false);
+    });
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && menuOpen) {
+      setMenu(false);
+      if (burger) burger.focus();
     }
-
-    try { localStorage.setItem('sym-lang', lang); } catch (err) { /* private mode */ }
-    if (scrub) scrub.dispatchEvent(new Event('input'));
-  };
-
-  document.querySelectorAll('.lang button').forEach(function (b) {
-    b.addEventListener('click', function () { setLang(b.getAttribute('data-lang')); });
   });
 
-  // An explicit ?lang= in the URL is a deliberate request and outranks
-  // whatever this browser stored last time; otherwise the hreflang
-  // alternates would silently do nothing for any returning visitor.
+  // The panel is fixed and full-bleed; leaving it open across the
+  // breakpoint hides a desktop header behind it.
+  var wide = window.matchMedia('(min-width: 1180px)');
+  var onWide = function (m) { if (m.matches && menuOpen) setMenu(false); };
+  if (wide.addEventListener) wide.addEventListener('change', onWide);
+  else wide.addListener(onWide);
+
+  /* ---------- declarative actions ---------- */
+
+  var ACTIONS = {
+    setBG: function () { swap('bg'); },
+    setEN: function () { swap('en'); },
+    toggleMenu: toggleMenu
+  };
+
+  root.querySelectorAll('[data-act]').forEach(function (el) {
+    var fn = ACTIONS[el.getAttribute('data-act')];
+    if (!fn) return;
+    el.addEventListener('click', function (e) {
+      if (el.tagName === 'BUTTON') e.preventDefault();
+      fn(e);
+    });
+  });
+
+  /* ---------- reveal on scroll ---------- */
+
+  function initReveal() {
+    var els = Array.prototype.slice.call(root.querySelectorAll('[data-reveal]'));
+    if (!els.length) return;
+    // Hiding the content first and revealing it on intersection is only
+    // safe if the reveal can actually run. Without IntersectionObserver,
+    // or with reduced motion asked for, the page stays as authored.
+    if (reduceMotion || !('IntersectionObserver' in window)) return;
+
+    els.forEach(function (el) {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(26px)';
+      el.style.filter = 'blur(6px)';
+      el.style.willChange = 'opacity, transform, filter';
+    });
+
+    var io = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        var el = en.target;
+        var d = parseInt(el.getAttribute('data-reveal-d') || '0', 10);
+        el.style.transition =
+          'opacity .8s cubic-bezier(.2,.7,.2,1) ' + d + 'ms, ' +
+          'transform .9s cubic-bezier(.2,.7,.2,1) ' + d + 'ms, ' +
+          'filter .8s ease ' + d + 'ms';
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+        el.style.filter = 'blur(0px)';
+        // willChange is a promise to the compositor, not a decoration —
+        // leaving it set on 110 elements keeps 110 layers alive.
+        window.setTimeout(function () { el.style.willChange = 'auto'; }, 1200 + d);
+        obs.unobserve(el);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
+
+    els.forEach(function (el) { io.observe(el); });
+  }
+
+  /* ---------- scroll-driven chrome ---------- */
+
+  function initScroll() {
+    var bar = root.querySelector('[data-sym-progress]');
+    var nav = root.querySelector('[data-sym-nav]');
+    var glow = root.querySelector('[data-sym-glow]');
+    var raf = 0;
+
+    var tick = function () {
+      raf = 0;
+      var y = window.scrollY || 0;
+      var max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      if (bar) bar.style.transform = 'scaleX(' + Math.min(1, y / max) + ')';
+      if (nav) {
+        var on = y > 24;
+        nav.style.background = on ? 'rgba(8,8,10,0.86)' : 'rgba(8,8,10,0.55)';
+        nav.style.borderBottomColor = on ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.06)';
+        nav.style.paddingTop = on ? '10px' : '14px';
+        nav.style.paddingBottom = on ? '10px' : '14px';
+      }
+      if (glow && !reduceMotion && y < 1400) {
+        glow.style.transform = 'translateX(-50%) translateY(' + (y * 0.16) + 'px)';
+      }
+    };
+
+    window.addEventListener('scroll', function () {
+      if (!raf) raf = requestAnimationFrame(tick);
+    }, { passive: true });
+    tick();
+  }
+
+  /* ---------- animated score dial ---------- */
+
+  function initDials() {
+    var dials = Array.prototype.slice.call(root.querySelectorAll('[data-dial]'));
+    if (!dials.length) return;
+
+    var paint = function (el, value) {
+      var num = el.querySelector('[data-dial-num]');
+      var deg = (value / 100) * 360;
+      el.style.background =
+        'conic-gradient(#ff9b4a 0deg,#7a4dff ' + deg + 'deg,rgba(255,255,255,0.07) ' + deg + 'deg)';
+      if (num) num.textContent = String(Math.round(value));
+    };
+
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      dials.forEach(function (d) { paint(d, parseInt(d.getAttribute('data-dial') || '0', 10)); });
+      return;
+    }
+
+    var obs = new IntersectionObserver(function (entries, o) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        var el = en.target;
+        o.unobserve(el);
+        var target = parseInt(el.getAttribute('data-dial') || '0', 10);
+        var start = performance.now();
+        var step = function (now) {
+          var p = Math.min(1, (now - start) / 1400);
+          paint(el, target * (1 - Math.pow(1 - p, 3)));
+          if (p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      });
+    }, { threshold: 0.4 });
+
+    dials.forEach(function (d) { obs.observe(d); });
+  }
+
+  /* ---------- animated ratio bars ---------- */
+
+  function initBars() {
+    var bars = Array.prototype.slice.call(root.querySelectorAll('[data-bar]'));
+    if (!bars.length) return;
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      bars.forEach(function (b) { b.style.width = b.getAttribute('data-bar') + '%'; });
+      return;
+    }
+    var obs = new IntersectionObserver(function (entries, o) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        o.unobserve(en.target);
+        en.target.style.width = en.target.getAttribute('data-bar') + '%';
+      });
+    }, { threshold: 0.5 });
+    bars.forEach(function (b) { obs.observe(b); });
+  }
+
+  /* ---------- Cinema slate: sticky card follows the active step ---------- */
+
+  function initSlate() {
+    var steps = Array.prototype.slice.call(root.querySelectorAll('[data-step]'));
+    var num = root.querySelector('[data-slate-num]');
+    var title = root.querySelector('[data-slate-title]');
+    var body = root.querySelector('[data-slate-body]');
+    if (!steps.length || !num || !title || !body) return;
+
+    var rails = Array.prototype.slice.call(root.querySelectorAll('[data-slate-rail]'));
+    var active = -1;
+
+    var setActive = function (i) {
+      if (i === active || i < 0) return;
+      active = i;
+      var el = steps[i];
+      var t = el.querySelector('[data-step-title]');
+      var b = el.querySelector('[data-step-body]');
+      num.textContent = String(i + 1).padStart(2, '0');
+      if (t) title.textContent = t.textContent;
+      if (b) body.textContent = b.textContent;
+
+      if (!reduceMotion) {
+        [num, title, body].forEach(function (n) {
+          n.style.transition = 'none';
+          n.style.opacity = '0';
+          n.style.transform = 'translateY(7px)';
+          requestAnimationFrame(function () {
+            n.style.transition = 'opacity .4s ease, transform .4s cubic-bezier(.2,.7,.2,1)';
+            n.style.opacity = '1';
+            n.style.transform = 'translateY(0)';
+          });
+        });
+      }
+
+      rails.forEach(function (r, ri) {
+        r.style.background = ri <= i ? '#8aa6ff' : 'rgba(255,255,255,0.1)';
+      });
+      steps.forEach(function (s, si) {
+        var on = si === i;
+        var last = si === steps.length - 1;
+        s.style.borderColor = on
+          ? 'rgba(138,166,255,0.45)'
+          : (last ? 'rgba(138,166,255,0.28)' : 'rgba(255,255,255,0.08)');
+        if (!last) s.style.background = on ? '#101018' : '#0c0c11';
+      });
+    };
+
+    setActive(0);
+    if (!('IntersectionObserver' in window)) return;
+
+    var obs = new IntersectionObserver(function (entries) {
+      var best = null;
+      entries.forEach(function (en) {
+        if (en.isIntersecting && (!best || en.intersectionRatio > best.intersectionRatio)) best = en;
+      });
+      if (best) setActive(steps.indexOf(best.target));
+    }, { rootMargin: '-42% 0px -42% 0px', threshold: [0, 0.4, 1] });
+
+    steps.forEach(function (s) { obs.observe(s); });
+  }
+
+  /* ---------- FAQ: single-open accordion ---------- */
+
+  function initFaq() {
+    var faq = document.getElementById('faq');
+    if (!faq) return;
+    var items = Array.prototype.slice.call(faq.querySelectorAll('details'));
+
+    items.forEach(function (d) {
+      var mark = d.querySelector('summary > span:last-child');
+      if (mark) mark.style.transition = 'transform .3s cubic-bezier(.2,.7,.2,1), color .3s, border-color .3s';
+      d.addEventListener('toggle', function () {
+        if (d.open) items.forEach(function (o) { if (o !== d) o.open = false; });
+        items.forEach(function (o) {
+          var m = o.querySelector('summary > span:last-child');
+          if (!m) return;
+          m.style.transform = o.open ? 'rotate(135deg)' : 'rotate(0deg)';
+          m.style.borderColor = o.open ? 'rgba(138,166,255,0.5)' : 'rgba(255,255,255,0.14)';
+        });
+      });
+    });
+  }
+
+  /* ---------- boot ---------- */
+
+  initReveal();
+  initScroll();
+  initDials();
+  initBars();
+  initSlate();
+  initFaq();
+
+  // An explicit ?lang= is a deliberate request and outranks whatever this
+  // browser stored last time; otherwise the hreflang alternates would do
+  // nothing for a returning visitor.
   var initial = null;
   var q = new URLSearchParams(location.search).get('lang');
-  if (q === 'en' || q === 'bg') {
-    initial = q;
-  } else {
-    try { initial = localStorage.getItem('sym-lang'); } catch (err) { /* private mode */ }
-  }
-  if (initial && initial !== 'bg') setLang(initial);
+  if (q === 'en' || q === 'bg') initial = q;
+  else { try { initial = localStorage.getItem('sym-lang'); } catch (e) { /* private mode */ } }
+  if (initial === 'en') swap('en');
 })();

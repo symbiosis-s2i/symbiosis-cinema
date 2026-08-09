@@ -1,572 +1,271 @@
+/* Symbiosis — stylesheet.
+
+   The design this page carries was authored in Claude Design, where the
+   component runtime forbids stylesheets: every rule lived in an inline
+   style attribute, hover states lived in a `style-hover` attribute the
+   runtime read, and the only breakpoint was a JS resize listener at
+   1180px. This file is what that design needs in order to survive as a
+   real page — webfonts that actually carry the weights and scripts they
+   claim, hover and focus states the browser resolves on its own, and
+   breakpoints that hold when JavaScript does not run.
+
+   Layout still lives in the inline styles the design shipped with. That
+   is deliberate: rewriting 1,376 of them into classes would be a
+   redesign in everything but name, and the point of this pass is to keep
+   the design intact while making it correct. */
+
 /* ============================================================
-   Symbiosis OS — The Edit Suite
-   Design system, read from the approved comp (.impeccable/mocks/hero-b.html).
-   Corner language 4px/2px · 1px hairlines only · no shadows ·
-   depth from three surface steps · one face · one accent.
+   1. Typefaces
+
+   The reference declared Inter at 300/400/500/600/700 and pointed all
+   five weights at the same static Regular file, so every heading above
+   400 was drawn by the browser's synthetic bold. These are the real
+   variable faces, with the Cyrillic subsets the Bulgarian copy needs.
+
+   SymIcons is a 21-glyph subset of DejaVu Sans covering the geometric
+   marks the design uses as icons — the play triangle, the checks, the
+   diamonds, the arrows. Neither Inter nor JetBrains Mono contains any of
+   them; without this face the platform resolves them, and iOS and
+   Android resolve several as colour emoji.
    ============================================================ */
 
 @font-face {
-  font-family: 'Geist';
-  src: url('assets/fonts/geist/Geist-Variable.woff2') format('woff2-variations');
-  font-weight: 100 900;
+  font-family: 'Inter';
   font-style: normal;
+  font-weight: 100 900;
   font-display: swap;
+  src: url('assets/fonts/inter-lat.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+2000-206F,
+                 U+2074, U+20AC, U+2122, U+2202, U+2212;
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('assets/fonts/inter-cyr.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
-:root {
-  --ground:    #0E1420;
-  --panel:     #141B2A;
-  --panel-lit: #1A2233;
-
-  --cobalt:     #2B4EE6;
-  --cobalt-lit: #5B7BFF;
-  --periwinkle: #8FA6FF;
-
-  /* verified against --ground: 16.1:1 · 8.85:1 · 5.41:1 */
-  --text:   #E8ECF4;
-  --text-2: #A8B4CC;
-  --text-3: #7E8CA8;
-
-  --rule:      rgba(201, 211, 232, 0.14);
-  --rule-soft: rgba(201, 211, 232, 0.07);
-
-  --gutter: clamp(20px, 4vw, 64px);
-  --max:    1360px;
-  --r:      4px;
-  --r-sm:   2px;
-
-  --ease: cubic-bezier(0.16, 1, 0.3, 1);
-
-  --section-y: clamp(64px, 8vw, 128px);
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url('assets/fonts/mono-lat.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+2000-206F,
+                 U+2074, U+20AC, U+2122, U+2202, U+2212;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url('assets/fonts/mono-cyr.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+/* One line of the hero, in two languages. Subset to those glyphs alone —
+   Instrument Serif, which the design named, carries no Cyrillic at all,
+   so that line was silently falling through to whatever serif the
+   visitor's OS happened to ship. */
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: italic;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url('assets/fonts/serif-lat.woff2') format('woff2');
+  unicode-range: U+0000-00FF;
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: italic;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url('assets/fonts/serif-cyr.woff2') format('woff2');
+  unicode-range: U+0400-045F;
+}
+
+@font-face {
+  font-family: 'SymIcons';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('assets/fonts/sym.woff2') format('woff2');
+  unicode-range: U+2190-21BB, U+2248, U+2261, U+2264-2265, U+2318,
+                 U+25A0-25FF, U+270E, U+2713, U+2715, U+2726, U+273A;
+}
+
+/* ============================================================
+   2. Ground
+   ============================================================ */
+
+* { box-sizing: border-box; }
 
 html {
-  font-family: 'Geist', system-ui, -apple-system, sans-serif;
-  -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
-  scroll-padding-top: 76px;   /* the fixed header, so deep links land true */
+  background: #08080a;
+  /* The fixed header is 64–70px tall; anchored sections have to clear it. */
+  scroll-padding-top: 92px;
 }
 
 body {
-  background: var(--ground);
-  color: var(--text-2);
-  font-family: 'Geist', system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #08080a;
+  color: #a9a9ba;
+  font-family: Inter, SymIcons, system-ui, -apple-system, sans-serif;
   font-size: 16px;
-  line-height: 1.55;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
+img { display: block; max-width: 100%; }
+a { color: #8aa6ff; text-decoration: none; }
+a:hover { color: #ffffff; }
+summary::-webkit-details-marker { display: none; }
+
+::selection { background: #5b7bff; color: #fff; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #08080a; }
+::-webkit-scrollbar-thumb { background: #23232e; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: #35354a; }
+
+/* The reference shipped no focus styles at all. On a page whose primary
+   action is a link, that leaves a keyboard user with the UA default and
+   nothing else. */
 :focus-visible {
-  outline: 2px solid var(--cobalt-lit);
+  outline: 2px solid #8aa6ff;
   outline-offset: 3px;
-  border-radius: var(--r-sm);
+  border-radius: 4px;
 }
-
-img, svg { display: block; max-width: 100%; }
-img { height: auto; }
-
-.wrap { max-width: var(--max); margin-inline: auto; padding-inline: var(--gutter); }
 
 .skip {
   position: absolute;
   left: -9999px;
   top: 0;
   z-index: 200;
-  background: var(--cobalt);
-  color: #fff;
-  padding: 12px 18px;
-  border-radius: 0 0 var(--r) 0;
+  padding: 12px 20px;
+  background: #f6f6f9;
+  color: #08080a;
+  font-weight: 600;
+  border-radius: 0 0 12px 0;
 }
-.skip:focus { left: 0; }
+.skip:focus { left: 0; color: #08080a; }
 
-/* ---------------- type ---------------- */
+/* ============================================================
+   3. Motion
+   ============================================================ */
 
-h1, h2, h3, h4 { color: var(--text); font-weight: 480; letter-spacing: -0.028em; line-height: 1.06; text-wrap: balance; }
-h1 { font-size: clamp(34px, 3.85vw, 62px); letter-spacing: -0.032em; }
-h2 { font-size: clamp(27px, 2.9vw, 44px); }
-h3 { font-size: clamp(18px, 1.35vw, 21px); font-weight: 520; letter-spacing: -0.018em; line-height: 1.25; }
-h4 { font-size: 15.5px; font-weight: 550; letter-spacing: -0.012em; line-height: 1.3; }
-
-em { font-style: normal; color: var(--periwinkle); }
-
-p { max-width: 68ch; }
-.lede { font-size: clamp(15.5px, 1.1vw, 17.5px); color: var(--text-2); max-width: 46ch; letter-spacing: -0.008em; }
-.small { font-size: 13.5px; }
-.muted { color: var(--text-3); }
-
-.label {
-  font-size: 11px;
-  font-weight: 550;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-3);
+@keyframes symPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(138,166,255,.55); }
+  70%  { box-shadow: 0 0 0 11px rgba(138,166,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(138,166,255,0); }
 }
-
-a { color: var(--periwinkle); }
-
-/* ---------------- header ---------------- */
-
-.hdr {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: color-mix(in oklab, var(--ground) 88%, transparent);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--rule-soft);
-}
-.hdr__in {
-  display: flex;
-  align-items: center;
-  gap: 26px;
-  max-width: var(--max);
-  margin-inline: auto;
-  padding: 14px var(--gutter);
-}
-.mark {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  gap: 9px;
-  color: var(--text);
-  text-decoration: none;
-  font-weight: 560;
-  font-size: 15px;
-  letter-spacing: -0.015em;
-  flex: none;
-}
-.hdr__nav { display: flex; gap: 24px; }
-.hdr__nav a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  min-width: 44px;
-  color: var(--text-3);
-  text-decoration: none;
-  font-size: 13.5px;
-  letter-spacing: -0.005em;
-  transition: color 0.2s var(--ease);
-}
-.hdr__nav a:hover { color: var(--text); }
-.hdr__end { margin-left: auto; display: flex; align-items: center; gap: 14px; }
-
-.lang { display: flex; border: 1px solid var(--rule); border-radius: var(--r-sm); overflow: hidden; flex: none; }
-.lang button {
-  font: inherit;
-  min-width: 44px;
-  font-size: 11.5px;
-  font-weight: 550;
-  letter-spacing: 0.06em;
-  padding: 0 11px;
-  min-height: 44px;
-  border: 0;
-  cursor: pointer;
-  background: transparent;
-  color: var(--text-3);
-  transition: background 0.2s var(--ease), color 0.2s var(--ease);
-}
-.lang button[aria-pressed='true'] { background: var(--text); color: var(--ground); }
-
-.burger {
-  font: inherit;
-  display: none;
-  width: 44px; height: 44px;
-  border: 1px solid var(--rule);
-  border-radius: var(--r-sm);
-  background: transparent;
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-}
-.burger svg { stroke: var(--text); }
-
-/* ---------------- buttons ---------------- */
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 44px;
-  padding: 0 20px;
-  border: 0;
-  border-radius: var(--r);
-  background: var(--cobalt);
-  color: #fff;
-  font: inherit;
-  font-size: 14.5px;
-  font-weight: 530;
-  letter-spacing: -0.005em;
-  text-decoration: none;
-  cursor: pointer;
-  transition: background 0.2s var(--ease);
-}
-.btn:hover { background: var(--cobalt-lit); }
-.btn--ghost { background: transparent; border: 1px solid var(--rule); color: var(--text); }
-.btn--ghost:hover { background: var(--panel-lit); border-color: var(--periwinkle); }
-.btn--sm { min-height: 44px; padding: 0 15px; font-size: 13.5px; }
-
-/* ---------------- panels ---------------- */
-
-.synthetic {
-  display: inline-flex;
-  align-self: flex-start;
-  align-items: center;
-  gap: 7px;
-  font-size: 11px;
-  color: var(--text-3);
-  border: 1px dashed var(--rule);
-  border-radius: var(--r-sm);
-  padding: 5px 9px;
-}
-.synthetic::before {
-  content: '';
-  width: 5px; height: 5px; border-radius: 50%;
-  background: var(--text-3); flex: none;
-}
-
-/* ---------------- timeline ---------------- */
-
-.tl {
-  --lane-gutter: 132px;   /* declared, not left to three different fallbacks */
-  position: relative; border: 1px solid var(--rule); border-radius: var(--r);
-  background: var(--panel); overflow: hidden;
-}
-.tl__ruler {
-  display: flex;
-  align-items: flex-end;
-  height: 30px;
-  border-bottom: 1px solid var(--rule);
-  background: var(--panel-lit);
-  padding-left: var(--lane-gutter, 132px);
-}
-.tl__tick { flex: 1; border-left: 1px solid var(--rule-soft); height: 7px; position: relative; }
-.tl__tick--major { height: 13px; border-left-color: var(--rule); }
-.tl__tick span {
-  position: absolute; top: -17px; left: 6px;
-  font-size: 10px; letter-spacing: 0.07em; color: var(--text-3); white-space: nowrap;
-}
-.tl__lanes { position: relative; }
-.tl__lane {
-  display: grid;
-  grid-template-columns: var(--lane-gutter, 132px) 1fr;
-  border-bottom: 1px solid var(--rule-soft);
-  min-height: var(--lane-h, 48px);
-}
-.tl__lane:last-child { border-bottom: 0; }
-.tl__laneName {
-  display: flex; align-items: center; gap: 9px;
-  padding: 0 14px;
-  border-right: 1px solid var(--rule);
-  font-size: 12.5px; color: var(--text-2); letter-spacing: -0.005em;
-}
-.tl__dot { width: 5px; height: 5px; border-radius: 50%; background: var(--periwinkle); flex: none; }
-.tl__track { position: relative; }
-.tl__block {
-  position: absolute; top: 50%; transform: translateY(-50%);
-  height: 24px;
-  border-radius: var(--r-sm);
-  background: color-mix(in oklab, var(--cobalt) 55%, var(--panel));
-  border: 1px solid color-mix(in oklab, var(--cobalt-lit) 45%, transparent);
-  display: flex; align-items: center; padding: 0 8px;
-  font-size: 11px; color: var(--text); white-space: nowrap; overflow: hidden;
-  /* The percentage is the INTENDED width; min-content is the floor. A block's
-     label is a fixed pixel length while its track is fluid, so percentages
-     that fit at 1440 and 390 clipped across the whole band between them.
-     Same failure as the plan lanes, on the horizontal axis. */
-  min-width: min-content;
-  transition: background 0.3s var(--ease), border-color 0.3s var(--ease);
-}
-.tl__block--quiet { background: var(--panel-lit); border-color: var(--rule); color: var(--text-3); }
-.tl__block--lit { background: var(--cobalt); border-color: var(--cobalt-lit); color: #fff; }
-.tl__head {
-  position: absolute; top: 0; bottom: 0; width: 1px;
-  background: var(--cobalt-lit); pointer-events: none; z-index: 3;
-  transition: left 0.12s linear;
-}
-.tl__head::before {
-  content: ''; position: absolute; top: 0; left: -4px;
-  width: 9px; height: 9px; background: var(--cobalt-lit); border-radius: 1px;
-}
-
-.scrub { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-top: 1px solid var(--rule); background: var(--panel-lit); }
-.scrub input[type='range'] { flex: 1; appearance: none; height: 44px; background: transparent; cursor: grab; min-width: 0; font: inherit; }
-.scrub input[type='range']::-webkit-slider-runnable-track { height: 2px; background: var(--rule); }
-.scrub input[type='range']::-webkit-slider-thumb {
-  appearance: none; width: 14px; height: 14px; margin-top: -6px;
-  border-radius: var(--r-sm); background: var(--cobalt-lit); border: 0;
-}
-.scrub input[type='range']::-moz-range-track { height: 2px; background: var(--rule); }
-.scrub input[type='range']::-moz-range-thumb { width: 12px; height: 12px; border-radius: var(--r-sm); background: var(--cobalt-lit); border: 0; }
-.scrub__read { font-size: 12px; color: var(--text-2); min-width: 16ch; letter-spacing: -0.005em; }
-
-/* vertical restack — a phone gets a sequence, never a squeezed timeline */
-.tl--stack .tl__ruler { display: none; }
-.tl--stack .tl__lane { grid-template-columns: 1fr; min-height: 0; border-bottom: 1px solid var(--rule-soft); }
-.tl--stack .tl__laneName { border-right: 0; padding: 12px 14px 0; font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--text-3); }
-.tl--stack .tl__track { position: static; display: flex; flex-direction: column; gap: 6px; padding: 8px 14px 13px; }
-.tl--stack .tl__block { position: static; transform: none; height: auto; min-height: 32px; width: auto !important; left: auto !important; right: auto !important; white-space: normal; }
-.tl--stack .tl__head { display: none; }
-/* The joint stops being an absolute overlay and joins the flow: a short
-   vertical drop between one event and the next. Left absolute it reparents
-   to .tl__lanes and every joint stacks on one line across a lane label. */
-.tl--stack .joint {
-  position: relative;   /* NOT static: ::after resolves against this, and
-                           static sent all three dots to one point outside
-                           the panel while still passing every "is it
-                           handled" check. */
-  left: auto !important; top: auto;
-  width: 1px; height: 12px; margin-left: 13px;
-}
-.tl--stack .joint::after { bottom: -3px; left: -2.5px; }
-
-/* ---------------- scopes ---------------- */
-
-.scopes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--rule); border-radius: var(--r); background: var(--panel); }
-.scope { padding: 14px 16px 12px; border-right: 1px solid var(--rule); min-width: 0; }
-.scope:last-child { border-right: 0; }
-.scope svg { width: 100%; height: 38px; margin-top: 10px; }
-.scope__name { font-size: 11.5px; color: var(--text-3); letter-spacing: 0.04em; }
-
-/* ---------------- queue ---------------- */
-
-.queue { border: 1px solid var(--rule); border-radius: var(--r); background: var(--panel); }
-.queue__row {
-  display: grid; grid-template-columns: 14px minmax(0, 1fr) auto;
-  align-items: center; gap: 11px;
-  padding: 11px 16px;
-  border-bottom: 1px solid var(--rule-soft);
-  font-size: 13px;
-}
-.queue__row:last-child { border-bottom: 0; }
-.queue__row { transition: background 0.2s var(--ease); }
-.queue__row:hover { background: var(--panel-lit); }
-.queue__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--periwinkle); justify-self: center; }
-.queue__dot--quiet { background: var(--text-3); }
-.queue__what { color: var(--text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.queue__what b { color: var(--text); font-weight: 530; }
-.queue__when { font-size: 11.5px; color: var(--text-3); white-space: nowrap; }
-
-/* ---------------- hero ---------------- */
-
-.hero { display: grid; grid-template-columns: minmax(0, 40fr) minmax(0, 60fr); border-bottom: 1px solid var(--rule); }
-.hero__say {
-  padding: clamp(44px, 6.5vw, 92px) clamp(26px, 3.2vw, 56px) clamp(40px, 5vw, 72px) var(--gutter);
-  display: flex; flex-direction: column; justify-content: center; gap: 24px;
-  border-right: 1px solid var(--rule);
-}
-.hero__say h1 { max-width: 14ch; }
-.hero__acts { display: flex; gap: 12px; flex-wrap: wrap; }
-.hero__foot { font-size: 12.5px; color: var(--text-3); max-width: 36ch; margin-top: 4px; }
-.hero__rig {
-  padding: clamp(24px, 3.2vw, 44px);
-  display: flex; flex-direction: column; gap: 16px; min-width: 0;
-  background: linear-gradient(var(--rule-soft) 1px, transparent 1px) 0 0 / 100% 68px, var(--ground);
-}
-
-/* ---------------- sections ---------------- */
-
-.sec { padding-block: var(--section-y); border-bottom: 1px solid var(--rule-soft); }
-.sec--tight { padding-block: clamp(48px, 5.5vw, 82px); }
-.sec__head { max-width: 34ch; margin-bottom: clamp(30px, 3.6vw, 52px); }
-.sec__head p { margin-top: 14px; }
-
-.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(238px, 1fr)); gap: clamp(22px, 2.6vw, 44px); }
-.cols h3 { margin-bottom: 8px; }
-.cols p { font-size: 14.5px; }
-
-/* personas */
-.people { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: var(--r); overflow: hidden; }
-.person { background: var(--panel); padding: 0 0 18px; }
-.person img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: center 22%; }
-.person__body { padding: 15px 18px 0; }
-.person__role { font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--periwinkle); margin: 3px 0 9px; }
-.person p { font-size: 13.5px; }
-
-/* sourced statistics */
-.cites { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: var(--r); overflow: hidden; }
-.cite { background: var(--panel); padding: 20px; }
-.cite__fig { font-size: clamp(26px, 2.4vw, 34px); color: var(--text); letter-spacing: -0.03em; line-height: 1; }
-.cite p { font-size: 13.5px; margin: 9px 0 12px; }
-.cite a {
-  display: inline-flex; align-items: center; min-height: 44px;
-  font-size: 12px; color: var(--text-3); text-decoration-color: var(--rule);
-}
-.cite a:hover { color: var(--periwinkle); }
-
-/* comparison — two contrasted timeline states, not two lists */
-.states { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(20px, 2.4vw, 38px); }
-.state__head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 13px; }
-.state__tag {
-  font-size: 11.5px; font-weight: 550; letter-spacing: 0.09em; text-transform: uppercase;
-  padding: 5px 10px; border-radius: var(--r-sm); border: 1px solid var(--rule); color: var(--text-3);
-}
-.state__tag--sym { color: var(--periwinkle); border-color: color-mix(in oklab, var(--periwinkle) 34%, transparent); }
-.tl--broken { --lane-gutter: 124px; --lane-h: 42px; opacity: 0.72; }
-.tl--joined { --lane-gutter: 124px; --lane-h: 42px; }
-.tl__dot--off { background: var(--text-3); }
-/* the joint is the whole argument: each event hands off to the next */
-.joint { position: absolute; top: 50%; z-index: 2; width: 1px; height: 42px; background: var(--cobalt-lit); opacity: 0.55; }
-.joint::after {
-  content: ''; position: absolute; bottom: -1px; left: -2.5px;
-  width: 6px; height: 6px; border-radius: 50%; background: var(--cobalt-lit);
-}
-.state__notes { list-style: none; margin-top: 14px; display: flex; flex-direction: column; gap: 7px; }
-.state__notes li { font-size: 13.5px; padding-left: 22px; position: relative; color: var(--text-3); }
-.state__notes li::before {
-  content: ''; position: absolute; left: 0; top: 5px; width: 11px; height: 11px;
-  background-repeat: no-repeat; background-size: 11px 11px;
-}
-.state__notes--off li::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 11'%3E%3Cpath d='M1 1l9 9M10 1l-9 9' stroke='%237E8CA8' stroke-width='1.3' fill='none'/%3E%3C/svg%3E");
-}
-.state__notes--on li { color: var(--text-2); }
-.state__notes--on li::before {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 11 11'%3E%3Cpath d='M1 6l3.2 3.2L10 2' stroke='%235B7BFF' stroke-width='1.4' fill='none'/%3E%3C/svg%3E");
-}
-@media (max-width: 900px) {
-  .states { grid-template-columns: 1fr; }
-  .tl--broken, .tl--joined { --lane-gutter: 108px; }
-}
-
-/* module groups */
-.groups { border: 1px solid var(--rule); border-radius: var(--r); background: var(--panel); overflow: hidden; }
-.groups details { border-bottom: 1px solid var(--rule); }
-.groups details:last-child { border-bottom: 0; }
-.groups summary {
-  display: flex; align-items: center; gap: 14px;
-  padding: 17px 20px; cursor: pointer; list-style: none;
-  min-height: 56px; color: var(--text); font-size: 15.5px; font-weight: 520; letter-spacing: -0.012em;
-}
-.groups summary::-webkit-details-marker { display: none; }
-.groups summary { transition: background 0.2s var(--ease); }
-.groups summary:hover { background: var(--panel-lit); }
-.groups summary .label { margin-left: auto; }
-.groups summary::after {
-  content: ''; width: 9px; height: 9px; flex: none;
-  border-right: 1px solid var(--text-3); border-bottom: 1px solid var(--text-3);
-  transform: rotate(45deg) translate(-2px, -2px);
-  transition: transform 0.25s var(--ease);
-}
-.groups details[open] summary::after { transform: rotate(-135deg) translate(-2px, -2px); }
-.groups__body { padding: 0 20px 20px; display: flex; flex-wrap: wrap; gap: 7px; }
-.groups__body span {
-  font-size: 12.5px; color: var(--text-2);
-  border: 1px solid var(--rule); border-radius: var(--r-sm);
-  padding: 6px 10px;
-}
-
-/* steps — a real six-lane timeline. Each step is a lane; its block's LEFT
-   encodes where in the sequence it falls, and the blocks overlap the way a
-   real plan does. Remove the axis and information is lost, which is the
-   test a per-card marker failed.
-   Older note kept for context: steps were once seated on a track. */
-.tl--plan { --lane-gutter: 46px; }
-/* No fixed --lane-h. Block height is content-driven and varies with width
-   and language, so any fixed lane height is a guess that two breakpoints
-   cannot track: below 900px the blocks occluded each other and card 06 was
-   clipped by .tl { overflow:hidden } at every desktop width. The block is
-   position:relative instead — it stays in flow so the lane grows to meet it,
-   while `left` still offsets it horizontally, which is what carries the
-   sequence. */
-.tl--plan .tl__lane { min-height: 0; }
-.tl--plan .tl__laneName { justify-content: center; padding: 0; align-items: flex-start; padding-top: 20px; }
-.tl--plan .tl__laneName span { font-size: 11.5px; letter-spacing: 0.1em; color: var(--periwinkle); }
-.tl--plan .tl__block {
-  position: relative; top: auto; transform: none;
-  height: auto; min-height: 0;
-  margin-block: 12px;
-  display: block; padding: 11px 14px; white-space: normal;
-  background: var(--panel-lit); border-color: var(--rule);
-}
-.tl--plan .tl__block h3 { font-size: 15.5px; font-weight: 540; letter-spacing: -0.012em; margin-bottom: 5px; }
-.tl--plan .tl__block p { font-size: 13px; color: var(--text-2); max-width: none; }
-.tl--plan .tl__block--lit { background: color-mix(in oklab, var(--cobalt) 26%, var(--panel)); border-color: var(--cobalt-lit); }
-.tl--plan .tl__ruler { justify-content: space-between; align-items: center; height: 34px; padding-inline: 14px; }
-.tl--plan .tl__ruler span { font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); }
-.tl--stack.tl--plan .tl__block { min-height: 0; top: auto; }
-.tl--stack.tl--plan .tl__laneName { padding: 12px 14px 0; justify-content: flex-start; }
-.tl--stack.tl--plan .tl__ruler { display: flex; }
-
-/* faq */
-.faq { border: 1px solid var(--rule); border-radius: var(--r); background: var(--panel); overflow: hidden; max-width: 900px; }
-.faq details { border-bottom: 1px solid var(--rule); }
-.faq details:last-child { border-bottom: 0; }
-.faq summary {
-  display: flex; align-items: center; gap: 16px;
-  padding: 18px 20px; cursor: pointer; list-style: none; min-height: 56px;
-  color: var(--text); font-size: 15.5px; letter-spacing: -0.012em; font-weight: 500;
-}
-.faq summary::-webkit-details-marker { display: none; }
-.faq summary::after {
-  content: ''; margin-left: auto; width: 9px; height: 9px; flex: none;
-  border-right: 1px solid var(--text-3); border-bottom: 1px solid var(--text-3);
-  transform: rotate(45deg) translate(-2px, -2px);
-  transition: transform 0.25s var(--ease);
-}
-.faq details[open] summary::after { transform: rotate(-135deg) translate(-2px, -2px); }
-.faq__a { padding: 0 20px 20px; font-size: 14.5px; }
-
-/* close */
-.close { padding-block: clamp(76px, 9vw, 132px); text-align: left; }
-.close h2 { max-width: 20ch; }
-.close .hero__acts { margin-top: 26px; }
-
-/* footer */
-.ftr { border-top: 1px solid var(--rule); padding-block: 34px; }
-.ftr__in { display: flex; flex-wrap: wrap; gap: 20px 30px; align-items: center; }
-.ftr nav { display: flex; flex-wrap: wrap; gap: 20px; }
-.ftr a { display: inline-flex; align-items: center; min-height: 44px; color: var(--text-3); text-decoration: none; font-size: 13.5px; }
-.ftr a:hover { color: var(--text); }
-.ftr__legal { margin-left: auto; font-size: 12.5px; color: var(--text-3); }
-
-/* ---------------- responsive ---------------- */
-
-@media (max-width: 1000px) {
-  .hero { grid-template-columns: 1fr; }
-  .hero__say { border-right: 0; border-bottom: 1px solid var(--rule); }
-  .hero__rig { padding: var(--gutter); }
-}
-
-@media (max-width: 900px) {
-  .hdr__nav { display: none; }
-  .burger { display: inline-flex; }
-  .hdr__in { gap: 12px; }
-  .hdr__end { gap: 10px; }
-
-  .hdr__nav--open {
-    display: flex;
-    position: absolute;
-    left: 0; right: 0; top: 100%;
-    flex-direction: column;
-    gap: 0;
-    background: var(--ground);
-    border-bottom: 1px solid var(--rule);
-    padding: 8px var(--gutter) 16px;
-  }
-  .hdr__nav--open a { padding: 14px 0; font-size: 16px; border-bottom: 1px solid var(--rule-soft); }
-
-  .scopes { grid-template-columns: 1fr; }
-  .scope { border-right: 0; border-bottom: 1px solid var(--rule); }
-  .scope:last-child { border-bottom: 0; }
-  .scrub { flex-wrap: wrap; }
-  .scrub input[type='range'] { flex: 1 1 100%; order: 3; }
-}
-
-@media (max-width: 420px) {
-  .mark span { display: none; }
-  .mark { min-width: 44px; justify-content: center; }
-}
+@keyframes symMarqL { from { transform: translate3d(0,0,0); }    to { transform: translate3d(-50%,0,0); } }
+@keyframes symMarqR { from { transform: translate3d(-50%,0,0); } to { transform: translate3d(0,0,0); } }
+@keyframes symFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+@keyframes symScan  { 0% { transform: translateY(-10%); opacity: 0; } 12% { opacity: .7; } 88% { opacity: .7; } 100% { transform: translateY(1000%); opacity: 0; } }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
+  html { scroll-behavior: auto; }
+  * {
+    animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
   }
+}
+
+/* ============================================================
+   4. Hover and focus
+
+   Generated from the 118 `style-hover` attributes the runtime used to
+   read, deduplicated to 20 distinct states. Inline style attributes
+   outrank a class selector, so each declaration carries !important in
+   order to win on hover. :focus-visible is paired with every one so a
+   keyboard reaches the same states a mouse does.
+   ============================================================ */
+
+[data-hv="hv0"]:hover,[data-hv="hv0"]:focus-visible{background:rgba(91,123,255,0.22) !important;border-color:rgba(138,166,255,0.6) !important}
+[data-hv="hv1"]:hover,[data-hv="hv1"]:focus-visible{background:rgba(255,155,74,0.2) !important;border-color:rgba(255,155,74,0.6) !important}
+[data-hv="hv2"]:hover,[data-hv="hv2"]:focus-visible{color:#f6f6f9 !important;background:rgba(255,255,255,0.05) !important}
+[data-hv="hv3"]:hover,[data-hv="hv3"]:focus-visible{border-color:rgba(255,255,255,0.2) !important;color:#f6f6f9 !important}
+[data-hv="hv4"]:hover,[data-hv="hv4"]:focus-visible{background:rgba(255,255,255,0.07) !important;border-color:rgba(255,255,255,0.24) !important}
+[data-hv="hv5"]:hover,[data-hv="hv5"]:focus-visible{transform:translateY(-1px) !important;box-shadow:0 10px 26px -10px rgba(255,255,255,.5) !important}
+[data-hv="hv6"]:hover,[data-hv="hv6"]:focus-visible{transform:translateY(-2px) !important;box-shadow:0 18px 44px -14px rgba(255,255,255,.45) !important}
+[data-hv="hv7"]:hover,[data-hv="hv7"]:focus-visible{background:rgba(255,255,255,0.07) !important;border-color:rgba(255,255,255,0.28) !important}
+[data-hv="hv8"]:hover,[data-hv="hv8"]:focus-visible{border-color:rgba(255,155,74,0.4) !important;transform:translateY(-3px) !important}
+[data-hv="hv9"]:hover,[data-hv="hv9"]:focus-visible{border-color:rgba(138,166,255,0.4) !important;transform:translateY(-4px) !important}
+[data-hv="hv10"]:hover,[data-hv="hv10"]:focus-visible{background:rgba(255,255,255,0.14) !important}
+[data-hv="hv11"]:hover,[data-hv="hv11"]:focus-visible{background:#101017 !important}
+[data-hv="hv12"]:hover,[data-hv="hv12"]:focus-visible{color:#8aa6ff !important}
+[data-hv="hv13"]:hover,[data-hv="hv13"]:focus-visible{border-color:rgba(138,166,255,0.35) !important;transform:translateY(-4px) !important}
+[data-hv="hv14"]:hover,[data-hv="hv14"]:focus-visible{border-color:rgba(138,166,255,0.45) !important;color:#f6f6f9 !important}
+[data-hv="hv15"]:hover,[data-hv="hv15"]:focus-visible{border-color:rgba(138,166,255,0.3) !important}
+[data-hv="hv16"]:hover,[data-hv="hv16"]:focus-visible{border-color:rgba(138,166,255,0.48) !important}
+[data-hv="hv17"]:hover,[data-hv="hv17"]:focus-visible{transform:translateY(-2px) !important;box-shadow:0 20px 50px -14px rgba(255,255,255,.5) !important}
+[data-hv="hv18"]:hover,[data-hv="hv18"]:focus-visible{background:rgba(255,255,255,0.08) !important;border-color:rgba(255,255,255,0.3) !important}
+[data-hv="hv19"]:hover,[data-hv="hv19"]:focus-visible{color:#f6f6f9 !important}
+
+/* A coarse pointer has no hover. Leaving the lift transforms in place
+   there makes a tap look like it dragged the card. */
+@media (hover: none) {
+  [data-hv]:hover { transform: none !important; box-shadow: none !important; }
+}
+
+/* ============================================================
+   5. Breakpoints
+
+   The reference had none. The runtime toggled `display` from a resize
+   listener, so the header collapsed only after JavaScript ran, and
+   everything else relied entirely on clamp(). These are the same
+   decisions expressed where they belong, plus the reflow the band
+   between 560px and 1180px turned out to need.
+   ============================================================ */
+
+@media (max-width: 1179.98px) {
+  [data-mob="hide"] { display: none !important; }
+  [data-mob="only"] { display: flex !important; }
+}
+@media (min-width: 1180px) {
+  [data-mob="only"] { display: none !important; }
+}
+
+/* Below ~560px the header's right-hand cluster — language tabs, the
+   booking button and the menu button — needs 273px next to a 118px
+   wordmark, and the row runs 35px past a 390px screen. Because body
+   clips overflow-x there is no scrollbar to reveal it: the menu button
+   simply sits off the edge of the phone, unreachable. The booking
+   button is the one of the three that is already repeated inside the
+   menu panel and again in the hero, so it is the one that goes. */
+@media (max-width: 560px) {
+  [data-sym-nav] a[data-hv="hv5"] { display: none; }
+}
+
+/* Every control on the page clears 24×24 already, which is what WCAG 2.5.8
+   asks for. On a touch screen that is still a small thing to hit, so the
+   controls — as opposed to the citation links, which are quiet small print
+   by design — get a 44px floor where the pointer is coarse. */
+@media (pointer: coarse) {
+  [data-sym-nav] a,
+  [data-sym-menu] a,
+  [role="tab"],
+  [data-act],
+  a[data-hv],
+  a[href^="https://www.sell2inspire.agency"],
+  summary {
+    min-height: 44px;
+  }
+  /* Short labels — "FAQ", "Вход" — are tall enough but too narrow to hit. */
+  [role="tab"],
+  a[data-hv="hv19"] { min-width: 44px; }
+}
+
+/* Wide instruments scroll inside their own box rather than pushing the
+   page sideways. */
+[data-scroll-x] {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
 }
