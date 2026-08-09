@@ -214,10 +214,9 @@ static, no build step. Full-resolution brand originals live in
 `brand-assets/` outside it; re-encode from those, not from the WebP, which
 is already at 2× its largest render.
 
-**The canonical URL, both `hreflang` alternates and `og:url` currently point
-at `https://symbiosis.bg/`, which is a placeholder.** It was never confirmed
-by the client. Set it to the real host before going live or the page will
-declare a canonical it does not own.
+The canonical URL, both `hreflang` alternates and `og:url` point at
+`https://symbiosis.sell2inspire.agency/`, confirmed by the client as the
+live host.
 
 ## Known open work
 
