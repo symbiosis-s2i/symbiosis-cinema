@@ -159,6 +159,28 @@ It took an explicit per-element sweep to find. My own first overflow check
 missed it too, for exactly that reason — it treated the body guard as
 legitimate clipping. The check was wrong before the page was.
 
+Two more came out of review, both from the same root cause — a design that
+could not express a breakpoint:
+
+- **The Cinema section held two columns all the way down.** It is the page's
+  only grid with a fixed template; every other one uses `auto-fit` and folds
+  on its own. At 390px that meant a 148px card beside a 196px one, three
+  words to a line. It now collapses below 900px.
+
+- **The sticky slate never stuck, at any width.** `section#cinema` carried
+  `overflow: hidden`, which makes it a scroll container, and a scroll
+  container is exactly what stops `position: sticky` engaging inside it. The
+  card scrolled away with the page and left roughly 500px of empty column
+  beside steps 05 and 06. Changed to `overflow: clip`, which clips
+  identically without creating a scroll container; `hidden` is still
+  declared first so a browser that does not know `clip` keeps the old
+  behaviour rather than losing the clip. When the grid stacks, the slate
+  drops to `position: static` — pinned in a single column it would sit on
+  top of the steps it describes.
+
+Both were present in the reference and inherited by the port. Neither is
+visible in a screenshot of a single scroll position.
+
 ### 3.4 Accessibility
 
 - **Contrast**: 180 declarations across three grey steps raised to AA.
@@ -222,6 +244,9 @@ Measured on the built page, served over HTTP, fonts loaded:
 | Untranslated nodes after EN swap | **0 of 550** |
 | Console errors / failed requests | **0** |
 | Without JavaScript | 22 sections, 94 headings, 26,055 chars, 0 hidden |
+| Cinema slate pins and releases with its grid | **yes**, 900px and up |
+| Cinema grid single-column below 900px | **yes** |
+| Links with a computed underline | **0** |
 
 ---
 
