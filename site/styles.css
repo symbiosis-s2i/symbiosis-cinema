@@ -274,6 +274,26 @@ summary::-webkit-details-marker { display: none; }
   a[data-hv="hv19"] { min-width: 44px; }
 }
 
+/* ============================================================
+   6. Tile rows
+
+   Fourteen of the page's tile groups paint their own gap: a 1px gap over a
+   light background is what draws the hairline between cells. As a grid,
+   any item count that does not divide by the column count leaves painted
+   tracks over — and a painted empty track looks exactly like an empty
+   tile. Three stats in a two-column grid left one; four list items in a
+   three-column grid left two.
+
+   A wrapping flex row has no tracks. The last row's items grow to fill it,
+   so there is nothing left over to paint. `--fb` carries each group's
+   original minimum width so the wrap points are unchanged.
+   ============================================================ */
+
+[data-fillrow] > * {
+  flex: 1 1 var(--fb, 150px);
+  min-width: 0;
+}
+
 /* Wide instruments scroll inside their own box rather than pushing the
    page sideways. */
 [data-scroll-x] {

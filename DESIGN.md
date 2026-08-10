@@ -71,12 +71,21 @@ an 88px grid under a radial mask, an eyebrow badge, a three-line headline
 at `clamp(2.5rem, 7.2vw, 6.1rem)` with `line-height: .99`, then the lede and
 two pill CTAs, then a masked marquee of persona frames.
 
-**23 sections**: hero, Cinema, why, a day in your life, transformation,
-proof, platform, features, everything else, AI search, industries, process,
-modules, AI models, comparison, FAQ, close.
+**23 sections**: hero, Cinema and its run — the vault, the dashboard, the AI
+assistant — then AI search, the Cinema audience, the Cinema numbers, why, a
+day in your life, transformation, proof, platform, features, everything
+else, industries, process, modules, AI models, comparison, FAQ, close.
 
 Cinema leads, which is also the order the navigation lists it in. AI search
-sits directly above the industries section. "A day in your life" is copy
+sits directly above the "За кого е" audience block.
+
+Moving it there exposed a seam. The audience section was authored to sit
+directly under the block above it, so it opens with **zero top padding** and
+borrows that block's bottom padding for its breathing room — with a full
+section dropped between them, its heading landed hard against the edge. It
+has its own top padding now, matching its siblings, and the AI-search
+section carries a hairline at each edge so the change of subject is stated
+rather than looking pasted in. "A day in your life" is copy
 recovered from the deployed page — see §3.8.
 
 **The product is `Symbiosis OS`.** The name appears in full everywhere the
@@ -239,7 +248,22 @@ The 2 MB persona PNGs were 1024×1536 rendering into a 400px card. They are
   it.
 - `scroll-padding-top: 92px` so anchored sections clear the fixed header.
 
-### 3.7 The mark, and the icon set
+### 3.7 Tile rows
+
+Sixteen of the page's tile groups paint their own gap: a 1px gap over a
+light background is what draws the hairline between cells. As grids, any
+item count that does not divide by the column count leaves painted tracks
+over — and a painted empty track looks exactly like an empty tile. Three
+statistics in a two-column grid left one; four list items in a three-column
+grid left two. At 1440px eleven groups were showing at least one.
+
+They are wrapping flex rows now, `flex: 1 1 var(--fb)` carrying each
+group's original minimum width so the wrap points are unchanged. A flex row
+has no tracks, so the last row's items grow to fill it and there is nothing
+left over to paint. Swept 320px to 1920px: **no painted empty cells at any
+width**.
+
+### 3.8 The mark, and the icon set
 
 The logo that shipped in the Claude Design bundle was a **zoomed crop of the
 mark's centre**. The outer connector ring — four dots joined by bracket
@@ -284,7 +308,7 @@ Four places were left without one, on purpose:
 - **The fifteen solution chips and the FAQ.** Too small, and the accordion has
   its own open/closed marker.
 
-### 3.8 Copy
+### 3.9 Copy
 
 **Recovered from the deployed page.** Its dictionary carries 62 keys the new
 design had no home for. Most are labels for a mock dashboard the design
