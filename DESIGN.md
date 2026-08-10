@@ -231,7 +231,37 @@ The 2 MB persona PNGs were 1024×1536 rendering into a 400px card. They are
   it.
 - `scroll-padding-top: 92px` so anchored sections clear the fixed header.
 
-### 3.7 Copy
+### 3.7 The mark, and the icon set
+
+The logo that shipped in the Claude Design bundle was a **zoomed crop of the
+mark's centre**. The outer connector ring — four dots joined by bracket
+lines — had been cut away entirely, and what remained ran flush to all four
+edges of its 544px canvas with a fraction of a pixel clipped on each side.
+It read as a logo photographed too close, because it was.
+
+The complete mark is now the source. It arrives on white, so the derived
+assets mask the disc to a circle at centre (538, 538.5) with radius 528 —
+three pixels inside the measured edge, which drops the JPEG fringe — and
+leave everything outside transparent. A white square behind a round logo is
+very visible on a near-black page. Both derivatives sit inside their box
+rather than flush to it: `symbiosis-mark.webp` is a 160px box with the disc
+at 141px, `favicon-64.png` a 64px box with the disc at 60px.
+
+**29 icons**, drawn as inline SVG rather than typed as emoji. An emoji is a
+colour glyph the platform owns: it cannot take a brand colour, and it renders
+as a different picture on iOS, Android and Windows. These are hairline
+strokes at 1.6px in `currentColor`, each in the accent its own section
+already uses — peach in AI search, periwinkle everywhere else — sitting in
+the same rounded tile the page uses for its list markers.
+
+| Section | Count |
+|---|---|
+| The seven changes | 7 |
+| AI search features | 6 |
+| Industries | 8 |
+| Everything else in your account | 8 |
+
+### 3.8 Copy
 
 **Recovered from the deployed page.** Its dictionary carries 62 keys the new
 design had no home for. Most are labels for a mock dashboard the design
