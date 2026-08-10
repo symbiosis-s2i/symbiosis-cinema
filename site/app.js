@@ -1,4 +1,4 @@
-/* Symbiosis — interaction layer.
+/* Symbiosis OS — interaction layer.
 
    A direct port of the component the design shipped inside Claude
    Design's runtime. Same behaviours, same easing, same thresholds; the
@@ -23,12 +23,12 @@
 
   var META = {
     bg: {
-      title: 'Symbiosis — AI платформа за бизнес растеж | 100+ AI модела в едно | Sell 2 Inspire',
-      desc: 'Symbiosis обединява AI видео създаване (Cinema), кампанийни страници с AI търсене, продажби, клиенти, оферти и проекти в една система. Над 100 AI модела без допълнителни абонаменти.'
+      title: 'Symbiosis OS — AI платформа за бизнес растеж | 100+ AI модела в едно | Sell 2 Inspire',
+      desc: 'Symbiosis OS обединява AI видео създаване (Cinema), кампанийни страници с AI търсене, продажби, клиенти, оферти и проекти в една система. Над 100 AI модела без допълнителни абонаменти.'
     },
     en: {
-      title: 'Symbiosis — the AI platform for business growth | 100+ AI models in one | Sell 2 Inspire',
-      desc: 'Symbiosis brings AI video production (Cinema), AI-search campaign pages, sales, clients, proposals and projects into one system. Over 100 AI models, no extra subscriptions.'
+      title: 'Symbiosis OS — the AI platform for business growth | 100+ AI models in one | Sell 2 Inspire',
+      desc: 'Symbiosis OS brings AI video production (Cinema), AI-search campaign pages, sales, clients, proposals and projects into one system. Over 100 AI models, no extra subscriptions.'
     }
   };
 

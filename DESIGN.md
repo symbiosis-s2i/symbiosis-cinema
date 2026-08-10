@@ -71,13 +71,21 @@ an 88px grid under a radial mask, an eyebrow badge, a three-line headline
 at `clamp(2.5rem, 7.2vw, 6.1rem)` with `line-height: .99`, then the lede and
 two pill CTAs, then a masked marquee of persona frames.
 
-**23 sections**: hero, Cinema, AI search, why, a day in your life,
-transformation, proof, platform, features, industries, process, modules, AI,
-comparison, FAQ, close.
+**23 sections**: hero, Cinema, why, a day in your life, transformation,
+proof, platform, features, everything else, AI search, industries, process,
+modules, AI models, comparison, FAQ, close.
 
-Cinema leads AI search, which is also the order the navigation has always
-listed them in. "A day in your life" is copy recovered from the deployed
-page — see §3.7.
+Cinema leads, which is also the order the navigation lists it in. AI search
+sits directly above the industries section. "A day in your life" is copy
+recovered from the deployed page — see §3.8.
+
+**The product is `Symbiosis OS`.** The name appears in full everywhere the
+platform is meant: 60 dictionary values across both languages, 47 places in
+the markup, and the meta titles in `app.js`. `Symbiosis Cinema` is left
+alone — Cinema is a part of the platform, not a second platform, so
+"Symbiosis OS Cinema" would be wrong. The rewrite uses a negative lookahead
+for exactly that reason, and it never touches `symbiosis.app` or the host
+names.
 
 ---
 
