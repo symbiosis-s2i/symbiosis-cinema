@@ -71,9 +71,13 @@ an 88px grid under a radial mask, an eyebrow badge, a three-line headline
 at `clamp(2.5rem, 7.2vw, 6.1rem)` with `line-height: .99`, then the lede and
 two pill CTAs, then a masked marquee of persona frames.
 
-**22 sections**: hero, AI search, Cinema, why, transformation, proof,
-platform, features, industries, process, modules, AI, comparison, FAQ,
-close.
+**23 sections**: hero, Cinema, AI search, why, a day in your life,
+transformation, proof, platform, features, industries, process, modules, AI,
+comparison, FAQ, close.
+
+Cinema leads AI search, which is also the order the navigation has always
+listed them in. "A day in your life" is copy recovered from the deployed
+page — see §3.7.
 
 ---
 
@@ -226,6 +230,57 @@ The 2 MB persona PNGs were 1024×1536 rendering into a 400px card. They are
   document order, so the dictionary is always in place before `app.js` reads
   it.
 - `scroll-padding-top: 92px` so anchored sections clear the fixed header.
+
+### 3.7 Copy
+
+**Recovered from the deployed page.** Its dictionary carries 62 keys the new
+design had no home for. Most are labels for a mock dashboard the design
+deliberately dropped — `PRODUCT.md` lists fake dashboard charts as an
+anti-reference, so they stay dropped. Two things were worth keeping and are
+now in the page: the **"Един ден в живота ви"** section, three time-stamped
+before/after moments at 08:30, 13:00 and 19:30, which is the strongest
+narrative copy the product has; and `cn.flow.title`, a heading the Cinema
+steps were missing.
+
+**Typography.** The copy used a spaced hyphen as a dash throughout — 103
+Bulgarian entries and 60 English. Bulgarian sets an appositive dash as an en
+dash; English convention here is the em dash. All 140 occurrences were
+checked first to confirm none is a numeric range or a minus sign.
+
+**One claim was corrected.** `tr.sub` read *"Не обещания – числа. Ето
+средните резултати при собственици, въвели Symbiosis в първите 3 месеца"* —
+asserting measured averages across real customers. `PRODUCT.md` records that
+there are no documented customer success metrics yet, and the English for
+the same key already hedged it as "a typical picture". Both languages now
+say plainly that the figures are an illustrative scenario. The numbers
+themselves are unchanged; only the claim about where they come from.
+
+**Nine other fixes**, each a real defect rather than a preference:
+
+| Key | What was wrong |
+|---|---|
+| `st.s4.body` | "wins the deal 21× more often" with the baseline missing — 21× more often *than what* |
+| `cn.s3.b` | four goals in Bulgarian, five in English; and two consecutive sentences opening "Избирате" |
+| `cmp.sub` | English said the section compares "content"; it compares clients |
+| `cta.sub` | English dropped the two sentences that answer "what does this cost me" |
+| `top.f1.b` | English ended on a generic summary instead of the Bulgarian's actual point |
+| `ai.sub` | "инвестиция" standing in for "цена"; English had lost "monthly" |
+| `ind.i3.b` | "последванията" is not a Bulgarian word in this sense |
+| `pq.sub` | "докато живеете" — "while you are alive" |
+| `cn.chat.a1` | "възвръщаемостта от внедряване" missing its definite article |
+
+Plus `as.f2.b` ("0-100" is a range and takes an en dash), `tr.before.5a`
+("0 clarity" reading oddly against "Full clarity"), four entries with
+trailing whitespace and two straight quotes.
+
+The Bulgarian lives in both the markup and the dictionary, so after every
+copy change the markup is re-synced from the dictionary — the two cannot
+drift.
+
+**Not reachable.** The live URL is blocked by this environment's egress
+proxy, so "the current live site" here means the deployed artifact's own
+extracted source and dictionaries, which this repo holds. If the live page
+has been edited since, those edits are not visible from here.
 
 ---
 

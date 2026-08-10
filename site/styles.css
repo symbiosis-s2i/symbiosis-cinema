@@ -192,8 +192,8 @@ summary::-webkit-details-marker { display: none; }
 [data-hv="hv2"]:hover,[data-hv="hv2"]:focus-visible{color:#f6f6f9 !important;background:rgba(255,255,255,0.05) !important}
 [data-hv="hv3"]:hover,[data-hv="hv3"]:focus-visible{border-color:rgba(255,255,255,0.2) !important;color:#f6f6f9 !important}
 [data-hv="hv4"]:hover,[data-hv="hv4"]:focus-visible{background:rgba(255,255,255,0.07) !important;border-color:rgba(255,255,255,0.24) !important}
-[data-hv="hv5"]:hover,[data-hv="hv5"]:focus-visible{transform:translateY(-1px) !important;box-shadow:0 10px 26px -10px rgba(255,255,255,.5) !important}
-[data-hv="hv6"]:hover,[data-hv="hv6"]:focus-visible{transform:translateY(-2px) !important;box-shadow:0 18px 44px -14px rgba(255,255,255,.45) !important}
+[data-hv="hv5"]:hover,[data-hv="hv5"]:focus-visible{transform:translateY(-1px) !important;box-shadow:0 10px 26px -10px rgba(43,78,230,.55) !important}
+[data-hv="hv6"]:hover,[data-hv="hv6"]:focus-visible{transform:translateY(-2px) !important;box-shadow:0 18px 44px -14px rgba(43,78,230,.5) !important}
 [data-hv="hv7"]:hover,[data-hv="hv7"]:focus-visible{background:rgba(255,255,255,0.07) !important;border-color:rgba(255,255,255,0.28) !important}
 [data-hv="hv8"]:hover,[data-hv="hv8"]:focus-visible{border-color:rgba(255,155,74,0.4) !important;transform:translateY(-3px) !important}
 [data-hv="hv9"]:hover,[data-hv="hv9"]:focus-visible{border-color:rgba(138,166,255,0.4) !important;transform:translateY(-4px) !important}
@@ -204,7 +204,7 @@ summary::-webkit-details-marker { display: none; }
 [data-hv="hv14"]:hover,[data-hv="hv14"]:focus-visible{border-color:rgba(138,166,255,0.45) !important;color:#f6f6f9 !important}
 [data-hv="hv15"]:hover,[data-hv="hv15"]:focus-visible{border-color:rgba(138,166,255,0.3) !important}
 [data-hv="hv16"]:hover,[data-hv="hv16"]:focus-visible{border-color:rgba(138,166,255,0.48) !important}
-[data-hv="hv17"]:hover,[data-hv="hv17"]:focus-visible{transform:translateY(-2px) !important;box-shadow:0 20px 50px -14px rgba(255,255,255,.5) !important}
+[data-hv="hv17"]:hover,[data-hv="hv17"]:focus-visible{transform:translateY(-2px) !important;box-shadow:0 20px 50px -14px rgba(43,78,230,.55) !important}
 [data-hv="hv18"]:hover,[data-hv="hv18"]:focus-visible{background:rgba(255,255,255,0.08) !important;border-color:rgba(255,255,255,0.3) !important}
 [data-hv="hv19"]:hover,[data-hv="hv19"]:focus-visible{color:#f6f6f9 !important}
 
