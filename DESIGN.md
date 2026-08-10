@@ -260,6 +260,21 @@ the same rounded tile the page uses for its list markers.
 | AI search features | 6 |
 | Industries | 8 |
 | Everything else in your account | 8 |
+| Cinema, six steps | 6 |
+| Process, six steps | 6 |
+| The three AI columns | 3 |
+| A day in your life, before / with | 2 designs × 3 moments |
+
+Four places were left without one, on purpose:
+
+- **The 28 modules.** Each cell is 240px wide with a 0.94rem title. Twenty-eight
+  more marks in that grid stops being a system and becomes noise.
+- **The six statistics and the three results cards.** A card anchored by
+  `106`, `1 200` or `+34%` at 3.2rem already has its mark. An icon beside it
+  competes with the number for the same job.
+- **The comparison lists.** They already carry `□` and `✓` per row.
+- **The fifteen solution chips and the FAQ.** Too small, and the accordion has
+  its own open/closed marker.
 
 ### 3.8 Copy
 
