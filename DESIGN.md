@@ -319,9 +319,15 @@ the same rounded tile the page uses for its list markers.
 | Industries | 8 |
 | Everything else in your account | 8 |
 | Cinema, six steps | 6 |
+| Cinema audience | 5 |
 | Process, six steps | 6 |
 | The three AI columns | 3 |
 | A day in your life, before / with | 2 designs × 3 moments |
+
+Two of the audience marks are deliberately the same drawings as the
+industries grid further down: "Маркетинг агенции" and "Консултанти и
+треньори" name the same reader in both places, and a second icon for the
+same audience would imply they were two different ones.
 
 Four places were left without one, on purpose:
 
