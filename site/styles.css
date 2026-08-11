@@ -275,7 +275,45 @@ summary::-webkit-details-marker { display: none; }
 }
 
 /* ============================================================
-   6. Tile rows
+   6. Section seams
+
+   Nine sections alternated a flat #0b0b0f band against the #08080a ground,
+   each ruled top and bottom with a 1px hairline. That is two hard edges per
+   section: the rule itself, and an instant step in value beside it. Twenty
+   hairlines down the page, each announcing "a section ends here".
+
+   The band is a gradient now. It starts and ends on the ground colour, so
+   the eye never meets an edge — the value rises over the first stretch of
+   the section and falls again over the last. 14% of the section height at
+   each end is 55–200px of ramp at the heights these sections actually run.
+   ============================================================ */
+
+section[data-band] {
+  background: linear-gradient(
+    180deg,
+    #08080a 0%,
+    #0b0b0f 14%,
+    #0b0b0f 86%,
+    #08080a 100%
+  );
+}
+
+/* Below the fold the sections are short enough that a percentage ramp gets
+   thin. Fixed stops keep the fade the same physical length on a phone. */
+@media (max-width: 700px) {
+  section[data-band] {
+    background: linear-gradient(
+      180deg,
+      #08080a 0px,
+      #0b0b0f 90px,
+      #0b0b0f calc(100% - 90px),
+      #08080a 100%
+    );
+  }
+}
+
+/* ============================================================
+   7. Tile rows
 
    Fourteen of the page's tile groups paint their own gap: a 1px gap over a
    light background is what draws the hairline between cells. As a grid,

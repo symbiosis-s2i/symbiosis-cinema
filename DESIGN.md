@@ -83,10 +83,9 @@ Moving it there exposed a seam. The audience section was authored to sit
 directly under the block above it, so it opens with **zero top padding** and
 borrows that block's bottom padding for its breathing room — with a full
 section dropped between them, its heading landed hard against the edge. It
-has its own top padding now, matching its siblings, and the AI-search
-section carries a hairline at each edge so the change of subject is stated
-rather than looking pasted in. "A day in your life" is copy
-recovered from the deployed page — see §3.8.
+has its own top padding now, matching its siblings; the seam itself is
+handled the way every other seam on the page is — see §3.7. "A day in your
+life" is copy recovered from the deployed page — see §3.10.
 
 **The product is `Symbiosis OS`.** The name appears in full everywhere the
 platform is meant: 60 dictionary values across both languages, 47 places in
@@ -248,7 +247,34 @@ The 2 MB persona PNGs were 1024×1536 rendering into a 400px card. They are
   it.
 - `scroll-padding-top: 92px` so anchored sections clear the fixed header.
 
-### 3.7 Tile rows
+### 3.7 Section seams
+
+The page announced every section change with a hard edge, usually two:
+
+- **Twenty 1px hairlines.** Nine sections alternated a flat `#0b0b0f` band
+  against the `#08080a` ground, each ruled top and bottom. A white rule at
+  7% opacity over near-black is a **19/255 step** — against about 2 for the
+  fill change on its own, so the rule was doing nearly all the shouting.
+- **Four full-bleed washes cut square.** The decorative radial glows live
+  inside sections that clip, so a glow still at full strength when it
+  reached the section edge was sliced off flat — a hard horizontal line
+  exactly where the subject changes.
+- **Three 2px accent bars** pinned to a section's top edge: the same hard
+  line in a brighter colour.
+
+Now: the bands are gradients that start and end on the ground colour, so the
+value rises over the first stretch and falls again over the last; the washes
+carry a vertical mask that fades them before they reach an edge; and the
+accent bars are 120px glows with no edge of their own.
+
+Measured by sampling the median luminance of every pixel row across the full
+page width at each of the 22 section boundaries — a median, so a glyph or a
+card cannot masquerade as a seam. **Twenty-one of twenty-two now step by 1/255
+or less**, which is the `#08080a → #0b0b0f` ramp resolving in 8-bit and is
+not visible. The twenty-second is a card's own bottom edge that happens to
+land on a section boundary, and cards are meant to have edges.
+
+### 3.8 Tile rows
 
 Sixteen of the page's tile groups paint their own gap: a 1px gap over a
 light background is what draws the hairline between cells. As grids, any
@@ -263,7 +289,7 @@ has no tracks, so the last row's items grow to fill it and there is nothing
 left over to paint. Swept 320px to 1920px: **no painted empty cells at any
 width**.
 
-### 3.8 The mark, and the icon set
+### 3.9 The mark, and the icon set
 
 The logo that shipped in the Claude Design bundle was a **zoomed crop of the
 mark's centre**. The outer connector ring — four dots joined by bracket
@@ -308,7 +334,7 @@ Four places were left without one, on purpose:
 - **The fifteen solution chips and the FAQ.** Too small, and the accordion has
   its own open/closed marker.
 
-### 3.9 Copy
+### 3.10 Copy
 
 **Recovered from the deployed page.** Its dictionary carries 62 keys the new
 design had no home for. Most are labels for a mock dashboard the design
