@@ -170,7 +170,12 @@ summary::-webkit-details-marker { display: none; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  * {
+  /* The universal selector does not match pseudo-elements, so `*` alone
+     left the two ambient drift layers running for a visitor who had asked
+     for no motion — confirmed with document.getAnimations(). */
+  *,
+  *::before,
+  *::after {
     animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
@@ -275,7 +280,63 @@ summary::-webkit-details-marker { display: none; }
 }
 
 /* ============================================================
-   6. Section seams
+   6. Ambient drift
+
+   Two fixed layers of very soft brand light behind the whole page, moving
+   slowly enough that you register it as depth rather than as animation.
+   Both live on `body`, below the content wrapper, so nothing overlays text
+   and the measured contrast is unaffected.
+
+   They are `position: fixed` with `transform` animations, which keeps them
+   on the compositor — they cost nothing on scroll and never trigger layout.
+   The two durations are deliberately not multiples of each other, so the
+   combined pattern takes about twenty minutes to repeat.
+   ============================================================ */
+
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  inset: -25%;
+  z-index: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+body::before {
+  background:
+    radial-gradient(32% 30% at 24% 26%, rgba(91, 123, 255, .10), transparent 64%),
+    radial-gradient(28% 26% at 76% 66%, rgba(122, 77, 255, .085), transparent 62%);
+  animation: symDriftA 67s ease-in-out infinite alternate;
+}
+
+body::after {
+  background:
+    radial-gradient(26% 24% at 66% 18%, rgba(255, 155, 74, .045), transparent 62%),
+    radial-gradient(30% 28% at 16% 78%, rgba(138, 166, 255, .06), transparent 64%);
+  animation: symDriftB 89s ease-in-out infinite alternate;
+}
+
+@keyframes symDriftA {
+  from { transform: translate3d(-3%, -2%, 0) scale(1); }
+  to   { transform: translate3d(4%, 3%, 0) scale(1.14); }
+}
+@keyframes symDriftB {
+  from { transform: translate3d(3%, 2%, 0) scale(1.1); }
+  to   { transform: translate3d(-4%, -3%, 0) scale(1); }
+}
+
+/* The wrapper painted its own opaque ground, which would have sat on top of
+   the drift. `body` carries the ground colour now and the wrapper is a
+   transparent stacking context above the two layers. */
+[data-sym-root] {
+  background: transparent !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   7. Section seams
 
    Nine sections alternated a flat #0b0b0f band against the #08080a ground,
    each ruled top and bottom with a 1px hairline. That is two hard edges per
@@ -291,10 +352,10 @@ summary::-webkit-details-marker { display: none; }
 section[data-band] {
   background: linear-gradient(
     180deg,
-    #08080a 0%,
-    #0b0b0f 14%,
-    #0b0b0f 86%,
-    #08080a 100%
+    transparent 0%,
+    rgba(255, 255, 255, .014) 14%,
+    rgba(255, 255, 255, .014) 86%,
+    transparent 100%
   );
 }
 
@@ -304,16 +365,16 @@ section[data-band] {
   section[data-band] {
     background: linear-gradient(
       180deg,
-      #08080a 0px,
-      #0b0b0f 90px,
-      #0b0b0f calc(100% - 90px),
-      #08080a 100%
+      transparent 0px,
+      rgba(255, 255, 255, .014) 90px,
+      rgba(255, 255, 255, .014) calc(100% - 90px),
+      transparent 100%
     );
   }
 }
 
 /* ============================================================
-   7. Tile rows
+   8. Tile rows
 
    Fourteen of the page's tile groups paint their own gap: a 1px gap over a
    light background is what draws the hairline between cells. As a grid,

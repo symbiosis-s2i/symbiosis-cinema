@@ -71,10 +71,10 @@ an 88px grid under a radial mask, an eyebrow badge, a three-line headline
 at `clamp(2.5rem, 7.2vw, 6.1rem)` with `line-height: .99`, then the lede and
 two pill CTAs, then a masked marquee of persona frames.
 
-**23 sections**: hero, Cinema and its run — the vault, the dashboard, the AI
+**24 sections**: hero, Cinema and its run — the vault, the dashboard, the AI
 assistant — then AI search, the Cinema audience, the Cinema numbers, why, a
 day in your life, transformation, proof, platform, features, everything
-else, industries, process, modules, AI models, comparison, FAQ, close.
+else, industries, process, modules, AI models, comparison, the team, FAQ, close.
 
 Cinema leads, which is also the order the navigation lists it in. AI search
 sits directly above the "За кого е" audience block.
@@ -84,8 +84,8 @@ directly under the block above it, so it opens with **zero top padding** and
 borrows that block's bottom padding for its breathing room — with a full
 section dropped between them, its heading landed hard against the edge. It
 has its own top padding now, matching its siblings; the seam itself is
-handled the way every other seam on the page is — see §3.7. "A day in your
-life" is copy recovered from the deployed page — see §3.10.
+handled the way every other seam on the page is — see §3.9. "A day in your
+life" is copy recovered from the deployed page — see §3.12.
 
 **The product is `Symbiosis OS`.** The name appears in full everywhere the
 platform is meant: 60 dictionary values across both languages, 47 places in
@@ -247,7 +247,45 @@ The 2 MB persona PNGs were 1024×1536 rendering into a 400px card. They are
   it.
 - `scroll-padding-top: 92px` so anchored sections clear the fixed header.
 
-### 3.7 Section seams
+### 3.7 Ambient drift
+
+Two fixed layers of very soft brand light sit behind the whole page, moving
+slowly enough to register as depth rather than as animation. Both live on
+`body`, below the content wrapper, so nothing overlays text — the contrast
+figures are unchanged. `position: fixed` plus `transform` keeps them on the
+compositor: no layout, no cost on scroll. The two durations, 67s and 89s,
+are not multiples of each other, so the combined pattern takes about twenty
+minutes to repeat.
+
+The wrapper used to paint its own opaque ground, which would have covered
+them, and the nine banded sections used to be an opaque `#0b0b0f`. `body`
+carries the ground colour now, and the bands are a 1.4% white wash instead —
+visually the same value, but the drift shows through.
+
+Measured at 1440×800: **55% of pixels change over nine seconds, average
+delta 11/255**. Visible as movement, nowhere near enough to distract.
+
+This turned up a real bug in the reduced-motion block. `*` does not match
+pseudo-elements, so `* { animation-duration: .01ms }` left both drift layers
+running at full speed for a visitor who had asked for no motion —
+`document.getAnimations()` confirmed it. The block now names `*::before` and
+`*::after` too, and reports an empty list under `prefers-reduced-motion`.
+
+### 3.8 The team section
+
+Built from the founder's own deck: the eyebrow, the heading, the three
+people, their remits, and the two next hires, in Bulgarian and English.
+Placed between the comparison and the FAQ — the last credibility beat before
+the questions and the ask.
+
+**The four photographs are not in it.** They were shown in the conversation
+but never written to disk, so there was nothing to embed. Each face is a
+monogram in the brand tile instead, sized and positioned exactly where the
+portrait goes, so swapping in an `<img>` is a one-line change per person.
+LinkedIn is blocked by this environment's egress proxy, so nothing was
+pulled from the founder's profile — the copy is the deck's own wording.
+
+### 3.9 Section seams
 
 The page announced every section change with a hard edge, usually two:
 
@@ -274,7 +312,7 @@ or less**, which is the `#08080a → #0b0b0f` ramp resolving in 8-bit and is
 not visible. The twenty-second is a card's own bottom edge that happens to
 land on a section boundary, and cards are meant to have edges.
 
-### 3.8 Tile rows
+### 3.10 Tile rows
 
 Sixteen of the page's tile groups paint their own gap: a 1px gap over a
 light background is what draws the hairline between cells. As grids, any
@@ -289,7 +327,7 @@ has no tracks, so the last row's items grow to fill it and there is nothing
 left over to paint. Swept 320px to 1920px: **no painted empty cells at any
 width**.
 
-### 3.9 The mark, and the icon set
+### 3.11 The mark, and the icon set
 
 The logo that shipped in the Claude Design bundle was a **zoomed crop of the
 mark's centre**. The outer connector ring — four dots joined by bracket
@@ -340,7 +378,7 @@ Four places were left without one, on purpose:
 - **The fifteen solution chips and the FAQ.** Too small, and the accordion has
   its own open/closed marker.
 
-### 3.10 Copy
+### 3.12 Copy
 
 **Recovered from the deployed page.** Its dictionary carries 62 keys the new
 design had no home for. Most are labels for a mock dashboard the design
