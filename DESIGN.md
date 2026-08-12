@@ -84,8 +84,8 @@ directly under the block above it, so it opens with **zero top padding** and
 borrows that block's bottom padding for its breathing room — with a full
 section dropped between them, its heading landed hard against the edge. It
 has its own top padding now, matching its siblings; the seam itself is
-handled the way every other seam on the page is — see §3.8. "A day in your
-life" is copy recovered from the deployed page — see §3.11.
+handled the way every other seam on the page is — see §3.9. "A day in your
+life" is copy recovered from the deployed page — see §3.12.
 
 **The product is `Symbiosis OS`.** The name appears in full everywhere the
 platform is meant: 60 dictionary values across both languages, 47 places in
@@ -271,7 +271,39 @@ running at full speed for a visitor who had asked for no motion —
 `document.getAnimations()` confirmed it. The block now names `*::before` and
 `*::after` too, and reports an empty list under `prefers-reduced-motion`.
 
-### 3.8 Section seams
+### 3.8 Detail
+
+The hero had a vocabulary the rest of the page did not use: a ruled field,
+a masked marquee, staggered arrivals. Five devices carry it through, all of
+them decorative and all of them sitting behind or over content without
+touching layout, so none of them can move a measured number.
+
+- **The ruled field**, echoed into four sections — why, comparison, AI
+  models, industries. Same 88px grid at 2.2% white under the same radial
+  mask the hero uses.
+- **Numbers count up.** 23 figures, over 1.1s on a cubic ease-out. Each
+  reads its own text when it first comes into view, so whatever the language
+  switch left there is what it counts to, and it restores the exact original
+  string at the end — verified identical under motion, under reduced motion,
+  and with JavaScript off.
+- **Tile rows arrive in sequence.** Seven rows moved their reveal onto their
+  children, staggered, capped so the last card is never more than 340ms
+  behind the first. Reveal count went from 117 to 177.
+- **A pointer spotlight** on all 80 cards: a soft periwinkle highlight
+  tracking the cursor. One delegated listener sets two custom properties;
+  CSS paints the rest. Measured at 122,561 pixels changing on hover, average
+  delta 22.65 — visible, soft. Disabled on coarse pointers, where there is
+  no cursor to follow and it would only flash on tap.
+- **A specular sweep** across the three primary actions on hover and on
+  focus.
+- **A rule beside every section eyebrow**, which is static — a typographic
+  detail rather than another thing in motion.
+
+The spotlight and the sweep both paint at `z-index: -1` inside an isolated
+stacking context, which puts them above the element's own background and
+below its text — a card's opaque fill would otherwise hide them entirely.
+
+### 3.9 Section seams
 
 The page announced every section change with a hard edge, usually two:
 
@@ -298,7 +330,7 @@ or less**, which is the `#08080a → #0b0b0f` ramp resolving in 8-bit and is
 not visible. The twenty-second is a card's own bottom edge that happens to
 land on a section boundary, and cards are meant to have edges.
 
-### 3.9 Tile rows
+### 3.10 Tile rows
 
 Sixteen of the page's tile groups paint their own gap: a 1px gap over a
 light background is what draws the hairline between cells. As grids, any
@@ -313,7 +345,7 @@ has no tracks, so the last row's items grow to fill it and there is nothing
 left over to paint. Swept 320px to 1920px: **no painted empty cells at any
 width**.
 
-### 3.10 The mark, and the icon set
+### 3.11 The mark, and the icon set
 
 The logo that shipped in the Claude Design bundle was a **zoomed crop of the
 mark's centre**. The outer connector ring — four dots joined by bracket
@@ -364,7 +396,7 @@ Four places were left without one, on purpose:
 - **The fifteen solution chips and the FAQ.** Too small, and the accordion has
   its own open/closed marker.
 
-### 3.11 Copy
+### 3.12 Copy
 
 **Recovered from the deployed page.** Its dictionary carries 62 keys the new
 design had no home for. Most are labels for a mock dashboard the design

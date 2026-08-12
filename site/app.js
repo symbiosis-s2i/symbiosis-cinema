@@ -345,9 +345,100 @@
     });
   }
 
+  /* ---------- numbers that count up ----------
+     The page already animates its score dial and grows its ratio bars; the
+     large figures were the one place a number simply appeared. Each one
+     reads its own text when it first comes into view, so whatever the
+     language switch left there is what it counts to. */
+
+  function initCounters() {
+    var els = Array.prototype.slice.call(root.querySelectorAll('[data-count]'));
+    if (!els.length) return;
+
+    // "1 200" -> prefix "", digits "1 200", suffix ""; "−70%" -> "−", "70", "%"
+    var split = function (text) {
+      var m = text.match(/^(\D*?)([\d][\d   ]*)(.*)$/);
+      if (!m) return null;
+      var raw = m[2];
+      var n = parseInt(raw.replace(/[^\d]/g, ''), 10);
+      if (!isFinite(n)) return null;
+      // keep whatever separator the copy used, at the same position
+      var sep = raw.match(/[   ]/);
+      return { pre: m[1], n: n, suf: m[3], sep: sep ? sep[0] : '', grouped: !!sep };
+    };
+
+    var render = function (p, v) {
+      var s = String(v);
+      if (p.grouped && s.length > 3) s = s.slice(0, s.length - 3) + p.sep + s.slice(s.length - 3);
+      return p.pre + s + p.suf;
+    };
+
+    if (reduceMotion || !('IntersectionObserver' in window)) return;
+
+    var obs = new IntersectionObserver(function (entries, o) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        var el = en.target;
+        o.unobserve(el);
+        var parts = split((el.textContent || '').trim());
+        if (!parts) return;
+        var final = el.textContent;
+        var start = performance.now();
+        var step = function (now) {
+          var t = Math.min(1, (now - start) / 1100);
+          var e = 1 - Math.pow(1 - t, 3);
+          el.textContent = render(parts, Math.round(parts.n * e));
+          if (t < 1) requestAnimationFrame(step);
+          else el.textContent = final;   // restore the exact original string
+        };
+        requestAnimationFrame(step);
+      });
+    }, { threshold: 0.6 });
+
+    els.forEach(function (el) { obs.observe(el); });
+  }
+
+  /* ---------- tile rows arrive in sequence ----------
+     A row of eight cards landing as one block reads as a slab. The reveal
+     moves onto the children, staggered, and capped so the last card is
+     never more than a third of a second behind the first. */
+
+  function initCascade() {
+    root.querySelectorAll('[data-cascade]').forEach(function (row) {
+      var kids = Array.prototype.slice.call(row.children);
+      if (kids.length < 2) { row.setAttribute('data-reveal', '1'); return; }
+      var stepMs = Math.min(60, Math.round(340 / kids.length));
+      kids.forEach(function (kid, i) {
+        if (kid.hasAttribute('data-reveal')) return;
+        kid.setAttribute('data-reveal', '1');
+        if (i) kid.setAttribute('data-reveal-d', String(i * stepMs));
+      });
+    });
+  }
+
+  /* ---------- the pointer spotlight ----------
+     One delegated listener rather than eighty. The card only needs to know
+     where the cursor is inside it; CSS paints the rest. */
+
+  function initSpotlight() {
+    if (!window.matchMedia('(hover: hover)').matches) return;
+    var current = null;
+    document.addEventListener('pointermove', function (e) {
+      var card = e.target.closest && e.target.closest('[data-spot]');
+      if (!card) { current = null; return; }
+      if (card !== current) current = card;
+      var r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%');
+      card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100).toFixed(1) + '%');
+    }, { passive: true });
+  }
+
   /* ---------- boot ---------- */
 
+  initCascade();
   initReveal();
+  initCounters();
+  initSpotlight();
   initScroll();
   initDials();
   initBars();

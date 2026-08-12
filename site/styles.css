@@ -346,7 +346,112 @@ body::after {
 }
 
 /* ============================================================
-   7. Section seams
+   7. Detail
+
+   Four devices, all of them borrowed from what the hero already does, so
+   the rest of the page reads as the same design rather than as a quieter
+   version of it. Every one of them is decorative and sits behind or over
+   content without touching layout, so nothing here can change a measured
+   number.
+   ============================================================ */
+
+/* --- the hero's ruled field, echoed in four sections ------------------ */
+[data-gridfield] {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, .022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .022) 1px, transparent 1px);
+  background-size: 88px 88px;
+  mask-image: radial-gradient(ellipse 72% 58% at 50% 34%, #000 6%, transparent 76%);
+  -webkit-mask-image: radial-gradient(ellipse 72% 58% at 50% 34%, #000 6%, transparent 76%);
+}
+/* the field is the section's first child, so everything after it needs to
+   sit above without each one declaring a z-index */
+[data-gridfield] ~ * { position: relative; z-index: 1; }
+
+/* --- the pointer spotlight ------------------------------------------- */
+[data-spot] {
+  position: relative;
+  isolation: isolate;
+}
+[data-spot]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity .35s ease;
+  background: radial-gradient(
+    240px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(138, 166, 255, .13),
+    transparent 68%
+  );
+}
+[data-spot]:hover::after { opacity: 1; }
+/* A coarse pointer has no cursor to follow, and the highlight would just
+   flash on tap. */
+@media (hover: none) {
+  [data-spot]::after { display: none; }
+}
+
+/* --- a specular sweep across the primary action ----------------------- */
+a[data-hv="hv5"],
+a[data-hv="hv6"],
+a[data-hv="hv17"] {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+a[data-hv="hv5"]::after,
+a[data-hv="hv6"]::after,
+a[data-hv="hv17"]::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  bottom: -60%;
+  left: -40%;
+  width: 34%;
+  z-index: -1;
+  pointer-events: none;
+  transform: translateX(-220%) rotate(18deg);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .30), transparent);
+}
+a[data-hv="hv5"]:hover::after,
+a[data-hv="hv6"]:hover::after,
+a[data-hv="hv17"]:hover::after,
+a[data-hv="hv5"]:focus-visible::after,
+a[data-hv="hv6"]:focus-visible::after,
+a[data-hv="hv17"]:focus-visible::after {
+  animation: symSweep .9s cubic-bezier(.3, .7, .3, 1) 1;
+}
+@keyframes symSweep {
+  from { transform: translateX(-220%) rotate(18deg); }
+  to   { transform: translateX(560%) rotate(18deg); }
+}
+
+/* --- a rule beside every section eyebrow ------------------------------ */
+[data-i$=".eyebrow"] {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 14px;
+}
+[data-i$=".eyebrow"]::after {
+  content: '';
+  width: clamp(26px, 5vw, 72px);
+  height: 1px;
+  background: currentColor;
+  opacity: .38;
+}
+/* the two eyebrows that already sit inside a pill have their own frame */
+[data-i$=".eyebrow"][style*="border-radius:999px"]::after { display: none; }
+
+/* ============================================================
+   8. Section seams
 
    Nine sections alternated a flat #0b0b0f band against the #08080a ground,
    each ruled top and bottom with a 1px hairline. That is two hard edges per
@@ -384,7 +489,7 @@ section[data-band] {
 }
 
 /* ============================================================
-   8. Tile rows
+   9. Tile rows
 
    Fourteen of the page's tile groups paint their own gap: a 1px gap over a
    light background is what draws the hairline between cells. As a grid,
