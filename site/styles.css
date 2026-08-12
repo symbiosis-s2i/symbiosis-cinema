@@ -260,10 +260,20 @@ summary::-webkit-details-marker { display: none; }
   [data-sym-nav] a[data-hv="hv5"] { display: none; }
 }
 
-/* Every control on the page clears 24×24 already, which is what WCAG 2.5.8
-   asks for. On a touch screen that is still a small thing to hit, so the
-   controls — as opposed to the citation links, which are quiet small print
-   by design — get a 44px floor where the pointer is coarse. */
+/* The footer's navigation row renders 22px tall, two pixels under the 24×24
+   floor WCAG 2.5.8 sets for every pointer, not only touch. They are
+   standalone links in a row rather than links inside a sentence, so the
+   inline exception does not cover them. */
+[data-hv="hv19"] {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+}
+
+/* Beyond that every control clears 24×24. On a touch screen it is still a
+   small thing to hit, so the controls — as opposed to the citation links,
+   which are quiet small print by design — get a 44px floor where the
+   pointer is coarse. */
 @media (pointer: coarse) {
   [data-sym-nav] a,
   [data-sym-menu] a,
