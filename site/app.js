@@ -1,4 +1,4 @@
-/* Symbiosis OS — interaction layer.
+/* Symbiosis OS - interaction layer.
 
    A direct port of the component the design shipped inside Claude
    Design's runtime. Same behaviours, same easing, same thresholds; the
@@ -23,11 +23,11 @@
 
   var META = {
     bg: {
-      title: 'Symbiosis OS — AI платформа за бизнес растеж | 100+ AI модела в едно | Sell 2 Inspire',
+      title: 'Symbiosis OS - AI платформа за бизнес растеж | 100+ AI модела в едно | Sell 2 Inspire',
       desc: 'Symbiosis OS обединява AI видео създаване (Cinema), кампанийни страници с AI търсене, продажби, клиенти, оферти и проекти в една система. Над 100 AI модела без допълнителни абонаменти.'
     },
     en: {
-      title: 'Symbiosis OS — the AI platform for business growth | 100+ AI models in one | Sell 2 Inspire',
+      title: 'Symbiosis OS - the AI platform for business growth | 100+ AI models in one | Sell 2 Inspire',
       desc: 'Symbiosis OS brings AI video production (Cinema), AI-search campaign pages, sales, clients, proposals and projects into one system. Over 100 AI models, no extra subscriptions.'
     }
   };
@@ -163,7 +163,7 @@
         el.style.opacity = '1';
         el.style.transform = 'translateY(0)';
         el.style.filter = 'blur(0px)';
-        // willChange is a promise to the compositor, not a decoration —
+        // willChange is a promise to the compositor, not a decoration -
         // leaving it set on 110 elements keeps 110 layers alive.
         window.setTimeout(function () { el.style.willChange = 'auto'; }, 1200 + d);
         obs.unobserve(el);

@@ -1,4 +1,4 @@
-# Symbiosis landing page — design record
+# Symbiosis landing page - design record
 
 Records what the page is, where the design came from, what the engineering
 pass changed and why, and what is still open. Every number here was measured
@@ -31,11 +31,11 @@ clothes, and would put the thing that was approved at risk. They stay.
 
 ## 2. The design
 
-**Ground** — neutral near-black. `#08080A` at the page level, `#0C0C11` for
+**Ground** - neutral near-black. `#08080A` at the page level, `#0C0C11` for
 panels, `#101016`–`#101018` for lit states. Not navy: the neutral reads
 colder and lets the accents carry all of the hue.
 
-**Accents** — a signal palette rather than a single brand colour.
+**Accents** - a signal palette rather than a single brand colour.
 
 | Token | Use |
 |---|---|
@@ -62,17 +62,17 @@ The bottom three replaced `#6E6E80` (3.91), `#5C5C6E` (2.98) and `#4D4D5E`
 (2.36), which between them appeared 180 times, all of them as `color`. The
 ordering of the ladder is preserved, so nothing changed rank.
 
-**Type** — Inter for everything structural, JetBrains Mono for eyebrows,
+**Type** - Inter for everything structural, JetBrains Mono for eyebrows,
 labels and readouts, Playfair Display italic for exactly one line: the third
 line of the `<h1>`, gradient-filled, in both languages.
 
-**Hero** — centred. Three overlapping radial gradients as a light source,
+**Hero** - centred. Three overlapping radial gradients as a light source,
 an 88px grid under a radial mask, an eyebrow badge, a three-line headline
 at `clamp(2.5rem, 7.2vw, 6.1rem)` with `line-height: .99`, then the lede and
 two pill CTAs, then a masked marquee of persona frames.
 
-**23 sections**: hero, Cinema and its run — the vault, the dashboard, the AI
-assistant — then AI search, the Cinema audience, the Cinema numbers, why, a
+**23 sections**: hero, Cinema and its run - the vault, the dashboard, the AI
+assistant - then AI search, the Cinema audience, the Cinema numbers, why, a
 day in your life, transformation, proof, platform, features, everything
 else, industries, process, modules, AI models, comparison, FAQ, close.
 
@@ -81,16 +81,16 @@ sits directly above the "За кого е" audience block.
 
 Moving it there exposed a seam. The audience section was authored to sit
 directly under the block above it, so it opens with **zero top padding** and
-borrows that block's bottom padding for its breathing room — with a full
+borrows that block's bottom padding for its breathing room - with a full
 section dropped between them, its heading landed hard against the edge. It
 has its own top padding now, matching its siblings; the seam itself is
-handled the way every other seam on the page is — see §3.9. "A day in your
-life" is copy recovered from the deployed page — see §3.12.
+handled the way every other seam on the page is - see §3.9. "A day in your
+life" is copy recovered from the deployed page - see §3.12.
 
 **The product is `Symbiosis OS`.** The name appears in full everywhere the
 platform is meant: 60 dictionary values across both languages, 47 places in
 the markup, and the meta titles in `app.js`. `Symbiosis Cinema` is left
-alone — Cinema is a part of the platform, not a second platform, so
+alone - Cinema is a part of the platform, not a second platform, so
 "Symbiosis OS Cinema" would be wrong. The rewrite uses a negative lookahead
 for exactly that reason, and it never touches `symbiosis.app` or the host
 names.
@@ -101,7 +101,7 @@ names.
 
 ### 3.1 Fonts
 
-The reference declared Inter at five weights — 300, 400, 500, 600, 700 —
+The reference declared Inter at five weights - 300, 400, 500, 600, 700 -
 and pointed **all five at the same static Regular file**. Every heading
 above 400 was being drawn by the browser's synthetic bold. JetBrains Mono
 had the same defect across its two declared weights.
@@ -110,15 +110,15 @@ Replaced with real variable faces carrying a genuine `wght` axis, subset to
 the 200 characters both dictionaries actually use.
 
 `Instrument Serif`, which the design named for the hero's third line,
-**contains zero Cyrillic glyphs** — confirmed with fontTools against the
+**contains zero Cyrillic glyphs** - confirmed with fontTools against the
 font binary and again in the browser via `CSS.getPlatformFontsForNode`. Its
 `unicode-range` declarations did not even include Cyrillic, so the browser
 never attempted it and fell straight through to whatever serif the visitor's
 OS happened to ship. On the built page that line now reports **Playfair
 Display × 15 glyphs** in Bulgarian and × 13 in English.
 
-Twenty-one characters the design uses as icons — `→ ↗ ≈ ≡ ≤ ≥ ⌘ ▢ ▤ ▲ ▶ ◆
-◈ ◉ ◧ ◷ ✎ ✓ ✕ ✦ ✺` — exist in **neither Inter nor JetBrains Mono**. They
+Twenty-one characters the design uses as icons - `→ ↗ ≈ ≡ ≤ ≥ ⌘ ▢ ▤ ▲ ▶ ◆
+◈ ◉ ◧ ◷ ✎ ✓ ✕ ✦ ✺` - exist in **neither Inter nor JetBrains Mono**. They
 were being resolved by the platform, which on iOS and Android turns several
 of them into colour emoji. A 21-glyph subset of DejaVu Sans (`SymIcons`,
 2,196 bytes) now sits in both font stacks and pins them.
@@ -135,8 +135,8 @@ of them into colour emoji. A 21-glyph subset of DejaVu Sans (`SymIcons`,
 
 | Removed | Replaced by |
 |---|---|
-| React 18.3.1 UMD, 142,586 B | — |
-| Claude Design runtime, 69,150 B | — |
+| React 18.3.1 UMD, 142,586 B | - |
+| Claude Design runtime, 69,150 B | - |
 | 118 `style-hover` attributes | 20 deduplicated CSS rules, each paired with `:focus-visible` |
 | 12 `sc-camel-on-click="{{ fn }}"` | `data-act` plus real listeners |
 | `sc-camel-view-box` | `viewBox` |
@@ -146,7 +146,7 @@ Behaviour is a straight port: same easing curves, same IntersectionObserver
 thresholds and root margins, same durations.
 
 Two things were added rather than ported. `willChange` is now released 1.2s
-after each reveal completes — the original set it on all 110 revealed
+after each reveal completes - the original set it on all 110 revealed
 elements and never cleared it, which keeps 110 compositor layers alive for
 the life of the page. And every observer-driven effect now has a
 reduced-motion path that paints the final state directly instead of
@@ -154,7 +154,7 @@ returning early and leaving the dial reading zero.
 
 ### 3.3 Responsive behaviour
 
-The reference had **no CSS media queries at all** — the runtime forbids
+The reference had **no CSS media queries at all** - the runtime forbids
 stylesheets, so its only breakpoint was a `resize` listener toggling
 `display` at 1180px. Two consequences: the header could not collapse until
 JavaScript ran, and nothing else adapted except through `clamp()`.
@@ -163,23 +163,23 @@ Those toggles are media queries now. Sweeping 24 widths from 320px to 1920px
 in both languages then surfaced a real defect:
 
 > **The mobile menu button was off the edge of the screen.** Below about
-> 560px the header's right-hand cluster — language tabs, booking button,
-> menu button — needs 273px beside a 118px wordmark. At 390px the row ran to
+> 560px the header's right-hand cluster - language tabs, booking button,
+> menu button - needs 273px beside a 118px wordmark. At 390px the row ran to
 > **425px**, putting the menu button 35px past the viewport. Because `body`
 > carries `overflow-x: hidden` there was no scrollbar to reveal it: on a
 > phone the entire navigation was simply unreachable.
 
-Fixed by dropping the header's booking button below 560px — the one of the
+Fixed by dropping the header's booking button below 560px - the one of the
 three that is already repeated inside the menu panel and again in the hero.
 
 That bug is the argument for this pass in one line. It is invisible in a
 preview at any single width, invisible in the markup, and invisible to a
 check that trusts `scrollWidth`, because the body's overflow guard hides it.
 It took an explicit per-element sweep to find. My own first overflow check
-missed it too, for exactly that reason — it treated the body guard as
+missed it too, for exactly that reason - it treated the body guard as
 legitimate clipping. The check was wrong before the page was.
 
-Two more came out of review, both from the same root cause — a design that
+Two more came out of review, both from the same root cause - a design that
 could not express a breakpoint:
 
 - **The Cinema section held two columns all the way down.** It is the page's
@@ -195,7 +195,7 @@ could not express a breakpoint:
   identically without creating a scroll container; `hidden` is still
   declared first so a browser that does not know `clip` keeps the old
   behaviour rather than losing the clip. When the grid stacks, the slate
-  drops to `position: static` — pinned in a single column it would sit on
+  drops to `position: static` - pinned in a single column it would sit on
   top of the steps it describes.
 
 Both were present in the reference and inherited by the port. Neither is
@@ -211,7 +211,7 @@ visible in a screenshot of a single scroll position.
 - **Targets**: every control cleared 24×24 (WCAG 2.5.8 AA) already. On
   coarse pointers they now clear 44×44 (2.5.5 AAA). Measured **0 under
   44×44** on a simulated touch device. Citation links are deliberately
-  excluded — they are quiet small print, and enlarging them would distort a
+  excluded - they are quiet small print, and enlarging them would distort a
   block the design wants recessive.
 - **Skip link**: added; it was absent.
 - **Translated attributes**: `alt` text and `aria-label`s now swap with the
@@ -228,7 +228,7 @@ visible in a screenshot of a single scroll position.
 | Images | 6,265,525 B (4 PNG + 1 JPEG) | 131,982 B (WebP) |
 | Fonts | 322,272 B | 88,204 B |
 | JS | 296,619 B runtime | 13,750 B + 91,157 B dictionary |
-| Transfer, gzipped | — | **≈ 287 KB total, ≈ 158 KB to first paint** |
+| Transfer, gzipped | - | **≈ 287 KB total, ≈ 158 KB to first paint** |
 
 The 2 MB persona PNGs were 1024×1536 rendering into a 400px card. They are
 800px WebP now. The 544×544 logo PNG was being drawn at 28×28.
@@ -237,7 +237,7 @@ The 2 MB persona PNGs were 1024×1536 rendering into a 400px card. They are
 
 - Bulgarian stays in the markup, so with JavaScript off the page still
   delivers **26,055 characters, 94 headings and all 22 sections**, and
-  **nothing is hidden** — the reveal only conceals content when it can prove
+  **nothing is hidden** - the reveal only conceals content when it can prove
   it is able to reveal it again.
 - Canonical, `og:*`, `twitter:card`, `theme-color`, and `hreflang`
   alternates for `bg`, `en` and `x-default`, all pointed at
@@ -251,7 +251,7 @@ The 2 MB persona PNGs were 1024×1536 rendering into a 400px card. They are
 
 Two fixed layers of very soft brand light sit behind the whole page, moving
 slowly enough to register as depth rather than as animation. Both live on
-`body`, below the content wrapper, so nothing overlays text — the contrast
+`body`, below the content wrapper, so nothing overlays text - the contrast
 figures are unchanged. `position: fixed` plus `transform` keeps them on the
 compositor: no layout, no cost on scroll. The two durations, 67s and 89s,
 are not multiples of each other, so the combined pattern takes about twenty
@@ -259,7 +259,7 @@ minutes to repeat.
 
 The wrapper used to paint its own opaque ground, which would have covered
 them, and the nine banded sections used to be an opaque `#0b0b0f`. `body`
-carries the ground colour now, and the bands are a 1.4% white wash instead —
+carries the ground colour now, and the bands are a 1.4% white wash instead -
 visually the same value, but the drift shows through.
 
 Measured at 1440×800: **55% of pixels change over nine seconds, average
@@ -267,7 +267,7 @@ delta 11/255**. Visible as movement, nowhere near enough to distract.
 
 This turned up a real bug in the reduced-motion block. `*` does not match
 pseudo-elements, so `* { animation-duration: .01ms }` left both drift layers
-running at full speed for a visitor who had asked for no motion —
+running at full speed for a visitor who had asked for no motion -
 `document.getAnimations()` confirmed it. The block now names `*::before` and
 `*::after` too, and reports an empty list under `prefers-reduced-motion`.
 
@@ -278,13 +278,13 @@ a masked marquee, staggered arrivals. Five devices carry it through, all of
 them decorative and all of them sitting behind or over content without
 touching layout, so none of them can move a measured number.
 
-- **The ruled field**, echoed into four sections — why, comparison, AI
+- **The ruled field**, echoed into four sections - why, comparison, AI
   models, industries. Same 88px grid at 2.2% white under the same radial
   mask the hero uses.
 - **Numbers count up.** 23 figures, over 1.1s on a cubic ease-out. Each
   reads its own text when it first comes into view, so whatever the language
   switch left there is what it counts to, and it restores the exact original
-  string at the end — verified identical under motion, under reduced motion,
+  string at the end - verified identical under motion, under reduced motion,
   and with JavaScript off.
 - **Tile rows arrive in sequence.** Seven rows moved their reveal onto their
   children, staggered, capped so the last card is never more than 340ms
@@ -292,16 +292,16 @@ touching layout, so none of them can move a measured number.
 - **A pointer spotlight** on all 80 cards: a soft periwinkle highlight
   tracking the cursor. One delegated listener sets two custom properties;
   CSS paints the rest. Measured at 122,561 pixels changing on hover, average
-  delta 22.65 — visible, soft. Disabled on coarse pointers, where there is
+  delta 22.65 - visible, soft. Disabled on coarse pointers, where there is
   no cursor to follow and it would only flash on tap.
 - **A specular sweep** across the three primary actions on hover and on
   focus.
-- **A rule beside every section eyebrow**, which is static — a typographic
+- **A rule beside every section eyebrow**, which is static - a typographic
   detail rather than another thing in motion.
 
 The spotlight and the sweep both paint at `z-index: -1` inside an isolated
 stacking context, which puts them above the element's own background and
-below its text — a card's opaque fill would otherwise hide them entirely.
+below its text - a card's opaque fill would otherwise hide them entirely.
 
 ### 3.9 Section seams
 
@@ -309,11 +309,11 @@ The page announced every section change with a hard edge, usually two:
 
 - **Twenty 1px hairlines.** Nine sections alternated a flat `#0b0b0f` band
   against the `#08080a` ground, each ruled top and bottom. A white rule at
-  7% opacity over near-black is a **19/255 step** — against about 2 for the
+  7% opacity over near-black is a **19/255 step** - against about 2 for the
   fill change on its own, so the rule was doing nearly all the shouting.
 - **Four full-bleed washes cut square.** The decorative radial glows live
   inside sections that clip, so a glow still at full strength when it
-  reached the section edge was sliced off flat — a hard horizontal line
+  reached the section edge was sliced off flat - a hard horizontal line
   exactly where the subject changes.
 - **Three 2px accent bars** pinned to a section's top edge: the same hard
   line in a brighter colour.
@@ -324,7 +324,7 @@ carry a vertical mask that fades them before they reach an edge; and the
 accent bars are 120px glows with no edge of their own.
 
 Measured by sampling the median luminance of every pixel row across the full
-page width at each of the 22 section boundaries — a median, so a glyph or a
+page width at each of the 22 section boundaries - a median, so a glyph or a
 card cannot masquerade as a seam. **Twenty-one of twenty-two now step by 1/255
 or less**, which is the `#08080a → #0b0b0f` ramp resolving in 8-bit and is
 not visible. The twenty-second is a card's own bottom edge that happens to
@@ -335,7 +335,7 @@ land on a section boundary, and cards are meant to have edges.
 Sixteen of the page's tile groups paint their own gap: a 1px gap over a
 light background is what draws the hairline between cells. As grids, any
 item count that does not divide by the column count leaves painted tracks
-over — and a painted empty track looks exactly like an empty tile. Three
+over - and a painted empty track looks exactly like an empty tile. Three
 statistics in a two-column grid left one; four list items in a three-column
 grid left two. At 1440px eleven groups were showing at least one.
 
@@ -348,14 +348,14 @@ width**.
 ### 3.11 The mark, and the icon set
 
 The logo that shipped in the Claude Design bundle was a **zoomed crop of the
-mark's centre**. The outer connector ring — four dots joined by bracket
-lines — had been cut away entirely, and what remained ran flush to all four
+mark's centre**. The outer connector ring - four dots joined by bracket
+lines - had been cut away entirely, and what remained ran flush to all four
 edges of its 544px canvas with a fraction of a pixel clipped on each side.
 It read as a logo photographed too close, because it was.
 
 The complete mark is now the source. It arrives on white, so the derived
-assets mask the disc to a circle at centre (538, 538.5) with radius 528 —
-three pixels inside the measured edge, which drops the JPEG fringe — and
+assets mask the disc to a circle at centre (538, 538.5) with radius 528 -
+three pixels inside the measured edge, which drops the JPEG fringe - and
 leave everything outside transparent. A white square behind a round logo is
 very visible on a near-black page. Both derivatives sit inside their box
 rather than flush to it: `symbiosis-mark.webp` is a 160px box with the disc
@@ -365,7 +365,7 @@ at 141px, `favicon-64.png` a 64px box with the disc at 60px.
 colour glyph the platform owns: it cannot take a brand colour, and it renders
 as a different picture on iOS, Android and Windows. These are hairline
 strokes at 1.6px in `currentColor`, each in the accent its own section
-already uses — peach in AI search, periwinkle everywhere else — sitting in
+already uses - peach in AI search, periwinkle everywhere else - sitting in
 the same rounded tile the page uses for its list markers.
 
 | Section | Count |
@@ -400,20 +400,20 @@ Four places were left without one, on purpose:
 
 **Recovered from the deployed page.** Its dictionary carries 62 keys the new
 design had no home for. Most are labels for a mock dashboard the design
-deliberately dropped — `PRODUCT.md` lists fake dashboard charts as an
+deliberately dropped - `PRODUCT.md` lists fake dashboard charts as an
 anti-reference, so they stay dropped. Two things were worth keeping and are
 now in the page: the **"Един ден в живота ви"** section, three time-stamped
 before/after moments at 08:30, 13:00 and 19:30, which is the strongest
 narrative copy the product has; and `cn.flow.title`, a heading the Cinema
 steps were missing.
 
-**Typography.** The copy used a spaced hyphen as a dash throughout — 103
+**Typography.** The copy used a spaced hyphen as a dash throughout - 103
 Bulgarian entries and 60 English. Bulgarian sets an appositive dash as an en
 dash; English convention here is the em dash. All 140 occurrences were
 checked first to confirm none is a numeric range or a minus sign.
 
 **One claim was corrected.** `tr.sub` read *"Не обещания – числа. Ето
-средните резултати при собственици, въвели Symbiosis в първите 3 месеца"* —
+средните резултати при собственици, въвели Symbiosis в първите 3 месеца"* -
 asserting measured averages across real customers. `PRODUCT.md` records that
 there are no documented customer success metrics yet, and the English for
 the same key already hedged it as "a typical picture". Both languages now
@@ -424,14 +424,14 @@ themselves are unchanged; only the claim about where they come from.
 
 | Key | What was wrong |
 |---|---|
-| `st.s4.body` | "wins the deal 21× more often" with the baseline missing — 21× more often *than what* |
+| `st.s4.body` | "wins the deal 21× more often" with the baseline missing - 21× more often *than what* |
 | `cn.s3.b` | four goals in Bulgarian, five in English; and two consecutive sentences opening "Избирате" |
 | `cmp.sub` | English said the section compares "content"; it compares clients |
 | `cta.sub` | English dropped the two sentences that answer "what does this cost me" |
 | `top.f1.b` | English ended on a generic summary instead of the Bulgarian's actual point |
 | `ai.sub` | "инвестиция" standing in for "цена"; English had lost "monthly" |
 | `ind.i3.b` | "последванията" is not a Bulgarian word in this sense |
-| `pq.sub` | "докато живеете" — "while you are alive" |
+| `pq.sub` | "докато живеете" - "while you are alive" |
 | `cn.chat.a1` | "възвръщаемостта от внедряване" missing its definite article |
 
 Plus `as.f2.b` ("0-100" is a range and takes an en dash), `tr.before.5a`
@@ -439,7 +439,7 @@ Plus `as.f2.b` ("0-100" is a range and takes an en dash), `tr.before.5a`
 trailing whitespace and two straight quotes.
 
 The Bulgarian lives in both the markup and the dictionary, so after every
-copy change the markup is re-synced from the dictionary — the two cannot
+copy change the markup is re-synced from the dictionary - the two cannot
 drift.
 
 **Not reachable.** The live URL is blocked by this environment's egress
@@ -484,12 +484,12 @@ than a defect.
 1. **The primary CTA is below the fold at 1440×900 in Bulgarian.** The
    headline is `clamp(2.5rem, 7.2vw, 6.1rem)` over three lines, and
    Bulgarian wraps it to four. Faithful to the reference, and the reference
-   is what was approved — but it costs the first viewport its action.
+   is what was approved - but it costs the first viewport its action.
    Tightening the clamp ceiling to about `5.2rem` would recover it.
 
 2. **"до −70% на месец"** in the comparison section is a cost claim. It
    compares subscription totals rather than reporting a customer outcome, so
-   it does not fall under the no-unverified-results rule in `PRODUCT.md` —
+   it does not fall under the no-unverified-results rule in `PRODUCT.md` -
    but a visitor will read it as a promise, and it should have a basis on
    file.
 

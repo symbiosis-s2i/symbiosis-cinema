@@ -1,11 +1,11 @@
-/* Symbiosis — stylesheet.
+/* Symbiosis - stylesheet.
 
    The design this page carries was authored in Claude Design, where the
    component runtime forbids stylesheets: every rule lived in an inline
    style attribute, hover states lived in a `style-hover` attribute the
    runtime read, and the only breakpoint was a JS resize listener at
    1180px. This file is what that design needs in order to survive as a
-   real page — webfonts that actually carry the weights and scripts they
+   real page - webfonts that actually carry the weights and scripts they
    claim, hover and focus states the browser resolves on its own, and
    breakpoints that hold when JavaScript does not run.
 
@@ -23,7 +23,7 @@
    variable faces, with the Cyrillic subsets the Bulgarian copy needs.
 
    SymIcons is a 21-glyph subset of DejaVu Sans covering the geometric
-   marks the design uses as icons — the play triangle, the checks, the
+   marks the design uses as icons - the play triangle, the checks, the
    diamonds, the arrows. Neither Inter nor JetBrains Mono contains any of
    them; without this face the platform resolves them, and iOS and
    Android resolve several as colour emoji.
@@ -65,7 +65,7 @@
   unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
-/* One line of the hero, in two languages. Subset to those glyphs alone —
+/* One line of the hero, in two languages. Subset to those glyphs alone -
    Instrument Serif, which the design named, carries no Cyrillic at all,
    so that line was silently falling through to whatever serif the
    visitor's OS happened to ship. */
@@ -172,7 +172,7 @@ summary::-webkit-details-marker { display: none; }
   html { scroll-behavior: auto; }
   /* The universal selector does not match pseudo-elements, so `*` alone
      left the two ambient drift layers running for a visitor who had asked
-     for no motion — confirmed with document.getAnimations(). */
+     for no motion - confirmed with document.getAnimations(). */
   *,
   *::before,
   *::after {
@@ -238,7 +238,7 @@ summary::-webkit-details-marker { display: none; }
 }
 
 /* The Cinema section is the page's one grid with a fixed two-column
-   template — every other grid uses auto-fit and folds on its own. With no
+   template - every other grid uses auto-fit and folds on its own. With no
    media query it held both columns all the way down: at 390px that is a
    148px card beside a 196px one, three words to a line, which is what
    "glitching and hard to read" looked like. Once stacked, the slate must
@@ -249,8 +249,8 @@ summary::-webkit-details-marker { display: none; }
   [data-sticky-col] { position: static !important; }
 }
 
-/* Below ~560px the header's right-hand cluster — language tabs, the
-   booking button and the menu button — needs 273px next to a 118px
+/* Below ~560px the header's right-hand cluster - language tabs, the
+   booking button and the menu button - needs 273px next to a 118px
    wordmark, and the row runs 35px past a 390px screen. Because body
    clips overflow-x there is no scrollbar to reveal it: the menu button
    simply sits off the edge of the phone, unreachable. The booking
@@ -271,8 +271,8 @@ summary::-webkit-details-marker { display: none; }
 }
 
 /* Beyond that every control clears 24×24. On a touch screen it is still a
-   small thing to hit, so the controls — as opposed to the citation links,
-   which are quiet small print by design — get a 44px floor where the
+   small thing to hit, so the controls - as opposed to the citation links,
+   which are quiet small print by design - get a 44px floor where the
    pointer is coarse. */
 @media (pointer: coarse) {
   [data-sym-nav] a,
@@ -284,7 +284,7 @@ summary::-webkit-details-marker { display: none; }
   summary {
     min-height: 44px;
   }
-  /* Short labels — "FAQ", "Вход" — are tall enough but too narrow to hit. */
+  /* Short labels - "FAQ", "Вход" - are tall enough but too narrow to hit. */
   [role="tab"],
   a[data-hv="hv19"] { min-width: 44px; }
 }
@@ -298,7 +298,7 @@ summary::-webkit-details-marker { display: none; }
    and the measured contrast is unaffected.
 
    They are `position: fixed` with `transform` animations, which keeps them
-   on the compositor — they cost nothing on scroll and never trigger layout.
+   on the compositor - they cost nothing on scroll and never trigger layout.
    The two durations are deliberately not multiples of each other, so the
    combined pattern takes about twenty minutes to repeat.
    ============================================================ */
@@ -459,7 +459,7 @@ a[data-hv="hv17"]:focus-visible::after {
    hairlines down the page, each announcing "a section ends here".
 
    The band is a gradient now. It starts and ends on the ground colour, so
-   the eye never meets an edge — the value rises over the first stretch of
+   the eye never meets an edge - the value rises over the first stretch of
    the section and falls again over the last. 14% of the section height at
    each end is 55–200px of ramp at the heights these sections actually run.
    ============================================================ */
@@ -494,7 +494,7 @@ section[data-band] {
    Fourteen of the page's tile groups paint their own gap: a 1px gap over a
    light background is what draws the hairline between cells. As a grid,
    any item count that does not divide by the column count leaves painted
-   tracks over — and a painted empty track looks exactly like an empty
+   tracks over - and a painted empty track looks exactly like an empty
    tile. Three stats in a two-column grid left one; four list items in a
    three-column grid left two.
 

@@ -19,7 +19,7 @@ resize listener, and shipped React plus a component runtime to render static
 markup.
 
 This directory is that design ported to a real page. The layout is
-unchanged — the inline styles the design shipped with are still there, on
+unchanged - the inline styles the design shipped with are still there, on
 purpose, because rewriting 1,376 of them into classes would be a redesign in
 everything but name. What changed is everything the design needed in order
 to be correct rather than merely to look correct. `DESIGN.md` in the repo
@@ -34,7 +34,7 @@ root records that pass in full.
 | `app.js` | Reveal, scroll chrome, score dial, ratio bars, Cinema slate, FAQ accordion, menu, language |
 | `i18n.js` | BG and EN, 550 keys each, covering every `data-i` and `data-ia` in the markup |
 | `assets/fonts/` | 7 subset woff2: Inter and JetBrains Mono (variable, Latin + Cyrillic), Playfair Display italic, and a 21-glyph symbol face |
-| `assets/img/` | 3 persona portraits, 2 marks, 1 favicon — WebP |
+| `assets/img/` | 3 persona portraits, 2 marks, 1 favicon - WebP |
 
 Full-resolution originals live in `brand-assets/` at the repo root, out of
 the deploy path.
