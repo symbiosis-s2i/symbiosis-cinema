@@ -181,6 +181,22 @@
     var glow = root.querySelector('[data-sym-glow]');
     var raf = 0;
 
+    // The glow used to track the scroll position 1:1; it now chases it,
+    // one lerp step per frame, so a wheel flick reads as light settling
+    // rather than light bolted to the page. The chase runs its own frame
+    // loop and retires the moment it lands - an idle page schedules
+    // nothing. The 1400px clamp keeps the old cutoff without the old
+    // rule's hard stop.
+    var glowY = 0, glowRaf = 0;
+    var glowStep = function () {
+      glowRaf = 0;
+      var target = Math.min(window.scrollY || 0, 1400) * 0.16;
+      glowY += (target - glowY) * 0.11;
+      if (Math.abs(target - glowY) < 0.15) glowY = target;
+      glow.style.transform = 'translateX(-50%) translate3d(0,' + glowY.toFixed(2) + 'px,0)';
+      if (glowY !== target) glowRaf = requestAnimationFrame(glowStep);
+    };
+
     var tick = function () {
       raf = 0;
       var y = window.scrollY || 0;
@@ -193,9 +209,7 @@
         nav.style.paddingTop = on ? '10px' : '14px';
         nav.style.paddingBottom = on ? '10px' : '14px';
       }
-      if (glow && !reduceMotion && y < 1400) {
-        glow.style.transform = 'translateX(-50%) translateY(' + (y * 0.16) + 'px)';
-      }
+      if (glow && !reduceMotion && !glowRaf) glowRaf = requestAnimationFrame(glowStep);
     };
 
     window.addEventListener('scroll', function () {
@@ -223,6 +237,46 @@
       return;
     }
 
+    // The dial landing on its score deserves a full stop: a ring and a
+    // handful of key/fill coloured sparks leave the rim and burn out.
+    // Web Animations rather than a stylesheet because every particle has
+    // its own vector, and the nodes remove themselves on finish, so the
+    // DOM ends as it began. Only the animated path ever gets here, so
+    // reduced motion never sees it.
+    var shockwave = function (dial) {
+      if (!dial.animate) return;
+      var spawn = function (i, n) {
+        var dot = document.createElement('span');
+        var ang = (i / n) * Math.PI * 2 + Math.random() * 0.5;
+        var dist = 58 + Math.random() * 54;
+        var size = 3 + Math.random() * 3;
+        var color = i % 3 ? '#8aa6ff' : '#ff9b4a';
+        dot.setAttribute('aria-hidden', 'true');
+        dot.style.cssText =
+          'position:absolute;left:50%;top:50%;width:' + size.toFixed(1) + 'px;height:' +
+          size.toFixed(1) + 'px;margin:' + (-size / 2).toFixed(1) + 'px;border-radius:50%;background:' +
+          color + ';filter:drop-shadow(0 0 6px ' + color + ');pointer-events:none';
+        dial.appendChild(dot);
+        dot.animate([
+          { transform: 'translate3d(0,0,0) scale(1)', opacity: 1 },
+          { transform: 'translate3d(' + (Math.cos(ang) * dist).toFixed(1) + 'px,' +
+            (Math.sin(ang) * dist).toFixed(1) + 'px,0) scale(.25)', opacity: 0 }
+        ], { duration: 700 + Math.random() * 400, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'forwards' })
+          .onfinish = function () { dot.remove(); };
+      };
+      for (var i = 0; i < 18; i++) spawn(i, 18);
+      var ring = document.createElement('span');
+      ring.setAttribute('aria-hidden', 'true');
+      ring.style.cssText =
+        'position:absolute;inset:-4px;border-radius:50%;border:2px solid rgba(255,155,74,0.7);pointer-events:none';
+      dial.appendChild(ring);
+      ring.animate([
+        { transform: 'scale(.55)', opacity: .9 },
+        { transform: 'scale(1.55)', opacity: 0 }
+      ], { duration: 800, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'forwards' })
+        .onfinish = function () { ring.remove(); };
+    };
+
     var obs = new IntersectionObserver(function (entries, o) {
       entries.forEach(function (en) {
         if (!en.isIntersecting) return;
@@ -234,6 +288,7 @@
           var p = Math.min(1, (now - start) / 1400);
           paint(el, target * (1 - Math.pow(1 - p, 3)));
           if (p < 1) requestAnimationFrame(step);
+          else if (target === 94) shockwave(el);
         };
         requestAnimationFrame(step);
       });
@@ -284,16 +339,32 @@
       if (b) body.textContent = b.textContent;
 
       if (!reduceMotion) {
+        // A rack-focus rather than a dissolve: the outgoing text defocuses
+        // for a single beat (120ms) while the travel eases in over a
+        // longer one, so the change reads as the slate being re-aimed.
         [num, title, body].forEach(function (n) {
           n.style.transition = 'none';
           n.style.opacity = '0';
+          n.style.filter = 'blur(5px)';
           n.style.transform = 'translateY(7px)';
           requestAnimationFrame(function () {
-            n.style.transition = 'opacity .4s ease, transform .4s cubic-bezier(.2,.7,.2,1)';
+            n.style.transition =
+              'opacity .12s ease-out, filter .12s ease-out, ' +
+              'transform .3s cubic-bezier(.2,.7,.2,1)';
             n.style.opacity = '1';
+            n.style.filter = 'blur(0px)';
             n.style.transform = 'translateY(0)';
           });
         });
+        // The rail that just filled flashes once. Removing and re-adding
+        // the class (with a forced reflow between) restarts the animation
+        // when the same rail fires twice in a fast scroll.
+        var rail = rails[i];
+        if (rail) {
+          rail.classList.remove('sym-rail-pulse');
+          void rail.offsetWidth;
+          rail.classList.add('sym-rail-pulse');
+        }
       }
 
       rails.forEach(function (r, ri) {
@@ -433,12 +504,212 @@
     }, { passive: true });
   }
 
+  /* ---------- the hero strip tilts toward the pointer ----------
+     One rect read per move, one style write per frame. The transition
+     stays on while the values stream, so the card is always easing
+     toward the cursor rather than snapped to it - the lag is the
+     weight. Only the portrait cards tilt; the placeholder frames have
+     their own hover life in styles.css. */
+
+  function initTilt() {
+    if (reduceMotion || !window.matchMedia('(hover: hover)').matches) return;
+    root.querySelectorAll('[data-sym-strip]').forEach(function (strip) {
+      Array.prototype.slice.call(strip.children).forEach(function (card) {
+        if (!card.querySelector('img')) return;
+        var raf = 0, rx = 0, ry = 0, on = false;
+        var apply = function () {
+          raf = 0;
+          card.style.transform = on
+            ? 'perspective(1000px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' +
+              ry.toFixed(2) + 'deg) scale(1.04)'
+            : '';
+        };
+        card.addEventListener('pointerenter', function () {
+          on = true;
+          card.style.transition = 'transform .6s cubic-bezier(0.16, 1, 0.3, 1)';
+          card.style.willChange = 'transform';
+          card.style.zIndex = '2';
+        });
+        card.addEventListener('pointermove', function (e) {
+          if (!on) return;
+          var r = card.getBoundingClientRect();
+          ry = ((e.clientX - r.left) / r.width - 0.5) * 14;
+          rx = (0.5 - (e.clientY - r.top) / r.height) * 10;
+          if (!raf) raf = requestAnimationFrame(apply);
+        });
+        card.addEventListener('pointerleave', function () {
+          on = false;
+          rx = ry = 0;
+          if (!raf) raf = requestAnimationFrame(apply);
+          window.setTimeout(function () {
+            if (!on) { card.style.willChange = 'auto'; card.style.zIndex = ''; }
+          }, 650);
+        });
+      });
+    });
+  }
+
+  /* ---------- the AI answers arrive as a stream ----------
+     Each bubble reads its own current text - whichever language the
+     switch last wrote - empties itself when it scrolls into view, and
+     streams the same string back at an uneven pace under a blinking
+     caret. min-height holds the bubble's box while it is empty, so the
+     chat column never reflows. If the language changes mid-stream the
+     dictionary has already rewritten the node; the stream sees the flag
+     and stands down without touching it. */
+
+  function initTypewriter() {
+    var els = ['cn.chat.a1', 'cn.chat.a2', 'cn.chat.a3'].map(function (k) {
+      return root.querySelector('[data-i="' + k + '"]');
+    }).filter(Boolean);
+    if (!els.length || reduceMotion || !('IntersectionObserver' in window)) return;
+
+    var stream = function (el, delay) {
+      var full = el.textContent;
+      var startLang = lang;
+      el.style.minHeight = el.offsetHeight + 'px';
+      el.textContent = '';
+      el.classList.add('sym-typing');
+      var i = 0, last = 0, t0 = performance.now() + delay;
+      var step = function (now) {
+        if (lang !== startLang) {
+          el.classList.remove('sym-typing');
+          el.style.minHeight = '';
+          return;
+        }
+        if (now >= t0 && now - last > 16) {
+          last = now;
+          i = Math.min(full.length, i + 1 + Math.floor(Math.random() * 3));
+          el.textContent = full.slice(0, i);
+        }
+        if (i < full.length) requestAnimationFrame(step);
+        else {
+          el.style.minHeight = '';
+          window.setTimeout(function () { el.classList.remove('sym-typing'); }, 900);
+        }
+      };
+      requestAnimationFrame(step);
+    };
+
+    var obs = new IntersectionObserver(function (entries, o) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        o.unobserve(en.target);
+        // the answers queue rather than talk over each other
+        stream(en.target, els.indexOf(en.target) * 500);
+      });
+    }, { threshold: 0.55 });
+
+    els.forEach(function (el) { obs.observe(el); });
+  }
+
+  /* ---------- the analytics bars stand up ----------
+     The rects keep their markup geometry; scaleY from each bar's own
+     baseline (fill-box) is the only thing that moves, staggered left to
+     right with an elastic settle. Bars at scaleY(0) are only ever set
+     where this same function can grow them back. */
+
+  function initChart() {
+    var rects = Array.prototype.slice.call(
+      root.querySelectorAll('rect[fill="url(#symcn1)"], rect[fill="url(#symcn2)"]'));
+    if (!rects.length || reduceMotion || !('IntersectionObserver' in window)) return;
+    var svg = rects[0].ownerSVGElement;
+    if (!svg) return;
+
+    rects.forEach(function (r) {
+      r.style.transformBox = 'fill-box';
+      r.style.transformOrigin = '50% 100%';
+      r.style.transform = 'scaleY(0)';
+    });
+
+    var elastic = function (t) {
+      return t >= 1 ? 1
+        : Math.max(0, Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * (2 * Math.PI / 3)) + 1);
+    };
+
+    var obs = new IntersectionObserver(function (entries, o) {
+      if (!entries.some(function (en) { return en.isIntersecting; })) return;
+      o.disconnect();
+      rects.forEach(function (r, i) {
+        var start = performance.now() + i * 90;
+        var step = function (now) {
+          var t = (now - start) / 900;
+          if (t >= 1) { r.style.transform = 'scaleY(1)'; return; }
+          if (t > 0) r.style.transform = 'scaleY(' + elastic(t).toFixed(4) + ')';
+          requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      });
+    }, { threshold: 0.35 });
+
+    obs.observe(svg);
+  }
+
+  /* ---------- the audit ticks ----------
+     The hide-then-pop class pair is armed here, where the observer that
+     fires it also lives: a page without JavaScript, or a visitor with
+     reduced motion, never has the marks hidden at all. */
+
+  function initChecks() {
+    if (reduceMotion || !('IntersectionObserver' in window)) return;
+    var items = [];
+    ['as.c1', 'as.c2', 'as.c3', 'as.c4', 'as.c5'].forEach(function (k) {
+      var t = root.querySelector('[data-i="' + k + '"]');
+      var li = t && t.parentElement;
+      if (li && li.firstElementChild !== t) items.push(li);
+    });
+    if (!items.length) return;
+    items.forEach(function (li, i) {
+      li.classList.add('sym-check-pop');
+      li.style.setProperty('--symCheckD', (i * 90) + 'ms');
+    });
+    var obs = new IntersectionObserver(function (entries, o) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        o.unobserve(en.target);
+        en.target.classList.add('sym-in');
+      });
+    }, { threshold: 0.6 });
+    items.forEach(function (li) { obs.observe(li); });
+  }
+
+  /* ---------- park the unconditional loops while offscreen ----------
+     The REC ping, the chat card's border laser and the AI-search beam
+     never stop on their own. One observer parks each behind .sym-idle
+     while its host is out of the viewport, so a reader three sections
+     away is not paying for a laser they cannot see. */
+
+  function initLoopGate() {
+    if (!('IntersectionObserver' in window)) return;
+    var hosts = Array.prototype.slice.call(
+      root.querySelectorAll('[data-sym-strip] span[style*="#ff5a5a"]'));
+    var a1 = root.querySelector('[data-i="cn.chat.a1"]');
+    if (a1 && a1.parentElement && a1.parentElement.parentElement &&
+        a1.parentElement.parentElement.parentElement) {
+      hosts.push(a1.parentElement.parentElement.parentElement);
+    }
+    var field = root.querySelector('#aisearch [data-gridfield]');
+    if (field) hosts.push(field);
+    if (!hosts.length) return;
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        en.target.classList.toggle('sym-idle', !en.isIntersecting);
+      });
+    }, { rootMargin: '80px 0px' });
+    hosts.forEach(function (h) { obs.observe(h); });
+  }
+
   /* ---------- boot ---------- */
 
   initCascade();
   initReveal();
   initCounters();
   initSpotlight();
+  initTilt();
+  initTypewriter();
+  initChart();
+  initChecks();
+  initLoopGate();
   initScroll();
   initDials();
   initBars();

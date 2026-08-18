@@ -515,3 +515,251 @@ section[data-band] {
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
 }
+
+/* ============================================================
+   10. The cinematic layer
+
+   Rim light on the hero personas, a sheen across the character vault,
+   instruments in Cinema and AI Search that look operated rather than
+   printed. Everything here is decorative, touches no layout box, and
+   animates only transform, opacity and filter, so the compositor
+   carries all of it. The reduced-motion block in section 3 already
+   catches every keyframe and transition below, pseudo-elements
+   included; the pieces that need JavaScript are armed from app.js so a
+   page without it hides nothing.
+   ============================================================ */
+
+/* --- hero strip: volumetric rim light on the persona cards ------------
+   The portraits are keyed blue from one side and filled amber from the
+   other; the hover glow repeats that pair as a radial wash anchored at
+   the top-right corner. The overlay is oversized and drifts slowly
+   while hovered, so the light reads as volume, not as a sticker. */
+
+[data-sym-strip] > div:has(> img)::after {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  pointer-events: none;
+  background: radial-gradient(circle at 80% 20%,
+    rgba(91, 123, 255, 0.35), rgba(255, 155, 74, 0.15) 50%, transparent 80%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  transform: translate3d(0, 0, 0);
+  transition: opacity .7s cubic-bezier(.16, 1, .3, 1);
+  animation: symRimDrift 6s ease-in-out infinite alternate;
+  animation-play-state: paused;
+}
+[data-sym-strip] > div:has(> img):hover::after {
+  opacity: 1;
+  animation-play-state: running;
+}
+@keyframes symRimDrift {
+  from { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+  to   { transform: translate3d(-3%, 2.5%, 0) rotate(5deg) scale(1.06); }
+}
+
+/* The tilt in app.js reads the cursor against a card the marquee is
+   still carrying sideways; holding the belt still under the pointer is
+   what makes the tilt legible. The animation arrives as an inline
+   shorthand, hence the !important - same reason as section 4. */
+@media (hover: hover) {
+  [data-sym-strip]:hover { animation-play-state: paused !important; }
+}
+
+/* --- hero strip: the REC light ----------------------------------------
+   The dot pulsed the page's blue - the one place blue is wrong, because
+   a recording light throbs red. The inline symPulse is stood down in
+   favour of a red core glow and an expanding ping. */
+
+[data-sym-strip] span[style*="#ff5a5a"] {
+  position: relative;
+  animation: none !important;
+  filter: drop-shadow(0 0 5px rgba(255, 90, 90, 0.8));
+}
+[data-sym-strip] span[style*="#ff5a5a"]::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(255, 90, 90, 0.85) 0%, rgba(255, 90, 90, 0) 70%);
+  transform: scale(.4);
+  opacity: 0;
+  animation: symRecPing 2s cubic-bezier(.16, 1, .3, 1) infinite;
+}
+@keyframes symRecPing {
+  0%   { transform: scale(.4);  opacity: .9; }
+  70%  { transform: scale(2.2); opacity: 0; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* --- hero strip: the placeholder frames' play buttons -----------------
+   Hovering the frame arms the button: the glyph brightens, the disc
+   grows a touch, and two rings leave it in alternation. The colour and
+   border arrive inline, hence the !important on those two. */
+
+[data-sym-strip] div[style*="place-items"][style*="border-radius:50%"] {
+  position: relative;
+  transition: color .35s, border-color .35s,
+    transform .45s cubic-bezier(.16, 1, .3, 1);
+}
+[data-sym-strip] div[style*="place-items"][style*="border-radius:50%"]::before,
+[data-sym-strip] div[style*="place-items"][style*="border-radius:50%"]::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  border: 1px solid rgba(138, 166, 255, 0.55);
+  opacity: 0;
+  pointer-events: none;
+}
+[data-sym-strip] > div:hover div[style*="place-items"][style*="border-radius:50%"] {
+  color: #c6d1ff !important;
+  border-color: rgba(138, 166, 255, 0.55) !important;
+  transform: scale(1.08);
+}
+[data-sym-strip] > div:hover div[style*="place-items"][style*="border-radius:50%"]::before {
+  animation: symRipple 1.6s cubic-bezier(.16, 1, .3, 1) infinite;
+}
+[data-sym-strip] > div:hover div[style*="place-items"][style*="border-radius:50%"]::after {
+  animation: symRipple 1.6s cubic-bezier(.16, 1, .3, 1) .55s infinite;
+}
+@keyframes symRipple {
+  0%   { transform: scale(1);   opacity: .7; }
+  100% { transform: scale(2.1); opacity: 0; }
+}
+
+/* --- character vault: anisotropic sheen across the portrait -----------
+   One pass per hover, glass over metal: a broad blue band with a narrow
+   white glint riding its centre, run across the image wrapper - not the
+   whole card, so the copy below stays matte. */
+
+[data-hv="hv9"] > div:first-child::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(105deg, transparent 44%, rgba(255, 255, 255, 0.18) 50%, transparent 56%),
+    linear-gradient(105deg, transparent 30%, rgba(138, 166, 255, 0.25) 50%, transparent 70%);
+  transform: translate3d(-130%, 0, 0);
+}
+[data-hv="hv9"]:hover > div:first-child::after,
+[data-hv="hv9"]:focus-visible > div:first-child::after {
+  animation: symSheen .95s cubic-bezier(.16, 1, .3, 1) forwards;
+}
+@keyframes symSheen {
+  from { transform: translate3d(-130%, 0, 0); }
+  to   { transform: translate3d(130%, 0, 0); }
+}
+
+/* --- cinema slate: the rail acknowledges each step change ------------- */
+
+[data-slate-rail] { transform-origin: 50% 50%; }
+.sym-rail-pulse {
+  animation: symRailPulse .5s cubic-bezier(.16, 1, .3, 1);
+}
+@keyframes symRailPulse {
+  0%   { transform: scaleY(1);   filter: brightness(1); }
+  35%  { transform: scaleY(2.6); filter: brightness(1.7); }
+  100% { transform: scaleY(1);   filter: brightness(1); }
+}
+
+/* --- AI chat: the streaming caret (class armed from app.js) ----------- */
+
+.sym-typing::after {
+  content: "|";
+  margin-left: 2px;
+  color: #6ee7ff;
+  animation: symCaret .8s steps(1, end) infinite;
+}
+@keyframes symCaret { 50% { opacity: 0; } }
+
+/* --- AI chat: a laser running the card's border -----------------------
+   A conic gradient clipped to a hairline ring by the two-layer mask.
+   The registered property is what lets the angle itself animate; a
+   browser without @property keeps a still highlight on the border. The
+   :has() chain is the chat terminal's only stable address - the markup
+   carries no hook on the card itself. */
+
+@property --symLaser {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+div:has(> div > div > p[data-i="cn.chat.a1"]) { position: relative; }
+div:has(> div > div > p[data-i="cn.chat.a1"])::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  padding: 1px;
+  background: conic-gradient(from var(--symLaser),
+    transparent 0deg, transparent 308deg,
+    rgba(138, 166, 255, 0.85) 344deg, #c6d1ff 355deg, transparent 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 2;
+  animation: symLaserOrbit 6s linear infinite;
+}
+@keyframes symLaserOrbit { to { --symLaser: 360deg; } }
+
+/* --- AI search: the diagnostic beam over the ruled field --------------
+   The field's own radial mask clips this pseudo-element with it, so the
+   beam lights the grid while it crosses it and dissolves where the grid
+   does - which is the point: it scans the instrument, not the copy. */
+
+#aisearch [data-gridfield]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 10%;
+  pointer-events: none;
+  background: linear-gradient(90deg,
+    transparent, rgba(255, 155, 74, 0.4), transparent);
+  -webkit-mask: linear-gradient(180deg, transparent, #000 48%, #000 52%, transparent);
+  mask: linear-gradient(180deg, transparent, #000 48%, #000 52%, transparent);
+  opacity: 0;
+  animation: symScanY 8s cubic-bezier(.45, .05, .55, .95) infinite;
+}
+@keyframes symScanY {
+  0%   { transform: translateY(-60%);  opacity: 0; }
+  10%  { opacity: .6; }
+  88%  { opacity: .6; }
+  100% { transform: translateY(950%); opacity: 0; }
+}
+
+/* --- AI search: the audit ticks land one by one -----------------------
+   app.js arms the class pair only when the observer that fires it can
+   also run; without JavaScript, or under reduced motion, the marks
+   simply stand. */
+
+.sym-check-pop > span:first-child {
+  transform: scale(0);
+  opacity: 0;
+}
+.sym-check-pop.sym-in > span:first-child {
+  animation: symCheckPop .55s cubic-bezier(.34, 1.56, .64, 1) var(--symCheckD, 0ms) forwards;
+}
+@keyframes symCheckPop {
+  0%   { transform: scale(0) rotate(-30deg);   opacity: 0; }
+  60%  { transform: scale(1.25) rotate(4deg);  opacity: 1; }
+  100% { transform: scale(1) rotate(0deg);     opacity: 1; }
+}
+
+/* --- the unconditional loops stop when nobody can see them ------------
+   The REC ping, the chat card's border laser and the AI-search beam are
+   the three loops above that run without a hover to start them. app.js
+   parks each one (.sym-idle) while its host is offscreen; without
+   JavaScript they simply run, like every other ambient layer here. */
+
+[data-sym-strip] span[style*="#ff5a5a"].sym-idle::after,
+div.sym-idle:has(> div > div > p[data-i="cn.chat.a1"])::before,
+#aisearch [data-gridfield].sym-idle::after {
+  animation-play-state: paused;
+}
