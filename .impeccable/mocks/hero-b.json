@@ -1,0 +1,21 @@
+{
+  "approved": true,
+  "approved_at": "2026-08-06",
+  "surface": "symbiosis-os-landing",
+  "mode": "persuade",
+  "world": "The Edit Suite",
+  "seed_key": "b08cf51f",
+  "assigned_index": 6,
+  "artifact": ".impeccable/mocks/hero-b.html",
+  "medium": "html+css",
+  "note": "Composition round was built as real HTML/CSS rather than rendered images: Recraft V4.1 returned 403 job_minimum_basic_plan_required and no remaining image model can draw interface layouts. Comps A and C were rejected in the same round.",
+  "decisions": {
+    "display_face": "Geist alone. Instrument Serif carries zero Cyrillic glyphs and cannot set Bulgarian display type; the pinned pairing was resolved to a single face.",
+    "accent": "single — cobalt #2B4EE6 with #5B7BFF as the lit state",
+    "ground": "#0E1420 deep navy, not neutral near-black"
+  },
+  "open": [
+    "Mobile timeline must become a vertical sequence, not a compressed horizontal one — event labels clip at 390px.",
+    "Right column must read as one instrument, not three stacked widgets."
+  ]
+}
