@@ -744,7 +744,9 @@ div:has(> div > div > p[data-i="cn.chat.a1"])::before {
   opacity: 0;
 }
 .sym-check-pop.sym-in > span:first-child {
-  animation: symCheckPop .55s cubic-bezier(.34, 1.56, .64, 1) var(--symCheckD, 0ms) forwards;
+  /* the overshoot is authored in the keyframes (0 -> 1.25 -> 1); the
+     curve between them decelerates cleanly rather than bouncing again */
+  animation: symCheckPop .55s cubic-bezier(.16, 1, .3, 1) var(--symCheckD, 0ms) forwards;
 }
 @keyframes symCheckPop {
   0%   { transform: scale(0) rotate(-30deg);   opacity: 0; }
