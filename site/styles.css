@@ -1,0 +1,517 @@
+/* Symbiosis - stylesheet.
+
+   The design this page carries was authored in Claude Design, where the
+   component runtime forbids stylesheets: every rule lived in an inline
+   style attribute, hover states lived in a `style-hover` attribute the
+   runtime read, and the only breakpoint was a JS resize listener at
+   1180px. This file is what that design needs in order to survive as a
+   real page - webfonts that actually carry the weights and scripts they
+   claim, hover and focus states the browser resolves on its own, and
+   breakpoints that hold when JavaScript does not run.
+
+   Layout still lives in the inline styles the design shipped with. That
+   is deliberate: rewriting 1,376 of them into classes would be a
+   redesign in everything but name, and the point of this pass is to keep
+   the design intact while making it correct. */
+
+/* ============================================================
+   1. Typefaces
+
+   The reference declared Inter at 300/400/500/600/700 and pointed all
+   five weights at the same static Regular file, so every heading above
+   400 was drawn by the browser's synthetic bold. These are the real
+   variable faces, with the Cyrillic subsets the Bulgarian copy needs.
+
+   SymIcons is a 21-glyph subset of DejaVu Sans covering the geometric
+   marks the design uses as icons - the play triangle, the checks, the
+   diamonds, the arrows. Neither Inter nor JetBrains Mono contains any of
+   them; without this face the platform resolves them, and iOS and
+   Android resolve several as colour emoji.
+   ============================================================ */
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('assets/fonts/inter-lat.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+2000-206F,
+                 U+2074, U+20AC, U+2122, U+2202, U+2212;
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('assets/fonts/inter-cyr.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url('assets/fonts/mono-lat.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+2000-206F,
+                 U+2074, U+20AC, U+2122, U+2202, U+2212;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url('assets/fonts/mono-cyr.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+/* One line of the hero, in two languages. Subset to those glyphs alone -
+   Instrument Serif, which the design named, carries no Cyrillic at all,
+   so that line was silently falling through to whatever serif the
+   visitor's OS happened to ship. */
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: italic;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url('assets/fonts/serif-lat.woff2') format('woff2');
+  unicode-range: U+0000-00FF;
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: italic;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url('assets/fonts/serif-cyr.woff2') format('woff2');
+  unicode-range: U+0400-045F;
+}
+
+@font-face {
+  font-family: 'SymIcons';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('assets/fonts/sym.woff2') format('woff2');
+  unicode-range: U+2190-21BB, U+2248, U+2261, U+2264-2265, U+2318,
+                 U+25A0-25FF, U+270E, U+2713, U+2715, U+2726, U+273A;
+}
+
+/* ============================================================
+   2. Ground
+   ============================================================ */
+
+* { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  background: #08080a;
+  /* The fixed header is 64–70px tall; anchored sections have to clear it. */
+  scroll-padding-top: 92px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #08080a;
+  color: #a9a9ba;
+  font-family: Inter, SymIcons, system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img { display: block; max-width: 100%; }
+a { color: #8aa6ff; text-decoration: none; }
+a:hover { color: #ffffff; }
+summary::-webkit-details-marker { display: none; }
+
+::selection { background: #5b7bff; color: #fff; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #08080a; }
+::-webkit-scrollbar-thumb { background: #23232e; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: #35354a; }
+
+/* The reference shipped no focus styles at all. On a page whose primary
+   action is a link, that leaves a keyboard user with the UA default and
+   nothing else. */
+:focus-visible {
+  outline: 2px solid #8aa6ff;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 200;
+  padding: 12px 20px;
+  background: #f6f6f9;
+  color: #08080a;
+  font-weight: 600;
+  border-radius: 0 0 12px 0;
+}
+.skip:focus { left: 0; color: #08080a; }
+
+/* ============================================================
+   3. Motion
+   ============================================================ */
+
+@keyframes symPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(138,166,255,.55); }
+  70%  { box-shadow: 0 0 0 11px rgba(138,166,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(138,166,255,0); }
+}
+@keyframes symMarqL { from { transform: translate3d(0,0,0); }    to { transform: translate3d(-50%,0,0); } }
+@keyframes symMarqR { from { transform: translate3d(-50%,0,0); } to { transform: translate3d(0,0,0); } }
+@keyframes symFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+@keyframes symScan  { 0% { transform: translateY(-10%); opacity: 0; } 12% { opacity: .7; } 88% { opacity: .7; } 100% { transform: translateY(1000%); opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  /* The universal selector does not match pseudo-elements, so `*` alone
+     left the two ambient drift layers running for a visitor who had asked
+     for no motion - confirmed with document.getAnimations(). */
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+/* ============================================================
+   4. Hover and focus
+
+   Generated from the 118 `style-hover` attributes the runtime used to
+   read, deduplicated to 20 distinct states. Inline style attributes
+   outrank a class selector, so each declaration carries !important in
+   order to win on hover. :focus-visible is paired with every one so a
+   keyboard reaches the same states a mouse does.
+   ============================================================ */
+
+[data-hv="hv0"]:hover,[data-hv="hv0"]:focus-visible{background:rgba(91,123,255,0.22) !important;border-color:rgba(138,166,255,0.6) !important}
+[data-hv="hv1"]:hover,[data-hv="hv1"]:focus-visible{background:rgba(255,155,74,0.2) !important;border-color:rgba(255,155,74,0.6) !important}
+[data-hv="hv2"]:hover,[data-hv="hv2"]:focus-visible{color:#f6f6f9 !important;background:rgba(255,255,255,0.05) !important}
+[data-hv="hv3"]:hover,[data-hv="hv3"]:focus-visible{border-color:rgba(255,255,255,0.2) !important;color:#f6f6f9 !important}
+[data-hv="hv4"]:hover,[data-hv="hv4"]:focus-visible{background:rgba(255,255,255,0.07) !important;border-color:rgba(255,255,255,0.24) !important}
+[data-hv="hv5"]:hover,[data-hv="hv5"]:focus-visible{transform:translateY(-1px) !important;box-shadow:0 10px 26px -10px rgba(43,78,230,.55) !important}
+[data-hv="hv6"]:hover,[data-hv="hv6"]:focus-visible{transform:translateY(-2px) !important;box-shadow:0 18px 44px -14px rgba(43,78,230,.5) !important}
+[data-hv="hv7"]:hover,[data-hv="hv7"]:focus-visible{background:rgba(255,255,255,0.07) !important;border-color:rgba(255,255,255,0.28) !important}
+[data-hv="hv8"]:hover,[data-hv="hv8"]:focus-visible{border-color:rgba(255,155,74,0.4) !important;transform:translateY(-3px) !important}
+[data-hv="hv9"]:hover,[data-hv="hv9"]:focus-visible{border-color:rgba(138,166,255,0.4) !important;transform:translateY(-4px) !important}
+[data-hv="hv10"]:hover,[data-hv="hv10"]:focus-visible{background:rgba(255,255,255,0.14) !important}
+[data-hv="hv11"]:hover,[data-hv="hv11"]:focus-visible{background:#101017 !important}
+[data-hv="hv12"]:hover,[data-hv="hv12"]:focus-visible{color:#8aa6ff !important}
+[data-hv="hv13"]:hover,[data-hv="hv13"]:focus-visible{border-color:rgba(138,166,255,0.35) !important;transform:translateY(-4px) !important}
+[data-hv="hv14"]:hover,[data-hv="hv14"]:focus-visible{border-color:rgba(138,166,255,0.45) !important;color:#f6f6f9 !important}
+[data-hv="hv15"]:hover,[data-hv="hv15"]:focus-visible{border-color:rgba(138,166,255,0.3) !important}
+[data-hv="hv16"]:hover,[data-hv="hv16"]:focus-visible{border-color:rgba(138,166,255,0.48) !important}
+[data-hv="hv17"]:hover,[data-hv="hv17"]:focus-visible{transform:translateY(-2px) !important;box-shadow:0 20px 50px -14px rgba(43,78,230,.55) !important}
+[data-hv="hv18"]:hover,[data-hv="hv18"]:focus-visible{background:rgba(255,255,255,0.08) !important;border-color:rgba(255,255,255,0.3) !important}
+[data-hv="hv19"]:hover,[data-hv="hv19"]:focus-visible{color:#f6f6f9 !important}
+
+/* A coarse pointer has no hover. Leaving the lift transforms in place
+   there makes a tap look like it dragged the card. */
+@media (hover: none) {
+  [data-hv]:hover { transform: none !important; box-shadow: none !important; }
+}
+
+/* ============================================================
+   5. Breakpoints
+
+   The reference had none. The runtime toggled `display` from a resize
+   listener, so the header collapsed only after JavaScript ran, and
+   everything else relied entirely on clamp(). These are the same
+   decisions expressed where they belong, plus the reflow the band
+   between 560px and 1180px turned out to need.
+   ============================================================ */
+
+@media (max-width: 1179.98px) {
+  [data-mob="hide"] { display: none !important; }
+  [data-mob="only"] { display: flex !important; }
+}
+@media (min-width: 1180px) {
+  [data-mob="only"] { display: none !important; }
+}
+
+/* The Cinema section is the page's one grid with a fixed two-column
+   template - every other grid uses auto-fit and folds on its own. With no
+   media query it held both columns all the way down: at 390px that is a
+   148px card beside a 196px one, three words to a line, which is what
+   "glitching and hard to read" looked like. Once stacked, the slate must
+   stop sticking: pinned in a single column it would sit on top of the very
+   steps it is describing. */
+@media (max-width: 900px) {
+  [data-col2] { grid-template-columns: minmax(0, 1fr) !important; }
+  [data-sticky-col] { position: static !important; }
+}
+
+/* Below ~560px the header's right-hand cluster - language tabs, the
+   booking button and the menu button - needs 273px next to a 118px
+   wordmark, and the row runs 35px past a 390px screen. Because body
+   clips overflow-x there is no scrollbar to reveal it: the menu button
+   simply sits off the edge of the phone, unreachable. The booking
+   button is the one of the three that is already repeated inside the
+   menu panel and again in the hero, so it is the one that goes. */
+@media (max-width: 560px) {
+  [data-sym-nav] a[data-hv="hv5"] { display: none; }
+}
+
+/* The footer's navigation row renders 22px tall, two pixels under the 24×24
+   floor WCAG 2.5.8 sets for every pointer, not only touch. They are
+   standalone links in a row rather than links inside a sentence, so the
+   inline exception does not cover them. */
+[data-hv="hv19"] {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+}
+
+/* Beyond that every control clears 24×24. On a touch screen it is still a
+   small thing to hit, so the controls - as opposed to the citation links,
+   which are quiet small print by design - get a 44px floor where the
+   pointer is coarse. */
+@media (pointer: coarse) {
+  [data-sym-nav] a,
+  [data-sym-menu] a,
+  [role="tab"],
+  [data-act],
+  a[data-hv],
+  a[href^="https://www.sell2inspire.agency"],
+  summary {
+    min-height: 44px;
+  }
+  /* Short labels - "FAQ", "Вход" - are tall enough but too narrow to hit. */
+  [role="tab"],
+  a[data-hv="hv19"] { min-width: 44px; }
+}
+
+/* ============================================================
+   6. Ambient drift
+
+   Two fixed layers of very soft brand light behind the whole page, moving
+   slowly enough that you register it as depth rather than as animation.
+   Both live on `body`, below the content wrapper, so nothing overlays text
+   and the measured contrast is unaffected.
+
+   They are `position: fixed` with `transform` animations, which keeps them
+   on the compositor - they cost nothing on scroll and never trigger layout.
+   The two durations are deliberately not multiples of each other, so the
+   combined pattern takes about twenty minutes to repeat.
+   ============================================================ */
+
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  inset: -25%;
+  z-index: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+body::before {
+  background:
+    radial-gradient(32% 30% at 24% 26%, rgba(91, 123, 255, .10), transparent 64%),
+    radial-gradient(28% 26% at 76% 66%, rgba(122, 77, 255, .085), transparent 62%);
+  animation: symDriftA 67s ease-in-out infinite alternate;
+}
+
+body::after {
+  background:
+    radial-gradient(26% 24% at 66% 18%, rgba(255, 155, 74, .045), transparent 62%),
+    radial-gradient(30% 28% at 16% 78%, rgba(138, 166, 255, .06), transparent 64%);
+  animation: symDriftB 89s ease-in-out infinite alternate;
+}
+
+@keyframes symDriftA {
+  from { transform: translate3d(-3%, -2%, 0) scale(1); }
+  to   { transform: translate3d(4%, 3%, 0) scale(1.14); }
+}
+@keyframes symDriftB {
+  from { transform: translate3d(3%, 2%, 0) scale(1.1); }
+  to   { transform: translate3d(-4%, -3%, 0) scale(1); }
+}
+
+/* The wrapper painted its own opaque ground, which would have sat on top of
+   the drift. `body` carries the ground colour now and the wrapper is a
+   transparent stacking context above the two layers. */
+[data-sym-root] {
+  background: transparent !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   7. Detail
+
+   Four devices, all of them borrowed from what the hero already does, so
+   the rest of the page reads as the same design rather than as a quieter
+   version of it. Every one of them is decorative and sits behind or over
+   content without touching layout, so nothing here can change a measured
+   number.
+   ============================================================ */
+
+/* --- the hero's ruled field, echoed in four sections ------------------ */
+[data-gridfield] {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, .022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .022) 1px, transparent 1px);
+  background-size: 88px 88px;
+  mask-image: radial-gradient(ellipse 72% 58% at 50% 34%, #000 6%, transparent 76%);
+  -webkit-mask-image: radial-gradient(ellipse 72% 58% at 50% 34%, #000 6%, transparent 76%);
+}
+/* the field is the section's first child, so everything after it needs to
+   sit above without each one declaring a z-index */
+[data-gridfield] ~ * { position: relative; z-index: 1; }
+
+/* --- the pointer spotlight ------------------------------------------- */
+[data-spot] {
+  position: relative;
+  isolation: isolate;
+}
+[data-spot]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity .35s ease;
+  background: radial-gradient(
+    240px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(138, 166, 255, .13),
+    transparent 68%
+  );
+}
+[data-spot]:hover::after { opacity: 1; }
+/* A coarse pointer has no cursor to follow, and the highlight would just
+   flash on tap. */
+@media (hover: none) {
+  [data-spot]::after { display: none; }
+}
+
+/* --- a specular sweep across the primary action ----------------------- */
+a[data-hv="hv5"],
+a[data-hv="hv6"],
+a[data-hv="hv17"] {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+a[data-hv="hv5"]::after,
+a[data-hv="hv6"]::after,
+a[data-hv="hv17"]::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  bottom: -60%;
+  left: -40%;
+  width: 34%;
+  z-index: -1;
+  pointer-events: none;
+  transform: translateX(-220%) rotate(18deg);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .30), transparent);
+}
+a[data-hv="hv5"]:hover::after,
+a[data-hv="hv6"]:hover::after,
+a[data-hv="hv17"]:hover::after,
+a[data-hv="hv5"]:focus-visible::after,
+a[data-hv="hv6"]:focus-visible::after,
+a[data-hv="hv17"]:focus-visible::after {
+  animation: symSweep .9s cubic-bezier(.3, .7, .3, 1) 1;
+}
+@keyframes symSweep {
+  from { transform: translateX(-220%) rotate(18deg); }
+  to   { transform: translateX(560%) rotate(18deg); }
+}
+
+/* --- a rule beside every section eyebrow ------------------------------ */
+[data-i$=".eyebrow"] {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 14px;
+}
+[data-i$=".eyebrow"]::after {
+  content: '';
+  width: clamp(26px, 5vw, 72px);
+  height: 1px;
+  background: currentColor;
+  opacity: .38;
+}
+/* the two eyebrows that already sit inside a pill have their own frame */
+[data-i$=".eyebrow"][style*="border-radius:999px"]::after { display: none; }
+
+/* ============================================================
+   8. Section seams
+
+   Nine sections alternated a flat #0b0b0f band against the #08080a ground,
+   each ruled top and bottom with a 1px hairline. That is two hard edges per
+   section: the rule itself, and an instant step in value beside it. Twenty
+   hairlines down the page, each announcing "a section ends here".
+
+   The band is a gradient now. It starts and ends on the ground colour, so
+   the eye never meets an edge - the value rises over the first stretch of
+   the section and falls again over the last. 14% of the section height at
+   each end is 55–200px of ramp at the heights these sections actually run.
+   ============================================================ */
+
+section[data-band] {
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(255, 255, 255, .014) 14%,
+    rgba(255, 255, 255, .014) 86%,
+    transparent 100%
+  );
+}
+
+/* Below the fold the sections are short enough that a percentage ramp gets
+   thin. Fixed stops keep the fade the same physical length on a phone. */
+@media (max-width: 700px) {
+  section[data-band] {
+    background: linear-gradient(
+      180deg,
+      transparent 0px,
+      rgba(255, 255, 255, .014) 90px,
+      rgba(255, 255, 255, .014) calc(100% - 90px),
+      transparent 100%
+    );
+  }
+}
+
+/* ============================================================
+   9. Tile rows
+
+   Fourteen of the page's tile groups paint their own gap: a 1px gap over a
+   light background is what draws the hairline between cells. As a grid,
+   any item count that does not divide by the column count leaves painted
+   tracks over - and a painted empty track looks exactly like an empty
+   tile. Three stats in a two-column grid left one; four list items in a
+   three-column grid left two.
+
+   A wrapping flex row has no tracks. The last row's items grow to fill it,
+   so there is nothing left over to paint. `--fb` carries each group's
+   original minimum width so the wrap points are unchanged.
+   ============================================================ */
+
+[data-fillrow] > * {
+  flex: 1 1 var(--fb, 150px);
+  min-width: 0;
+}
+
+/* Wide instruments scroll inside their own box rather than pushing the
+   page sideways. */
+[data-scroll-x] {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}

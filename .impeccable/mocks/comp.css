@@ -1,0 +1,373 @@
+/* ============================================================
+   The Edit Suite — shared token layer for the three hero comps.
+   Composition is the variable across comps A/B/C; this file is
+   held fixed so the comparison stays about layout, not palette.
+   ============================================================ */
+
+@font-face {
+  font-family: 'Geist';
+  src: url('../../site/assets/fonts/geist/Geist-Variable.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* ground and panels — deep navy, not the incumbent's neutral near-black */
+  --ground:    #0E1420;
+  --panel:     #141B2A;
+  --panel-lit: #1A2233;
+
+  /* one accent, taken from the logo mark */
+  --cobalt:     #2B4EE6;
+  --cobalt-lit: #5B7BFF;
+  --periwinkle: #8FA6FF;
+
+  /* text ramp — every step verified against --ground:
+     E8ECF4 16.1:1 · A8B4CC 8.85:1 · 7E8CA8 5.41:1 (all clear AA) */
+  --text:   #E8ECF4;
+  --text-2: #A8B4CC;
+  --text-3: #7E8CA8;
+
+  --rule:      rgba(201, 211, 232, 0.14);
+  --rule-soft: rgba(201, 211, 232, 0.07);
+
+  --gutter: clamp(20px, 4vw, 64px);
+  --radius: 4px;
+
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  background: var(--ground);
+  color: var(--text-2);
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  font-feature-settings: 'ss01', 'cv01';
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+:focus-visible {
+  outline: 2px solid var(--cobalt-lit);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ---------- shared chrome ---------- */
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 18px var(--gutter);
+  border-bottom: 1px solid var(--rule-soft);
+}
+.nav__mark {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 560;
+  letter-spacing: -0.015em;
+  font-size: 15px;
+}
+.nav__mark svg { display: block; }
+.nav__links { display: flex; gap: 26px; margin-left: 14px; }
+.nav__links a {
+  color: var(--text-3);
+  text-decoration: none;
+  font-size: 13.5px;
+  letter-spacing: -0.005em;
+  transition: color 0.2s var(--ease);
+}
+.nav__links a:hover { color: var(--text); }
+.nav__end { margin-left: auto; display: flex; align-items: center; gap: 18px; }
+.nav__lang {
+  display: flex;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.nav__lang button {
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 550;
+  letter-spacing: 0.06em;
+  padding: 7px 10px;
+  min-height: 32px;
+  border: 0;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-3);
+}
+.nav__lang button[aria-pressed='true'] { background: var(--text); color: var(--ground); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--cobalt);
+  color: #fff;
+  font: inherit;
+  font-size: 14.5px;
+  font-weight: 530;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s var(--ease);
+}
+.btn:hover { background: var(--cobalt-lit); }
+.btn--ghost {
+  background: transparent;
+  border: 1px solid var(--rule);
+  color: var(--text);
+}
+.btn--ghost:hover { background: var(--panel-lit); border-color: var(--periwinkle); }
+.btn--sm { min-height: 36px; padding: 0 14px; font-size: 13px; }
+
+/* ---------- display type ---------- */
+
+h1 {
+  font-weight: 480;
+  letter-spacing: -0.032em;
+  line-height: 1.02;
+  color: var(--text);
+  text-wrap: balance;
+}
+h1 em { font-style: normal; color: var(--periwinkle); }
+
+.lede {
+  color: var(--text-2);
+  font-size: clamp(15px, 1.15vw, 17px);
+  max-width: 46ch;
+  letter-spacing: -0.008em;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 550;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+/* ---------- timeline primitives ---------- */
+
+.tl {
+  position: relative;   /* containing block for .tl__head */
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--panel);
+  overflow: hidden;
+}
+.tl__lanes { position: relative; }
+.tl__ruler {
+  display: flex;
+  align-items: flex-end;
+  height: 30px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--panel-lit);
+  padding-left: var(--lane-gutter, 150px);
+  position: relative;
+}
+.tl__tick {
+  flex: 1;
+  border-left: 1px solid var(--rule-soft);
+  height: 7px;
+  position: relative;
+}
+.tl__tick--major { height: 13px; border-left-color: var(--rule); }
+.tl__tick span {
+  position: absolute;
+  top: -17px;
+  left: 6px;
+  font-size: 10px;
+  letter-spacing: 0.07em;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+.tl__lane {
+  display: grid;
+  grid-template-columns: var(--lane-gutter, 150px) 1fr;
+  border-bottom: 1px solid var(--rule-soft);
+  min-height: var(--lane-h, 54px);
+}
+.tl__lane:last-child { border-bottom: 0; }
+.tl__laneName {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 14px;
+  border-right: 1px solid var(--rule);
+  font-size: 12.5px;
+  color: var(--text-2);
+  letter-spacing: -0.005em;
+}
+.tl__dot { width: 5px; height: 5px; border-radius: 50%; background: var(--periwinkle); flex: none; }
+.tl__track { position: relative; }
+.tl__block {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 24px;
+  border-radius: 2px;
+  background: color-mix(in oklab, var(--cobalt) 55%, var(--panel));
+  border: 1px solid color-mix(in oklab, var(--cobalt-lit) 45%, transparent);
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  font-size: 11px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.tl__block--quiet {
+  background: var(--panel-lit);
+  border-color: var(--rule);
+  color: var(--text-3);
+}
+.tl__block--lit {
+  background: var(--cobalt);
+  border-color: var(--cobalt-lit);
+  color: #fff;
+}
+.tl__head {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--cobalt-lit);
+  pointer-events: none;
+  z-index: 3;
+}
+.tl__head::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -4px;
+  width: 9px;
+  height: 9px;
+  background: var(--cobalt-lit);
+  border-radius: 1px;
+}
+
+/* ---------- scrub control ---------- */
+
+.scrub {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  border-top: 1px solid var(--rule);
+  background: var(--panel-lit);
+}
+.scrub input[type='range'] {
+  flex: 1;
+  appearance: none;
+  height: 22px;
+  background: transparent;
+  cursor: grab;
+}
+.scrub input[type='range']::-webkit-slider-runnable-track {
+  height: 2px;
+  background: var(--rule);
+}
+.scrub input[type='range']::-webkit-slider-thumb {
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  margin-top: -5px;
+  border-radius: 2px;
+  background: var(--cobalt-lit);
+  border: 0;
+}
+.scrub input[type='range']::-moz-range-track { height: 2px; background: var(--rule); }
+.scrub input[type='range']::-moz-range-thumb {
+  width: 12px; height: 12px; border-radius: 2px;
+  background: var(--cobalt-lit); border: 0;
+}
+.scrub__read {
+  font-size: 12px;
+  color: var(--text-2);
+  min-width: 15ch;
+  letter-spacing: -0.005em;
+}
+
+/* ---------- responsive chrome ----------
+   The nav is not what these comps are testing, but it still has to fit:
+   below 900px the link list collapses and only the mark, the language
+   toggle, and the primary action remain. Nothing may cross 100vw. */
+
+@media (max-width: 900px) {
+  .nav { gap: 14px; padding: 14px var(--gutter); }
+  .nav__links { display: none; }
+  .nav__end { gap: 12px; }
+  .scrub { flex-wrap: wrap; }
+  .scrub input[type='range'] { flex: 1 1 100%; order: 3; }
+}
+
+@media (max-width: 400px) {
+  .nav__mark { font-size: 0; gap: 0; }   /* mark only; wordmark returns at 400px up */
+  .nav__mark svg { width: 22px; height: 22px; }
+}
+
+/* ---------- demonstration-data notice ---------- */
+
+.synthetic {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--text-3);
+  border: 1px dashed var(--rule);
+  border-radius: 2px;
+  padding: 5px 9px;
+}
+.synthetic::before {
+  content: '';
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--text-3);
+  flex: none;
+}
+
+/* ---------- comp frame chrome (not part of the design) ---------- */
+
+.compbar {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 9px 16px;
+  background: rgba(6, 9, 15, 0.94);
+  border-top: 1px solid var(--rule);
+  font-size: 12px;
+  color: var(--text-3);
+  backdrop-filter: blur(8px);
+}
+.compbar strong { color: var(--text); font-weight: 550; }
+.compbar a { color: var(--periwinkle); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

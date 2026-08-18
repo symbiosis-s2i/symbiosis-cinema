@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comp C · Program Monitor — Symbiosis OS</title>
+<link rel="stylesheet" href="comp.css">
+<style>
+  .fold {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 61px);
+    padding: clamp(26px, 3.4vh, 46px) var(--gutter) clamp(24px, 3vh, 40px);
+    gap: clamp(18px, 2.4vh, 30px);
+  }
+
+  .say { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 30px; align-items: end; }
+  .say h1 { font-size: clamp(26px, 2.55vw, 40px); max-width: 26ch; letter-spacing: -0.026em; }
+  .say__actions { display: flex; gap: 10px; }
+
+  /* the program monitor — the record leads, the timeline supports */
+  .monitor {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 232px minmax(0, 1fr);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    background: var(--panel);
+    overflow: hidden;
+    min-height: 300px;
+  }
+  .monitor__who {
+    border-right: 1px solid var(--rule);
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background: var(--panel-lit);
+  }
+  .portrait {
+    aspect-ratio: 3 / 4;
+    border-radius: 2px;
+    border: 1px solid var(--rule);
+    background:
+      radial-gradient(120% 80% at 50% 22%, rgba(91,123,255,0.20), transparent 62%),
+      var(--ground);
+    display: flex;
+    align-items: flex-end;
+    padding: 12px;
+    max-height: 250px;
+  }
+  .portrait span { font-size: 11px; color: var(--text-3); letter-spacing: 0.06em; }
+  .monitor__name { font-size: 19px; color: var(--text); font-weight: 520; letter-spacing: -0.018em; }
+  .monitor__role { font-size: 12.5px; color: var(--text-3); margin-top: 2px; }
+
+  .monitor__body { display: flex; flex-direction: column; }
+  .monitor__bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .chip {
+    font-size: 11.5px;
+    color: var(--periwinkle);
+    border: 1px solid color-mix(in oklab, var(--periwinkle) 34%, transparent);
+    border-radius: 2px;
+    padding: 4px 9px;
+    letter-spacing: 0.02em;
+  }
+  .fields {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(178px, 1fr));
+    align-content: start;
+  }
+  .field { padding: 16px 20px; border-right: 1px solid var(--rule-soft); border-bottom: 1px solid var(--rule-soft); }
+  .field dt { font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--text-3); }
+  .field dd { font-size: 14.5px; color: var(--text); margin-top: 5px; letter-spacing: -0.008em; }
+
+  /* the transport rail + the ribbon */
+  .rail { border: 1px solid var(--rule); border-radius: var(--radius); background: var(--panel); }
+  .ribbon { --lane-gutter: 128px; --lane-h: 34px; border: 0; border-radius: 0; }
+  .ribbon .tl__block { height: 17px; font-size: 10px; padding: 0 6px; }
+  .ribbon .tl__laneName { font-size: 11.5px; }
+  .rail__foot { display: flex; align-items: center; gap: 14px; padding: 11px 16px; border-top: 1px solid var(--rule); }
+
+  @media (max-width: 900px) {
+    .say { grid-template-columns: 1fr; align-items: start; gap: 20px; }
+    .monitor { grid-template-columns: 1fr; }
+    .monitor__who { border-right: 0; border-bottom: 1px solid var(--rule); flex-direction: row; align-items: center; }
+    .portrait { width: 92px; aspect-ratio: 3/4; flex: none; }
+    .ribbon { --lane-gutter: 0; }
+    .ribbon .tl__lane { grid-template-columns: 1fr; min-height: 58px; }
+    .ribbon .tl__laneName { border-right: 0; border-bottom: 1px solid var(--rule-soft); padding: 6px 12px 2px; }
+    .ribbon .tl__ruler { padding-left: 12px; }
+    .rail__foot { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <a class="nav__mark" href="#">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <circle cx="10" cy="10" r="8.25" stroke="#5B7BFF" stroke-width="1.5"/>
+      <circle cx="10" cy="10" r="3" fill="#5B7BFF"/>
+    </svg>
+    Symbiosis
+  </a>
+  <nav class="nav__links">
+    <a href="#">Cinema</a><a href="#">Платформа</a><a href="#">Защо Symbiosis</a><a href="#">Процесът</a><a href="#">Въпроси</a>
+  </nav>
+  <div class="nav__end">
+    <div class="nav__lang" role="group" aria-label="Език">
+      <button type="button" aria-pressed="true">BG</button>
+      <button type="button" aria-pressed="false">EN</button>
+    </div>
+    <a class="btn btn--sm" href="#">Заяви достъп</a>
+  </div>
+</header>
+
+<main class="fold">
+  <div class="say">
+    <h1>Съдържание, което носи клиенти. <em>Система, която ги затваря.</em></h1>
+    <div class="say__actions">
+      <a class="btn" href="#">Заяви достъп</a>
+      <a class="btn btn--ghost" href="#">Виж как работи</a>
+    </div>
+  </div>
+
+  <section class="monitor" aria-label="Досие на клиент">
+    <div class="monitor__who">
+      <div class="portrait"><span>ПОРТРЕТ</span></div>
+      <div>
+        <div class="monitor__name">Мария Тодорова</div>
+        <div class="monitor__role">Управител · Студио Север</div>
+      </div>
+    </div>
+    <div class="monitor__body">
+      <div class="monitor__bar">
+        <span class="label">Досие</span>
+        <span class="chip">Готова за разговор</span>
+        <span class="synthetic" style="margin-left:auto">примерни данни</span>
+      </div>
+      <dl class="fields">
+        <div class="field"><dt>Дошла от</dt><dd>Видео · Анна</dd></div>
+        <div class="field"><dt>Гледания</dt><dd>Три, последното снощи</dd></div>
+        <div class="field"><dt>Задържане</dt><dd>До края</dd></div>
+        <div class="field"><dt>Оферта</dt><dd>Отворена, без отговор</dd></div>
+        <div class="field"><dt>Следваща стъпка</dt><dd>Обаждане днес</dd></div>
+        <div class="field"><dt>Отговорник</dt><dd>Калоян</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="rail" aria-label="Пътят до това досие">
+    <div class="tl ribbon">
+      <div class="tl__ruler" aria-hidden="true">
+        <div class="tl__tick tl__tick--major"><span>ПОН</span></div>
+        <div class="tl__tick"></div>
+        <div class="tl__tick tl__tick--major"><span>СРЯ</span></div>
+        <div class="tl__tick"></div>
+        <div class="tl__tick tl__tick--major"><span>ПЕТ</span></div>
+        <div class="tl__tick"></div>
+      </div>
+      <div class="tl__lane">
+        <div class="tl__laneName"><span class="tl__dot"></span>Съдържание</div>
+        <div class="tl__track"><div class="tl__block" style="left:3%;width:19%">Видео</div></div>
+      </div>
+      <div class="tl__lane">
+        <div class="tl__laneName"><span class="tl__dot"></span>Ангажираност</div>
+        <div class="tl__track"><div class="tl__block tl__block--quiet" style="left:25%;width:15%">3 гледания</div></div>
+      </div>
+      <div class="tl__lane">
+        <div class="tl__laneName"><span class="tl__dot"></span>Клиент</div>
+        <div class="tl__track"><div class="tl__block tl__block--lit" style="left:43%;width:14%">Мария Т.</div></div>
+      </div>
+      <div class="tl__lane">
+        <div class="tl__laneName"><span class="tl__dot"></span>Оферта</div>
+        <div class="tl__track"><div class="tl__block" style="left:60%;width:16%">Изпратена</div></div>
+      </div>
+      <div class="tl__head" style="left:calc(var(--lane-gutter, 0px) + 43%)"></div>
+    </div>
+    <div class="rail__foot">
+      <span class="label">Превърти</span>
+      <input type="range" min="0" max="100" value="43" aria-label="Превърти през пътя" style="flex:1;appearance:none;height:22px;background:transparent">
+      <a class="btn btn--sm" href="#">Заяви достъп</a>
+    </div>
+  </section>
+</main>
+
+<div class="compbar">
+  <strong>Comp C</strong> · Program Monitor — досието води, таймлайнът поддържа
+  <span style="margin-left:auto">Композиция C от 3</span>
+</div>
+
+<style>
+  .rail__foot input[type='range']::-webkit-slider-runnable-track { height:2px; background:var(--rule); }
+  .rail__foot input[type='range']::-webkit-slider-thumb { appearance:none;width:12px;height:12px;margin-top:-5px;border-radius:2px;background:var(--cobalt-lit);border:0; }
+  .rail__foot input[type='range']::-moz-range-track { height:2px; background:var(--rule); }
+  .rail__foot input[type='range']::-moz-range-thumb { width:12px;height:12px;border-radius:2px;background:var(--cobalt-lit);border:0; }
+</style>
+</body>
+</html>
