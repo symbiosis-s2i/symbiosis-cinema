@@ -11,7 +11,41 @@
       "Bash(awk ' *)",
       "Bash(printenv ELEVENLABS_API_KEY)",
       "Bash(printenv FAL_KEY)",
-      "Bash(printenv OPENAI_API_KEY)"
+      "Bash(printenv OPENAI_API_KEY)",
+      "mcp__Claude_Code_Remote__send_later",
+      "Bash(mkdir -p /home/user/symbiosis-cinema/public/brand/renders)",
+      "Bash(cp \"/root/.claude/projects/-home-user-symbiosis-cinema/794774a8-92ae-5d62-ad69-a3a1222ebe7a/tool-results/mcp-Lovable-read_file-1786020061230.txt\" /home/user/symbiosis-cinema/public/brand/renders/render-hero.jpg)",
+      "Bash(identify /home/user/symbiosis-cinema/public/brand/renders/render-hero.jpg)",
+      "mcp__Claude_Code_Remote__get_session",
+      "mcp__Claude_Code_Remote__add_repo"
     ]
-  }
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -f \"${CLAUDE_PROJECT_DIR}/.claude/skills/impeccable/scripts/hook.mjs\" ] || node \"${CLAUDE_PROJECT_DIR}/.claude/skills/impeccable/scripts/hook.mjs\"",
+            "timeout": 5,
+            "statusMessage": "Checking UI changes"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ ! -f \"${CLAUDE_PROJECT_DIR}/.claude/skills/impeccable/scripts/hook.mjs\" ] || node \"${CLAUDE_PROJECT_DIR}/.claude/skills/impeccable/scripts/hook.mjs\"",
+            "timeout": 30,
+            "statusMessage": "Design deep pass"
+          }
+        ]
+      }
+    ]
+  },
+  "description": "Impeccable design detector: immediate-tier checks after Edit/Write/MultiEdit on UI files, full-rule deep pass on Stop."
 }

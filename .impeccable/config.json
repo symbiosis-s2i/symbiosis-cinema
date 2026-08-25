@@ -1,0 +1,29 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "geist",
+        "createdAt": "2026-08-06T17:30:49.455Z",
+        "reason": "User-pinned in PRODUCT.md (binding visual reference) and reconfirmed in session: Geist Sans is the committed face for the Symbiosis OS landing page. Chosen over Instrument Serif because Instrument Serif carries zero Cyrillic glyphs and cannot set Bulgarian."
+      },
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-08-18T10:49:33.811Z",
+        "reason": "variable subset chosen for Cyrillic coverage"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "site/styles.css"
+        ],
+        "createdAt": "2026-08-18T10:49:33.874Z",
+        "reason": "Hero's 88px ruled field, part of the approved Claude Design world (DESIGN.md)"
+      }
+    ]
+  }
+}
