@@ -15,7 +15,9 @@
       "mcp__Claude_Code_Remote__send_later",
       "Bash(mkdir -p /home/user/symbiosis-cinema/public/brand/renders)",
       "Bash(cp \"/root/.claude/projects/-home-user-symbiosis-cinema/794774a8-92ae-5d62-ad69-a3a1222ebe7a/tool-results/mcp-Lovable-read_file-1786020061230.txt\" /home/user/symbiosis-cinema/public/brand/renders/render-hero.jpg)",
-      "Bash(identify /home/user/symbiosis-cinema/public/brand/renders/render-hero.jpg)"
+      "Bash(identify /home/user/symbiosis-cinema/public/brand/renders/render-hero.jpg)",
+      "mcp__Claude_Code_Remote__get_session",
+      "mcp__Claude_Code_Remote__add_repo"
     ]
   },
   "hooks": {
